@@ -13,7 +13,7 @@ import utils.FileIO;
 
 public class GetGithubRepoForLiveAPI {
 //	final static String[] keywords = new String[]{"android.", "com.google.gwt.", "org.hibernate.", "org.joda.time.", "com.thoughtworks.xstream."};
-	final static String[] keywords = new String[]{"android.", "com.google.gwt.", "org.hibernate.", "org.joda.time.", "com.thoughtworks.xstream."};
+	final static String[] keywords = new String[]{"org.apache.", "com.google.gwt.", "org.hibernate.", "org.joda.time.", "com.thoughtworks.xstream."};
 	
 	public static void main(String[] args) {
 		getLists();

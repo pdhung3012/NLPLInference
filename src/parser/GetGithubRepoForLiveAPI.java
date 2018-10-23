@@ -23,7 +23,7 @@ public class GetGithubRepoForLiveAPI {
 	private static void readLists() {
 		for (String keyword : keywords) {
 			HashMap<String, Integer> counts = new HashMap<>();
-			String content = utils.FileIO.readStringFromFile("T:/github/repos-5stars-50commits-lib-" + keyword + ".csv");
+			String content = utils.FileIO.readStringFromFile("G:/gitTrans/repos-5stars-50commits-lib-" + keyword + ".csv");
 			Scanner sc = new Scanner(content);
 			while (sc.hasNextLine()) {
 				String line = sc.nextLine();

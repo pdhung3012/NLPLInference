@@ -5,7 +5,11 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.junit.Test;
+
+import consts.GithubConfig;
+
 import javax.validation.constraints.NotNull;
+
 import java.io.File;
 import java.net.URL;
 
@@ -29,7 +33,7 @@ public class GithubClient {
 			@NotNull String destinationDir) throws Exception {
 		// String githubSourceUrl, String accessToken
 		CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(
-				accessToken, "");
+				GithubConfig.username, GithubConfig.password);
 		URL fileUrl = new URL("file://" + destinationDir);
 		File destinationFile = FileUtils.toFile(fileUrl);
 		// delete any existing file

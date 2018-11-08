@@ -26,7 +26,7 @@ public class DownloadGithubProject {
 
 	public static void downloadProjects() {
 		final GithubClient gitClient = new GithubClient();
-		ExecutorService pool = Executors.newFixedThreadPool(5);
+		ExecutorService pool = Executors.newFixedThreadPool(8);
 		for (String keyword : keywords) {
 			String listContent = FileIO
 					.readStringFromFile(PathConstanct.fopListLibraryLocation+File.separator+"repos-5stars-50commits-lib-"+keyword+".csv");
@@ -54,7 +54,7 @@ public class DownloadGithubProject {
 									ex.printStackTrace();
 								}
 								if (gotIt){
-									System.out.println("project " +repos + " downloaded");
+									System.out.println("project "+username+"-" +repos + " downloaded");
 									FileIO.appendStringToFile(username+"-"+repos+"\n",PathConstanct.fopListLibraryLocation+"downloaded-"+keyw+".txt");
 									break;
 								}

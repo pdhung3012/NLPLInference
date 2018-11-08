@@ -9,15 +9,14 @@ import java.util.Scanner;
 import utils.FileIO;
 import utils.GithubClient;
 import consts.GithubConfig;
+import consts.PathConstanct;
 
 public class DownloadGithubProject {
 
 	final static String[] keywords = new String[] { "android.",
 			"com.google.gwt.", "org.hibernate.", "org.joda.time.",
 			"com.thoughtworks.xstream." };
-	final static String fopProjectLocation = "/Users/hungphan/git/NLPLInference/data/downloaded/";
-	final static String fopListLibraryLocation = "/Users/hungphan/git/NLPLInference/data/StatTypeProjects/";
-
+	
 	public static void main(String[] args) {
 		downloadProjects();
 	}
@@ -27,7 +26,7 @@ public class DownloadGithubProject {
 
 		for (String keyword : keywords) {
 			String listContent = FileIO
-					.readStringFromFile(fopListLibraryLocation+"/repos-5stars-50commits-lib-"+keyword+".csv");
+					.readStringFromFile(PathConstanct.fopListLibraryLocation+"/repos-5stars-50commits-lib-"+keyword+".csv");
 			Scanner sc = new Scanner(listContent);
 			int index = 0;
 			while (sc.hasNextLine()) {
@@ -45,7 +44,7 @@ public class DownloadGithubProject {
 								boolean gotIt = false;
 								try {
 									gotIt = gitClient.downloadRepoContent(GithubConfig.urlGithub+username+"/"+repos+".git", GithubConfig.accessTokens,
-											"master", fopProjectLocation+File.separator+username+"-"+repos+"/");
+											"master", PathConstanct.fopProjectLocation+File.separator+username+"-"+repos+"/");
 								} catch (Exception ex) {
 									ex.printStackTrace();
 								}

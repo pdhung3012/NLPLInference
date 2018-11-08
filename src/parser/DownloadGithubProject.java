@@ -5,6 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import utils.FileIO;
 import utils.GithubClient;
@@ -23,7 +26,7 @@ public class DownloadGithubProject {
 
 	public static void downloadProjects() {
 		final GithubClient gitClient = new GithubClient();
-
+		ExecutorService pool = Executors.newFixedThreadPool(5);
 		for (String keyword : keywords) {
 			String listContent = FileIO
 					.readStringFromFile(PathConstanct.fopListLibraryLocation+File.separator+"repos-5stars-50commits-lib-"+keyword+".csv");
@@ -35,9 +38,10 @@ public class DownloadGithubProject {
 				String[] arrContent = projectContent.split("/");
 				final String username = arrContent[0];
 				final String repos = arrContent[1];
+				final String keyw=keyword;
 				index++;
-				if(index==1){
-					new Thread(new Runnable() {
+				if(true){
+					pool.execute(new Runnable() {
 						@Override
 						public void run() {
 
@@ -51,7 +55,7 @@ public class DownloadGithubProject {
 								}
 								if (gotIt){
 									System.out.println("project " +repos + " downloaded");
-									FileIO.appendStringToFile(username+"-"+repos+"\n",PathConstanct.fopListLibraryLocation+"downloaded-"+keyword+".txt");
+									FileIO.appendStringToFile(username+"-"+repos+"\n",PathConstanct.fopListLibraryLocation+"downloaded-"+keyw+".txt");
 									break;
 								}
 									
@@ -66,10 +70,19 @@ public class DownloadGithubProject {
 //							System.out.println("project index " +index);
 							
 						}
-					}).start();
+					});
 				}
 			}
 		}
+		
+		pool.shutdown();
+		// wait for them to finish for up to one minute.
+//		try{
+//			pool.awaitTermination(1, TimeUnit.MINUTES);
+//		} catch(Exception ex){
+//			ex.printStackTrace();
+//		}
+		
 	}
 
 }

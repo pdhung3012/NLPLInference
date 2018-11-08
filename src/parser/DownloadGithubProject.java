@@ -26,9 +26,10 @@ public class DownloadGithubProject {
 
 		for (String keyword : keywords) {
 			String listContent = FileIO
-					.readStringFromFile(PathConstanct.fopListLibraryLocation+"/repos-5stars-50commits-lib-"+keyword+".csv");
+					.readStringFromFile(PathConstanct.fopListLibraryLocation+File.separator+"repos-5stars-50commits-lib-"+keyword+".csv");
 			Scanner sc = new Scanner(listContent);
 			int index = 0;
+			FileIO.writeStringToFile("",PathConstanct.fopListLibraryLocation+"downloaded-"+keyword+".txt");
 			while (sc.hasNextLine()) {
 				String projectContent = sc.nextLine().split(",")[0];
 				String[] arrContent = projectContent.split("/");
@@ -50,6 +51,7 @@ public class DownloadGithubProject {
 								}
 								if (gotIt){
 									System.out.println("project " +repos + " downloaded");
+									FileIO.appendStringToFile(username+"-"+repos+"\n",PathConstanct.fopListLibraryLocation+"downloaded-"+keyword+".txt");
 									break;
 								}
 									
@@ -66,7 +68,6 @@ public class DownloadGithubProject {
 						}
 					}).start();
 				}
-				break;
 			}
 		}
 	}

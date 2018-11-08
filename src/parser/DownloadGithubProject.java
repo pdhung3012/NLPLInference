@@ -49,13 +49,13 @@ public class DownloadGithubProject {
 								boolean gotIt = false;
 								try {
 									gotIt = gitClient.downloadRepoContent(GithubConfig.urlGithub+username+"/"+repos+".git", GithubConfig.accessTokens,
-											"master", PathConstanct.fopProjectLocation+File.separator+username+"-"+repos+"/");
+											"master", PathConstanct.fopProjectLocation+File.separator+username+"_"+repos+"/");
 								} catch (Exception ex) {
 									ex.printStackTrace();
 								}
 								if (gotIt){
 									System.out.println("project "+username+"-" +repos + " downloaded");
-									FileIO.appendStringToFile(username+"-"+repos+"\n",PathConstanct.fopListLibraryLocation+"downloaded-"+keyw+".txt");
+									FileIO.appendStringToFile(username+"_"+repos+"\n",PathConstanct.fopListLibraryLocation+"downloaded-"+keyw+".txt");
 									break;
 								}
 									

@@ -83,6 +83,12 @@ public class DownloadGithubProject {
 									FileIO.appendStringToFile(username+"_"+repos+"\t"+ex.getMessage()+"\torg.eclipse.jgit.errors.TransportException\n",PathConstanct.fopListLibraryLocation+"unable-"+keyw+".txt");
 									break;
 								}
+								catch (org.eclipse.jgit.api.errors.TransportException ex) {
+									ex.printStackTrace();
+									System.out.println("exception here");
+									FileIO.appendStringToFile(username+"_"+repos+"\t"+ex.getMessage()+"\torg.eclipse.jgit.api.errors.TransportException\n",PathConstanct.fopListLibraryLocation+"unable-"+keyw+".txt");
+									break;
+								}
 								catch (Exception ex) {
 									ex.printStackTrace();
 								}

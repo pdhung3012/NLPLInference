@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.HashSet;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,7 +17,8 @@ import consts.PathConstanct;
 
 public class DownloadGithubProject {
 
-	final static String[] keywords = new String[] { "android.",
+//	 "android.",
+	final static String[] keywords = new String[] {
 			"com.google.gwt.", "org.hibernate.", "org.joda.time.",
 			"com.thoughtworks.xstream." };
 	
@@ -32,15 +34,23 @@ public class DownloadGithubProject {
 					.readStringFromFile(PathConstanct.fopListLibraryLocation+File.separator+"repos-5stars-50commits-lib-"+keyword+".csv");
 			Scanner sc = new Scanner(listContent);
 			int index = 0;
-			FileIO.writeStringToFile("",PathConstanct.fopListLibraryLocation+"downloaded-"+keyword+".txt");
+			String[] arrProjectName=FileIO.readStringFromFile(PathConstanct.fopListLibraryLocation+"downloaded-"+keyword+".txt").split("\n");
+			HashSet<String> setExistProjects=new HashSet<String>();
+			for(int i=0;i<arrProjectName.length;i++) {
+				setExistProjects.add(arrProjectName[i].trim());
+			}
+			
 			while (sc.hasNextLine()) {
 				String projectContent = sc.nextLine().split(",")[0];
 				String[] arrContent = projectContent.split("/");
 				final String username = arrContent[0];
 				final String repos = arrContent[1];
 				final String keyw=keyword;
+				String keyCheck=username+"_"+repos;
 				index++;
-				if(true){
+				if(!setExistProjects.contains(keyCheck)){
+					File currentFile = new File(PathConstanct.fopProjectLocation+File.separator+username+"_"+repos+"/");
+				    currentFile.delete();
 					pool.execute(new Runnable() {
 						@Override
 						public void run() {
@@ -48,8 +58,12 @@ public class DownloadGithubProject {
 							while (true) {
 								boolean gotIt = false;
 								try {
-									gotIt = gitClient.downloadRepoContent(GithubConfig.urlGithub+username+"/"+repos+".git", GithubConfig.accessTokens,
-											"master", PathConstanct.fopProjectLocation+File.separator+username+"_"+repos+"/");
+									System.out.println("begin download "+username+"-" +repos);
+									
+//									gotIt = gitClient.downloadRepoContent(GithubConfig.urlGithub+username+"/"+repos+".git", GithubConfig.accessTokens,
+//											"master", PathConstanct.fopProjectLocation+File.separator+username+"_"+repos+"/");
+									gotIt = gitClient.downloadRepoContentByArchiveDownload(GithubConfig.urlGithub+username+"/"+repos+"/archive/master.zip", GithubConfig.accessTokens,
+											"master", PathConstanct.fopProjectLocation+File.separator+username+"_"+repos+".zip");
 								} catch (Exception ex) {
 									ex.printStackTrace();
 								}

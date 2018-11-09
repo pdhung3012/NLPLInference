@@ -62,13 +62,19 @@ public class DownloadGithubProject {
 									
 //									gotIt = gitClient.downloadRepoContent(GithubConfig.urlGithub+username+"/"+repos+".git", GithubConfig.accessTokens,
 //											"master", PathConstanct.fopProjectLocation+File.separator+username+"_"+repos+"/");
-									gotIt = gitClient.downloadRepoContentByArchiveDownload(GithubConfig.urlGithub+username+"/"+repos+"/archive/master.zip", GithubConfig.accessTokens,
-											"master", PathConstanct.fopProjectLocation+File.separator+username+"_"+repos+".zip");
+									String branch = gitClient.downloadRepoContentCheck(GithubConfig.urlGithub+username+"/"+repos+".git", GithubConfig.accessTokens,
+									"master", PathConstanct.fopProjectLocation+File.separator+username+"_"+repos+"/.git/");
+									if(!branch.isEmpty()){
+										System.out.println("begin download branch "+branch+" of repo"+username+"-" +repos);
+										gotIt = gitClient.downloadRepoContentByArchiveDownload(GithubConfig.urlGithub+username+"/"+repos+"/archive/"+branch+".zip", GithubConfig.accessTokens,
+												 PathConstanct.fopProjectLocation+File.separator+username+"_"+repos+".zip");
+									}
+									
 								} catch (Exception ex) {
 									ex.printStackTrace();
 								}
 								if (gotIt){
-									System.out.println("project "+username+"-" +repos + " downloaded");
+									System.out.println(" project "+username+"-" +repos + " downloaded");
 									FileIO.appendStringToFile(username+"_"+repos+"\n",PathConstanct.fopListLibraryLocation+"downloaded-"+keyw+".txt");
 									break;
 								}

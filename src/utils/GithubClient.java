@@ -68,9 +68,26 @@ public class GithubClient {
 			return false;
 		}
 	}
+	
+	public String downloadRepoContentCheck(@NotNull String githubRemoteUrl, @NotNull String accessToken,
+			@NotNull String branchName, @NotNull String destinationDir) throws Exception {
+		// String githubSourceUrl, String accessToken
+		CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(accessToken, "");
+		// URL fileUrl = new URL("file://" + destinationDir);
+		File destinationFile = new File(destinationDir);
+		// delete any existing file
+		FileUtils.deleteDirectory(destinationFile);
+//		System.out.println(githubRemoteUrl+" aaa "+Git.cloneRepository()
+//				.setCredentialsProvider(credentialsProvider).setURI(githubRemoteUrl)
+//				.setDirectory(destinationFile).setBare(true).call().getRepository().getBranch());
+		String branchDefault=Git.cloneRepository()
+				.setCredentialsProvider(credentialsProvider).setURI(githubRemoteUrl)
+				.setDirectory(destinationFile).setBare(true).call().getRepository().getBranch();
+		return branchDefault;
+	}
 
 	public boolean downloadRepoContentByArchiveDownload(@NotNull String githubRemoteUrl, @NotNull String accessToken,
-			@NotNull String branchName, @NotNull String destinationDir) throws Exception {
+			 @NotNull String destinationDir) throws Exception {
 		File destinationFile = new File(destinationDir);
 		boolean result = false;
 		try {

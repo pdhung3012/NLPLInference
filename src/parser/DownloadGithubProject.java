@@ -10,6 +10,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.jgit.errors.TransportException;
+
 import utils.FileIO;
 import utils.GithubClient;
 import consts.GithubConfig;
@@ -38,6 +40,10 @@ public class DownloadGithubProject {
 			HashSet<String> setExistProjects=new HashSet<String>();
 			for(int i=0;i<arrProjectName.length;i++) {
 				setExistProjects.add(arrProjectName[i].trim());
+			}
+			File fUnable=new File(PathConstanct.fopListLibraryLocation+"unable-"+keyword+".txt");
+			if(!fUnable.exists()){
+				FileIO.writeStringToFile("", fUnable.getAbsolutePath());
 			}
 			
 			while (sc.hasNextLine()) {
@@ -70,7 +76,13 @@ public class DownloadGithubProject {
 												 PathConstanct.fopProjectLocation+File.separator+username+"_"+repos+".zip");
 									}
 									
-								} catch (Exception ex) {
+								} 
+								catch (TransportException ex) {
+									ex.printStackTrace();
+									FileIO.appendStringToFile(username+"_"+repos+"\t"+ex.getMessage()+"\torg.eclipse.jgit.errors.TransportException\n",PathConstanct.fopListLibraryLocation+"unable-"+keyw+".txt");
+									break;
+								}
+								catch (Exception ex) {
 									ex.printStackTrace();
 								}
 								if (gotIt){

@@ -21,9 +21,10 @@ import consts.PathConstanct;
 public class DownloadGithubProject {
 
 //	 "android.",
-	final static String[] keywords = new String[] {
-			"com.google.gwt.", "org.hibernate.", "org.joda.time.",
-			"com.thoughtworks.xstream." };
+//	"com.google.gwt.", "org.hibernate.", "org.joda.time.",
+//	"com.thoughtworks.xstream."
+	final static String[] keywords = new String[] {"android."
+			 };
 	
 	public static void main(String[] args) {
 		downloadProjects();

@@ -3,6 +3,7 @@ package parser;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -44,6 +45,11 @@ public class DownloadGithubProject {
 			File fUnable=new File(PathConstanct.fopListLibraryLocation+"unable-"+keyword+".txt");
 			if(!fUnable.exists()){
 				FileIO.writeStringToFile("", fUnable.getAbsolutePath());
+			} else{
+				String[] arrUnable=FileIO.readStringFromFile(PathConstanct.fopListLibraryLocation+"unable-"+keyword+".txt").split("\n");
+				for(int i=0;i<arrProjectName.length;i++) {
+					setExistProjects.add(arrUnable[i].trim().split("\t")[0].trim());
+				}
 			}
 			
 			while (sc.hasNextLine()) {
@@ -76,13 +82,13 @@ public class DownloadGithubProject {
 												 PathConstanct.fopProjectLocation+File.separator+username+"_"+repos+".zip");
 									}
 									
-								} 
-								catch (TransportException ex) {
+								}
+								catch (IOException ex) {
 									ex.printStackTrace();
-									System.out.println("exception here");
-									FileIO.appendStringToFile(username+"_"+repos+"\t"+ex.getMessage()+"\torg.eclipse.jgit.errors.TransportException\n",PathConstanct.fopListLibraryLocation+"unable-"+keyw+".txt");
+									FileIO.appendStringToFile(username+"_"+repos+"\t"+ex.getMessage()+"\tjava.io.IOException\n",PathConstanct.fopListLibraryLocation+"unable-"+keyw+".txt");
 									break;
 								}
+								
 								catch (org.eclipse.jgit.api.errors.TransportException ex) {
 									ex.printStackTrace();
 									System.out.println("exception here");

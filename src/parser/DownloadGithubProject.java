@@ -47,7 +47,7 @@ public class DownloadGithubProject {
 				FileIO.writeStringToFile("", fUnable.getAbsolutePath());
 			} else{
 				String[] arrUnable=FileIO.readStringFromFile(PathConstanct.fopListLibraryLocation+"unable-"+keyword+".txt").split("\n");
-				for(int i=0;i<arrProjectName.length;i++) {
+				for(int i=0;i<arrUnable.length;i++) {
 					setExistProjects.add(arrUnable[i].trim().split("\t")[0].trim());
 				}
 			}

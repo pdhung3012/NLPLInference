@@ -51,10 +51,10 @@ public class DownloadHighQualityProject {
 		}
 
 		while (sc.hasNextLine()) {
-			String projectContent = sc.nextLine().split(",")[0];
-			String[] arrContent = projectContent.split("/");
-			final String username = arrContent[0];
-			final String repos = arrContent[1];
+			//String projectContent = sc.nextLine().split(",")[0];
+			String[] arrContent = sc.nextLine().split(",");
+			final String username = arrContent[0].trim();
+			final String repos = arrContent[1].trim();
 			String keyCheck = username + "_" + repos;
 			index++;
 			if (!setExistProjects.contains(keyCheck)) {

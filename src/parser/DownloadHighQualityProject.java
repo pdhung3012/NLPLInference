@@ -23,7 +23,7 @@ public class DownloadHighQualityProject {
 	public static void downloadProjects() {
 		final GithubClient gitClient = new GithubClient();
 		ExecutorService pool = Executors.newFixedThreadPool(8);
-
+//
 		String listContent = FileIO
 				.readStringFromFile(PathConstanct.fop2ndListLibraryLocation
 						+ File.separator + "githubHighQualitySpecs"

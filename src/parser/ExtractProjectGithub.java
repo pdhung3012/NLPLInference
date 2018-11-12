@@ -12,6 +12,7 @@ import utils.GithubClient;
 import utils.ZipUtil;
 import consts.GithubConfig;
 import consts.PathConstanct;
+import net.lingala.zip4j.exception.ZipException;
 
 public class ExtractProjectGithub {
 
@@ -99,7 +100,12 @@ public class ExtractProjectGithub {
 									gotIt = ZipUtil.extractZipFileToFolder(zipFile.getAbsolutePath(), fNewLocation.getAbsolutePath());
 									
 									
-								}			
+								}
+								catch (ZipException ex) {
+									ex.printStackTrace();
+									FileIO.appendStringToFile(username+"_"+repos+"\t"+ex.getMessage()+"\tnet.lingala.zip4j.exception.ZipException\n",PathConstanct.fopListLibraryLocation+"notExtracted-"+keyw+".txt");
+									break;
+								}
 								catch (Exception ex) {
 									ex.printStackTrace();
 								}

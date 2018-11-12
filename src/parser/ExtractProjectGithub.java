@@ -45,11 +45,22 @@ public class ExtractProjectGithub {
 			for(int i=0;i<arrProjectName.length;i++) {
 				setExistProjects.add(arrProjectName[i].trim());
 			}
-			File fUnable=new File(PathConstanct.fopListLibraryLocation+"notExtracted-"+keyword+".txt");
+			
+			File fUnable=new File(PathConstanct.fopListLibraryLocation+"unable-"+keyword+".txt");
 			if(!fUnable.exists()){
 				FileIO.writeStringToFile("", fUnable.getAbsolutePath());
 			} else{
-				String[] arrUnable=FileIO.readStringFromFile(PathConstanct.fopListLibraryLocation+"unable-"+keyword+".txt").split("\n");
+				String[] arrUnable=FileIO.readStringFromFile(fUnable.getAbsolutePath()).split("\n");
+				for(int i=0;i<arrUnable.length;i++) {
+					setExistProjects.add(arrUnable[i].trim().split("\t")[0].trim());
+				}
+			}
+			
+			File fNotExtracted=new File(PathConstanct.fopListLibraryLocation+"notExtracted-"+keyword+".txt");
+			if(!fNotExtracted.exists()){
+				FileIO.writeStringToFile("", fNotExtracted.getAbsolutePath());
+			} else{
+				String[] arrUnable=FileIO.readStringFromFile(fNotExtracted.getAbsolutePath()).split("\n");
 				for(int i=0;i<arrUnable.length;i++) {
 					setExistProjects.add(arrUnable[i].trim().split("\t")[0].trim());
 				}

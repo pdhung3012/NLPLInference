@@ -59,12 +59,15 @@ public class ExtractProjectGithub {
 			File fNotExtracted=new File(PathConstanct.fopListLibraryLocation+"notExtracted-"+keyword+".txt");
 			if(!fNotExtracted.exists()){
 				FileIO.writeStringToFile("", fNotExtracted.getAbsolutePath());
-			} else{
+			} 
+			/*
+			else{
 				String[] arrUnable=FileIO.readStringFromFile(fNotExtracted.getAbsolutePath()).split("\n");
 				for(int i=0;i<arrUnable.length;i++) {
 					setExistProjects.add(arrUnable[i].trim().split("\t")[0].trim());
 				}
 			}
+			*/
 			
 			while (sc.hasNextLine()) {
 				String projectContent = sc.nextLine().split(",")[0];
@@ -89,9 +92,10 @@ public class ExtractProjectGithub {
 								try {
 									System.out.println("begin extracted "+username+"-" +repos);
 									File fNewLocation=new File(PathConstanct.fopExtractedLocation+File.separator+username+"-" +repos+File.separator);
-									if(!fNewLocation.isDirectory()){
+									/*if(!fNewLocation.isDirectory()){
 										fNewLocation.mkdir();
-									}
+									}*/
+									System.out.println( fNewLocation.getAbsolutePath());
 									gotIt = ZipUtil.extractZipFileToFolder(zipFile.getAbsolutePath(), fNewLocation.getAbsolutePath());
 									
 									

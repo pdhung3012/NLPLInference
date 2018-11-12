@@ -38,6 +38,7 @@ public class ExtractProjectGithub {
 			File fExtractedList=new File(PathConstanct.fopListLibraryLocation+"extracted-"+keyword+".txt");
 			if(!fExtractedList.exists()){
 				FileIO.writeStringToFile("", fExtractedList.getAbsolutePath());
+				
 			}
 			String[] arrProjectName=FileIO.readStringFromFile(fExtractedList.getAbsolutePath()).split("\n");
 			HashSet<String> setExistProjects=new HashSet<String>();

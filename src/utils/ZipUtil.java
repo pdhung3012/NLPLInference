@@ -20,26 +20,19 @@ import net.lingala.zip4j.exception.ZipException;
 
 public class ZipUtil {
 
-	public static boolean extractZipFileToFolder(String inputZipFile,String outputFolder){
+	public static boolean extractZipFileToFolder(String inputZipFile,String outputFolder) throws ZipException{
 		// TODO Auto-generated method stub
 				 //Open the file
 				boolean isExtractSuccess=false;
 				
-		        try
-		        {
-		        	File fNewLocation=new File(outputFolder+File.separator);
-					if(!fNewLocation.isDirectory()){
-						fNewLocation.mkdir();
-					}
-					ZipFile zipFile = new ZipFile(inputZipFile);
-			         zipFile.extractAll(outputFolder);
-				     isExtractSuccess=true;
-		        }
-		        catch(ZipException e)
-		        {
-		            e.printStackTrace();
-		        }
-		        return isExtractSuccess;
+	        	File fNewLocation=new File(outputFolder+File.separator);
+				if(!fNewLocation.isDirectory()){
+					fNewLocation.mkdir();
+				}
+				ZipFile zipFile = new ZipFile(inputZipFile);
+		         zipFile.extractAll(outputFolder);
+			     isExtractSuccess=true;
+		         return isExtractSuccess;
 	}
 	
 	public static File newFile(File destinationDir, ZipEntry zipEntry) throws IOException {

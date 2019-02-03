@@ -76,6 +76,24 @@ public class FileIO {
 		return convertToArrString(lstRersult);
 	}
 	
+	public static String[] findAllJarFiles(String inputPath) {
+		ArrayList<String> lstRersult = new ArrayList<String>();
+		File fileInput = new File(inputPath);
+		findFiles(fileInput, "jar", lstRersult);
+
+		return convertToArrString(lstRersult);
+	}
+	
+	public static String[] combineFilesToArray(String jdkPath,String[] arr) {
+		String[] arrTotal=new String[1+arr.length];
+		arrTotal[0]=jdkPath;
+		for(int i=0;i<arr.length;i++){
+			arrTotal[i+1]=arr[i];
+		}
+
+		return arrTotal;
+	}
+	
 	public static String[] findAllExtensionFiles(String inputPath,String extension) {
 		ArrayList<String> lstRersult = new ArrayList<String>();
 		File fileInput = new File(inputPath);

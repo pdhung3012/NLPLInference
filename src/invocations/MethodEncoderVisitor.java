@@ -14,11 +14,14 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.FieldAccess;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.FileASTRequestor;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
@@ -28,6 +31,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 
 import utils.JavaASTUtil;
 import entities.LocalEntity;
+import entities.LocalForMethod;
 
 public class MethodEncoderVisitor extends ASTVisitor {
 
@@ -35,11 +39,21 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	private HashMap<String, String> setSequencesOfMethods, setOfUnResolvedType;
 	private LinkedHashSet<LocalEntity> setFields, setArguments,
 			setLocalVariables;
-	private boolean isVisistMethod=false;
+
+	private boolean isVisitMethod = false;
+	private int typeOfTraverse = 0;
 
 	ASTParser parser = ASTParser.newParser(AST.JLS4);
 	String[] classpath = { "C:\\Program Files\\Java\\jre1.8.0_51\\lib\\rt.jar" };
 	HashMap<String, CompilationUnit> mapCU;
+	LinkedHashMap<String, LocalForMethod> mapLocalcontextForMethod = new LinkedHashMap<String, LocalForMethod>();
+	private boolean isAbstractMethod = false;
+	private StringBuilder sbAbstractInformation = new StringBuilder(),
+			sbAbstractTypeQuestionMark = new StringBuilder();
+	private StringBuilder sbTotalBuilder = new StringBuilder();
+	private LocalForMethod currentLocalMethod = null;
+	private MethodDeclaration currentMethodDecl = null;
+	private int levelOfTraverMD = 0;
 
 	public HashMap<String, String> getSetSequencesOfMethods() {
 		return setSequencesOfMethods;
@@ -59,16 +73,16 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		this.setOfUnResolvedType = setOfUnResolvedType;
 	}
 
-	public void parseProject(String projectLocation,String jdkPath) {
+	public void parseProject(String projectLocation, String jdkPath) {
 		Map<String, String> options = JavaCore.getOptions();
-		String[] arrChildJars=utils.FileIO.findAllJarFiles(projectLocation);
-		String[] jarPaths=utils.FileIO.combineFilesToArray(jdkPath, arrChildJars);
-//		String[] jarPaths = { jdkPath };
-//		File f = new File(fileLocation);
+		String[] arrChildJars = utils.FileIO.findAllJarFiles(projectLocation);
+		String[] jarPaths = utils.FileIO.combineFilesToArray(jdkPath,
+				arrChildJars);
+		// String[] jarPaths = { jdkPath };
+		// File f = new File(fileLocation);
 		String[] filePaths = utils.FileIO.findAllJavaFiles(projectLocation);
-		String[] sources = { projectLocation
-				+ File.separator };
-//		System.out.println(f.getParentFile().getAbsolutePath());
+		String[] sources = { projectLocation + File.separator };
+		// System.out.println(f.getParentFile().getAbsolutePath());
 		// System.out.println("jdk :" +this.jdkPath);
 		ASTParser parser = ASTParser.newParser(AST.JLS8);
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
@@ -77,81 +91,99 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		parser.setResolveBindings(true);
 		parser.setBindingsRecovery(true);
 		parser.setEnvironment(jarPaths, sources, null, true);
-		
-//		String strCode=FileIO.readStringFromFile(fileLocation );
-//		parser.setSource(strCode.toCharArray());
-		mapCU=new LinkedHashMap<String, CompilationUnit>();
-		setArguments=new LinkedHashSet<>();
-		setLocalVariables=new LinkedHashSet<LocalEntity>();
-		setFields=new LinkedHashSet<LocalEntity>();
+
+		// String strCode=FileIO.readStringFromFile(fileLocation );
+		// parser.setSource(strCode.toCharArray());
+		mapCU = new LinkedHashMap<String, CompilationUnit>();
+		setArguments = new LinkedHashSet<>();
+		setLocalVariables = new LinkedHashSet<LocalEntity>();
+		setFields = new LinkedHashSet<LocalEntity>();
 		final MethodEncoderVisitor visitor = this;
 		parser.createASTs(filePaths, null, new String[] {},
 				new FileASTRequestor() {
 					@Override
 					public void acceptAST(String sourceFilePath,
 							CompilationUnit javaUnit) {
-//						javaUnit.accept(visitor);
+						// javaUnit.accept(visitor);
 						mapCU.put(sourceFilePath, javaUnit);
 					}
 				}, null);
-		
+
 	}
-	
+
 	public void parseFile(String fileLocation) {
-		try{
-			CompilationUnit cu=mapCU.get(fileLocation);
+		try {
+			typeOfTraverse =1;
+			mapLocalcontextForMethod.clear();
+			CompilationUnit cu = mapCU.get(fileLocation);
 			cu.accept(this);
-		}catch(Exception ex){
+			typeOfTraverse=0;
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
-	
-	public StringBuilder viewAllLocalInformation(){
-		StringBuilder sb=new StringBuilder();
-		sb.append("setLocalVariable "+setLocalVariables.size()+": ");
-		for(LocalEntity ent:setLocalVariables){
-			sb.append(ent.getStrCodeReprensent()+" - "+ent.getStrTypeOfEntity()+",");
+
+	public void parseForAbstractingMethodInvocation(String fileLocation) {
+		try {
+			typeOfTraverse = 2;
+			CompilationUnit cu = mapCU.get(fileLocation);
+			cu.accept(this);
+			typeOfTraverse = 0;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public StringBuilder viewAllLocalInformation() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("setLocalVariable " + setLocalVariables.size() + ": ");
+		for (LocalEntity ent : setLocalVariables) {
+			sb.append(ent.getStrCodeReprensent() + " - "
+					+ ent.getStrTypeOfEntity() + ",");
 		}
 		sb.append("\n");
-		sb.append("setArgument "+setArguments.size()+": ");
-		for(LocalEntity ent:setArguments){
-			sb.append(ent.getStrCodeReprensent()+" - "+ent.getStrTypeOfEntity()+",");
+		sb.append("setArgument " + setArguments.size() + ": ");
+		for (LocalEntity ent : setArguments) {
+			sb.append(ent.getStrCodeReprensent() + " - "
+					+ ent.getStrTypeOfEntity() + ",");
 		}
 		sb.append("\n");
-		sb.append("setField "+setFields.size()+": ");
-		for(LocalEntity ent:setFields){
-			sb.append(ent.getStrCodeReprensent()+" - "+ent.getStrTypeOfEntity()+",");
+		sb.append("setField " + setFields.size() + ": ");
+		for (LocalEntity ent : setFields) {
+			sb.append(ent.getStrCodeReprensent() + " - "
+					+ ent.getStrTypeOfEntity() + ",");
 		}
 		sb.append("\n");
-		
-		
+
 		return sb;
 	}
-	
 
 	public boolean visit(TypeDeclaration node) {
-		setFields.clear();
-		FieldDeclaration[] arrFields = node.getFields();
-		for (int i = 0; i < arrFields.length; i++) {
-			List<VariableDeclarationFragment> arrDeclaration = arrFields[i]
-					.fragments();
-			for (int j = 0; j < arrDeclaration.size(); j++) {
-				VariableDeclarationFragment item = arrDeclaration.get(j);
-				IVariableBinding varBind = item.resolveBinding();
-				SimpleName varName = item.getName();
-				if (varBind != null && varName != null) {
-					ITypeBinding typeBind = varBind.getType();
-					if (typeBind != null) {
-						LocalEntity le = new LocalEntity();
-						le.setStrCodeReprensent(varName.getIdentifier());
-						le.setStrTypeOfEntity(typeBind.getQualifiedName());
-						setFields.add(le);
+		if (typeOfTraverse == 1) {
+			setFields.clear();
+			FieldDeclaration[] arrFields = node.getFields();
+			for (int i = 0; i < arrFields.length; i++) {
+				List<VariableDeclarationFragment> arrDeclaration = arrFields[i]
+						.fragments();
+				for (int j = 0; j < arrDeclaration.size(); j++) {
+					VariableDeclarationFragment item = arrDeclaration.get(j);
+					IVariableBinding varBind = item.resolveBinding();
+					SimpleName varName = item.getName();
+					if (varBind != null && varName != null) {
+						ITypeBinding typeBind = varBind.getType();
+						if (typeBind != null) {
+							LocalEntity le = new LocalEntity();
+							le.setStrCodeReprensent(varName.getIdentifier());
+							le.setStrTypeOfEntity(typeBind.getQualifiedName());
+							setFields.add(le);
+						}
+
 					}
-
 				}
-			}
 
+			}
 		}
+
 		return true;
 	}
 
@@ -161,46 +193,72 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	}
 
 	public boolean visit(MethodDeclaration node) {
-
-		setArguments.clear();
-		setLocalVariables.clear();
-		Iterator<SingleVariableDeclaration> parameters = node.parameters()
-				.iterator();
-		while (parameters.hasNext()) {
-			SingleVariableDeclaration parameter = parameters.next();
-			IVariableBinding parameterType = parameter.resolveBinding();
-			SimpleName varName=parameter.getName();
-			if (parameterType!= null && varName != null) {
-				ITypeBinding typeBind = parameterType.getType();
-				if (typeBind != null) {
-					LocalEntity le = new LocalEntity();
-					le.setStrCodeReprensent(varName.getIdentifier());
-					le.setStrTypeOfEntity(typeBind.getQualifiedName());
-					setArguments.add(le);
+		if (typeOfTraverse == 1) {
+			setArguments.clear();
+			setLocalVariables.clear();
+			Iterator<SingleVariableDeclaration> parameters = node.parameters()
+					.iterator();
+			while (parameters.hasNext()) {
+				SingleVariableDeclaration parameter = parameters.next();
+				IVariableBinding parameterType = parameter.resolveBinding();
+				SimpleName varName = parameter.getName();
+				if (parameterType != null && varName != null) {
+					ITypeBinding typeBind = parameterType.getType();
+					if (typeBind != null) {
+						LocalEntity le = new LocalEntity();
+						le.setStrCodeReprensent(varName.getIdentifier());
+						le.setStrTypeOfEntity(typeBind.getQualifiedName());
+						setArguments.add(le);
+					}
 				}
+			}
 
+			if (node.getBody() != null) {
+				isVisitMethod = true;
+				node.getBody().accept(this);
+				isVisitMethod = false;
+			}
+			String strSignature = JavaASTUtil.buildAllSigIngo(node);
+			String strInformation = viewAllLocalInformation().toString();
+			System.out.println(strSignature + "\n" + strInformation);
+			LocalForMethod lfm = new LocalForMethod();
+			lfm.setMethod(node);
+			lfm.setSetArguments((LinkedHashSet<LocalEntity>) setArguments
+					.clone());
+			lfm.setSetLocalVariables((LinkedHashSet<LocalEntity>) setLocalVariables
+					.clone());
+			lfm.setSetFields((LinkedHashSet<LocalEntity>) setFields.clone());
+//			currentLocalMethod = lfm;
+			mapLocalcontextForMethod.put(strSignature, lfm);
+		} else if (typeOfTraverse == 2) {
+			String strSignature = JavaASTUtil.buildAllSigIngo(node);
+			sbTotalBuilder = new StringBuilder();
+			currentMethodDecl = node;
+			levelOfTraverMD = 0;
+			currentLocalMethod = mapLocalcontextForMethod.get(strSignature);
+			if (node.getBody() != null) {
+				node.getBody().accept(this);
+			}
+			String methodSig = JavaASTUtil.buildAllSigIngo(node);
+			System.out.println("Method " + methodSig);
+			System.out.println("Content " + sbTotalBuilder.toString());
+
+		} else {
+			if (node.getBody() != null) {
+
+				node.getBody().accept(this);
 			}
 		}
-		
-		
-		 if (node.getBody() == null) {
-				//	this.buffer.append(";\n");//$NON-NLS-1$
-		 } else {
-			 isVisistMethod=true;
-			 node.getBody().accept(this);
-			 isVisistMethod=false;
-		 }
-		String strSignature=JavaASTUtil.buildAllSigIngo(node);
-		String strInformation= viewAllLocalInformation().toString();
-		System.out.println(strSignature+"\n"+strInformation);
+
 		return false;
 	}
-	
+
 	public boolean visit(VariableDeclarationStatement node) {
-		if(isVisistMethod){
-			List<VariableDeclarationFragment> listFrags=(List<VariableDeclarationFragment> )node.fragments();
-			for(int i=0;i<listFrags.size();i++){
-				VariableDeclarationFragment item=listFrags.get(i);
+		if (isVisitMethod) {
+			List<VariableDeclarationFragment> listFrags = (List<VariableDeclarationFragment>) node
+					.fragments();
+			for (int i = 0; i < listFrags.size(); i++) {
+				VariableDeclarationFragment item = listFrags.get(i);
 				IVariableBinding varBind = item.resolveBinding();
 				SimpleName varName = item.getName();
 				if (varBind != null && varName != null) {
@@ -217,14 +275,202 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		}
 		return false;
 	}
-	
-	public static void main(String[] args){
-		String projectLocation="/Users/hungphan/Documents/workspace/SampleMethodInvocationProject/";
-		String jdkPath="/Library/Java/JavaVirtualMachines/jdk1.8.0_141.jdk/Contents/Home/jre/lib/rt.jar";
-		String fileLocation="/Users/hungphan/Documents/workspace/SampleMethodInvocationProject/src/examples/CalGetInstance.java";
-		MethodEncoderVisitor visitor=new MethodEncoderVisitor();
+
+	private boolean isLocalInfo(LocalForMethod method) {
+		return true;
+	}
+
+	public boolean visit(MethodInvocation node) {
+		levelOfTraverMD++;
+		if (typeOfTraverse == 2) {
+			if (levelOfTraverMD == 1) {
+				sbAbstractInformation = new StringBuilder();
+				sbAbstractTypeQuestionMark = new StringBuilder();
+			}
+			Expression exRetriever = node.getExpression();
+			if (exRetriever instanceof SimpleName) {
+				SimpleName nameRetriever = (SimpleName) exRetriever;
+				String strVariable = nameRetriever.getIdentifier();
+				boolean isLocalEntity = false;
+				String selectedType = node.getExpression().resolveTypeBinding() != null ? node
+						.getExpression().resolveTypeBinding()
+						.getQualifiedName()
+						: "";
+				for (LocalEntity ent : currentLocalMethod.getSetArguments()) {
+					if (ent.getStrCodeReprensent().equals(strVariable)) {
+						isLocalEntity = true;
+						break;
+					}
+				}
+
+				for (LocalEntity ent : currentLocalMethod
+						.getSetLocalVariables()) {
+					if (ent.getStrCodeReprensent().equals(strVariable)) {
+						isLocalEntity = true;
+						break;
+					}
+				}
+
+				for (LocalEntity ent : currentLocalMethod.getSetFields()) {
+					if (ent.checkCodeInLocalRepresent(strVariable)) {
+						isLocalEntity = true;
+						break;
+					}
+				}
+				if (isLocalEntity) {
+					sbAbstractInformation.append("?");
+					sbAbstractTypeQuestionMark.append(selectedType + "\n");
+				} else {
+//					sbAbstractInformation.append(exRetriever.toString());
+					exRetriever.accept(this);
+				}
+			} 
+			else if(exRetriever instanceof FieldAccess){
+				FieldAccess nameRetriever = (FieldAccess) exRetriever;
+				String strVariable = nameRetriever.toString();
+				boolean isLocalEntity = false;
+				String selectedType = nameRetriever.resolveTypeBinding() != null ? nameRetriever.resolveTypeBinding()
+						.getQualifiedName()
+						: "";
+
+				for (LocalEntity ent : currentLocalMethod.getSetFields()) {
+					if (ent.checkCodeInLocalRepresent(strVariable)) {
+						isLocalEntity = true;
+						break;
+					}
+				}
+				if (isLocalEntity) {
+					sbAbstractInformation.append("?");
+					sbAbstractTypeQuestionMark.append(selectedType + "\n");
+				} else {
+//					sbAbstractInformation.append(exRetriever.toString());
+					exRetriever.accept(this);
+				}
+			}
+			else {
+				exRetriever.accept(this);
+			}
+			sbAbstractInformation.append("."+node.getName().getIdentifier()+"(");
+			List<Expression> listArgument = node.arguments();
+
+			for (int i = 0; i < listArgument.size(); i++) {
+				Expression exParam = listArgument.get(i);
+
+				if (exParam instanceof SimpleName) {
+					SimpleName nameParam = (SimpleName) exParam;
+					String strVariable = nameParam.getIdentifier();
+					boolean isLocalEntity = false;
+					String selectedType = exParam.resolveTypeBinding() != null ? exParam
+							.resolveTypeBinding().getQualifiedName() : "";
+					for (LocalEntity ent : currentLocalMethod.getSetArguments()) {
+						if (ent.getStrCodeReprensent().equals(strVariable)) {
+							isLocalEntity = true;
+							break;
+						}
+					}
+
+					for (LocalEntity ent : currentLocalMethod
+							.getSetLocalVariables()) {
+						if (ent.getStrCodeReprensent().equals(strVariable)) {
+							isLocalEntity = true;
+							break;
+						}
+					}
+
+					for (LocalEntity ent : currentLocalMethod.getSetFields()) {
+						if (ent.checkCodeInLocalRepresent(strVariable)) {
+							isLocalEntity = true;
+							break;
+						}
+					}
+					if (isLocalEntity) {
+						sbAbstractInformation.append("?");
+						sbAbstractTypeQuestionMark.append(selectedType + "\n");
+					} else {
+//						sbAbstractInformation.append(nameParam.toString());
+						exParam.accept(this);
+					}
+				} 
+				else if(exParam instanceof FieldAccess){
+					FieldAccess nameParam = (FieldAccess) exParam;
+					String strVariable = nameParam.toString();
+					boolean isLocalEntity = false;
+					
+					String selectedType = exParam.resolveTypeBinding() != null ? exParam.resolveTypeBinding()
+							.getQualifiedName()
+							: "";
+//					System.out.println("param "+strVariable+" "+selectedType);
+					for (LocalEntity ent : currentLocalMethod.getSetFields()) {
+						if (ent.checkCodeInLocalRepresent(strVariable)) {
+							isLocalEntity = true;
+							break;
+						}
+					}
+					if (isLocalEntity) {
+						sbAbstractInformation.append("?");
+						sbAbstractTypeQuestionMark.append(selectedType + "\n");
+					} else {	
+						exParam.accept(this);
+					}
+				}
+				else {
+					exParam.accept(this);
+				}
+				if(i!=listArgument.size()-1){
+					sbAbstractInformation.append(",");
+				}
+			}
+			sbAbstractInformation.append(")");
+			if(levelOfTraverMD==1){
+				sbTotalBuilder.append(sbAbstractInformation.toString()+" ");
+				System.out.println("variable: "+sbAbstractTypeQuestionMark.toString());
+				sbAbstractInformation = new StringBuilder();
+				sbAbstractTypeQuestionMark = new StringBuilder();
+			}
+
+		}
+		levelOfTraverMD--;
+		return false;
+	}
+
+	public boolean visit(FieldAccess node) {
+		if (typeOfTraverse==2) {
+			sbAbstractInformation.append(node.toString());
+//			String strVariable=node.toString();
+//			boolean isLocalEntity=false;
+//			
+//			for (LocalEntity ent : currentLocalMethod.getSetFields()) {
+//				if (ent.checkCodeInLocalRepresent(strVariable)) {
+//					isLocalEntity = true;
+//					break;
+//				}
+//			}
+//			if (isLocalEntity) {
+//				sbAbstractInformation.append("?");
+//				sbAbstractTypeQuestionMark.append(selectedType + "\n");
+//			} else {
+//				sbAbstractInformation.append(nameParam.toString());
+//				exParam.accept(this);
+//			}
+//			sbAbstractInformation.append(node.toString());
+		}
+		return false;
+	}
+	public boolean visit(SimpleName node) {
+		if (typeOfTraverse==2) {
+			sbAbstractInformation.append(node.toString());
+		}
+		return false;
+	}
+
+	public static void main(String[] args) {
+		String projectLocation = "/Users/hungphan/Documents/workspace/SampleMethodInvocationProject/";
+		String jdkPath = "/Library/Java/JavaVirtualMachines/jdk1.8.0_141.jdk/Contents/Home/jre/lib/rt.jar";
+		String fileLocation = "/Users/hungphan/Documents/workspace/SampleMethodInvocationProject/src/examples/CalGetInstance.java";
+		MethodEncoderVisitor visitor = new MethodEncoderVisitor();
 		visitor.parseProject(projectLocation, jdkPath);
 		visitor.parseFile(fileLocation);
+		visitor.parseForAbstractingMethodInvocation(fileLocation);
 	}
 
 }

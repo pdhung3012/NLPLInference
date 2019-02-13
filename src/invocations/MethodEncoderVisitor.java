@@ -18,6 +18,7 @@ import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.FieldAccess;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.FileASTRequestor;
+import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
@@ -280,6 +281,26 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		return true;
 	}
 
+	public String viewSelectedTypeReceiver(IMethodBinding iMethod){
+		
+		String strType=iMethod!=null ?(iMethod.getDeclaredReceiverType() != null ? iMethod.getDeclaredReceiverType()
+				.getQualifiedName()
+				: ""):":";
+		return strType;
+	}
+	
+	public String viewSelectedTypeParam(IMethodBinding iMethod,int i){
+		if(iMethod==null){
+			return "";
+		}
+		ITypeBinding[] arrBindArgs= iMethod.getParameterTypes();
+		if(arrBindArgs==null){
+			return "";
+		}
+		String strType=arrBindArgs[i] != null ? arrBindArgs[i].getQualifiedName() : "";
+		return strType;
+	}
+	
 	public boolean visit(MethodInvocation node) {
 		levelOfTraverMD++;
 		if (typeOfTraverse == 2) {
@@ -288,14 +309,13 @@ public class MethodEncoderVisitor extends ASTVisitor {
 				sbAbstractTypeQuestionMark = new StringBuilder();
 			}
 			Expression exRetriever = node.getExpression();
+			IMethodBinding iMethod=node.resolveMethodBinding();
+			String selectedType =  viewSelectedTypeReceiver(iMethod);
 			if (exRetriever instanceof SimpleName) {
 				SimpleName nameRetriever = (SimpleName) exRetriever;
 				String strVariable = nameRetriever.getIdentifier();
 				boolean isLocalEntity = false;
-				String selectedType = node.getExpression().resolveTypeBinding() != null ? node
-						.getExpression().resolveTypeBinding()
-						.getQualifiedName()
-						: "";
+				
 				for (LocalEntity ent : currentLocalMethod.getSetArguments()) {
 					if (ent.getStrCodeReprensent().equals(strVariable)) {
 						isLocalEntity = true;
@@ -329,9 +349,6 @@ public class MethodEncoderVisitor extends ASTVisitor {
 				FieldAccess nameRetriever = (FieldAccess) exRetriever;
 				String strVariable = nameRetriever.toString();
 				boolean isLocalEntity = false;
-				String selectedType = nameRetriever.resolveTypeBinding() != null ? nameRetriever.resolveTypeBinding()
-						.getQualifiedName()
-						: "";
 
 				for (LocalEntity ent : currentLocalMethod.getSetFields()) {
 					if (ent.checkCodeInLocalRepresent(strVariable)) {
@@ -352,16 +369,15 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			}
 			sbAbstractInformation.append("."+node.getName().getIdentifier()+"(");
 			List<Expression> listArgument = node.arguments();
-
+//			ITypeBinding[] arrBindArgs= iMethod.getParameterTypes();
 			for (int i = 0; i < listArgument.size(); i++) {
 				Expression exParam = listArgument.get(i);
-
+				String selectedParamType = viewSelectedTypeParam(iMethod,i);
 				if (exParam instanceof SimpleName) {
 					SimpleName nameParam = (SimpleName) exParam;
 					String strVariable = nameParam.getIdentifier();
 					boolean isLocalEntity = false;
-					String selectedType = exParam.resolveTypeBinding() != null ? exParam
-							.resolveTypeBinding().getQualifiedName() : "";
+					
 					for (LocalEntity ent : currentLocalMethod.getSetArguments()) {
 						if (ent.getStrCodeReprensent().equals(strVariable)) {
 							isLocalEntity = true;
@@ -385,7 +401,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 					}
 					if (isLocalEntity) {
 						sbAbstractInformation.append("?");
-						sbAbstractTypeQuestionMark.append(selectedType + "\n");
+						sbAbstractTypeQuestionMark.append(selectedParamType + "\n");
 					} else {
 //						sbAbstractInformation.append(nameParam.toString());
 						exParam.accept(this);
@@ -395,10 +411,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 					FieldAccess nameParam = (FieldAccess) exParam;
 					String strVariable = nameParam.toString();
 					boolean isLocalEntity = false;
-					
-					String selectedType = exParam.resolveTypeBinding() != null ? exParam.resolveTypeBinding()
-							.getQualifiedName()
-							: "";
+
 //					System.out.println("param "+strVariable+" "+selectedType);
 					for (LocalEntity ent : currentLocalMethod.getSetFields()) {
 						if (ent.checkCodeInLocalRepresent(strVariable)) {
@@ -408,7 +421,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 					}
 					if (isLocalEntity) {
 						sbAbstractInformation.append("?");
-						sbAbstractTypeQuestionMark.append(selectedType + "\n");
+						sbAbstractTypeQuestionMark.append(selectedParamType + "\n");
 					} else {	
 						exParam.accept(this);
 					}
@@ -423,7 +436,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			sbAbstractInformation.append(")");
 			if(levelOfTraverMD==1){
 				sbTotalBuilder.append(sbAbstractInformation.toString()+" ");
-				System.out.println("variable: "+sbAbstractTypeQuestionMark.toString());
+//				System.out.println("variable: "+sbAbstractTypeQuestionMark.toString());
 				sbAbstractInformation = new StringBuilder();
 				sbAbstractTypeQuestionMark = new StringBuilder();
 			}

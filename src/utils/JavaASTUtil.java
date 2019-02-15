@@ -370,6 +370,38 @@ public class JavaASTUtil {
 		}
 		return strResult;
 	}
+	
+	public static String buildAllSigIngo(MethodInvocation method) {
+		IMethodBinding ibind=method.resolveMethodBinding();
+		if(ibind==null) return "";
+		StringBuilder sbResult=new StringBuilder();
+		try{
+			ITypeBinding typeReceiver=ibind.getDeclaringClass();
+			ITypeBinding[] arrParams=ibind.getParameterTypes();
+			String strReceiver=typeReceiver!=null?typeReceiver.getQualifiedName():"";
+			sbResult.append(ibind.getModifiers());
+			sbResult.append("#");
+			sbResult.append(strReceiver);
+			sbResult.append("#");
+			sbResult.append(ibind.getName());
+			sbResult.append("#(");
+			if(arrParams!=null){
+				for(int i=0;i<arrParams.length;i++){
+					String strParam=arrParams[i]!=null?arrParams[i].getQualifiedName():"";
+					sbResult.append(strParam);
+					if(i!=arrParams.length-1){
+						sbResult.append(",");
+					}
+				}
+			}
+			
+			sbResult.append(")");
+		}catch(Exception ex){
+//			ex.printStackTrace();
+		}
+		
+		return sbResult.toString();
+	}
 
 	public static String buildFullAllSigIngo(MethodDeclaration method) {
 		Type type = method.getReturnType2();

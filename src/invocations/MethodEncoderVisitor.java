@@ -1,6 +1,8 @@
 package invocations;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -30,7 +32,10 @@ import org.eclipse.jdt.core.dom.VariableDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 
+import utils.DateUtil;
 import utils.JavaASTUtil;
+import utils.StringUtil;
+import entities.InvocationObject;
 import entities.LocalEntity;
 import entities.LocalForMethod;
 
@@ -40,6 +45,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	private HashMap<String, String> setSequencesOfMethods, setOfUnResolvedType;
 	private LinkedHashSet<LocalEntity> setFields, setArguments,
 			setLocalVariables;
+	private LinkedHashSet<String> setRequiredAPIsForMI;
 
 	private boolean isVisitMethod = false;
 	private int typeOfTraverse = 0;
@@ -49,12 +55,13 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	HashMap<String, CompilationUnit> mapCU;
 	LinkedHashMap<String, LocalForMethod> mapLocalcontextForMethod = new LinkedHashMap<String, LocalForMethod>();
 	private boolean isAbstractMethod = false;
-	private StringBuilder sbAbstractInformation = new StringBuilder(),
-			sbAbstractTypeQuestionMark = new StringBuilder();
+	private StringBuilder sbAbstractInformation = new StringBuilder();
+	private ArrayList<String> listAbstractTypeQuestionMark;
 	private StringBuilder sbTotalBuilder = new StringBuilder();
 	private LocalForMethod currentLocalMethod = null;
 	private MethodDeclaration currentMethodDecl = null;
 	private int levelOfTraverMD = 0;
+	private String fopInvocationObject;
 
 	public HashMap<String, String> getSetSequencesOfMethods() {
 		return setSequencesOfMethods;
@@ -74,7 +81,8 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		this.setOfUnResolvedType = setOfUnResolvedType;
 	}
 
-	public void parseProject(String projectLocation, String jdkPath) {
+	public void parseProject(String projectLocation,String fopInvocationObject, String jdkPath) {
+		this.fopInvocationObject=fopInvocationObject;
 		Map<String, String> options = JavaCore.getOptions();
 		String[] arrChildJars = utils.FileIO.findAllJarFiles(projectLocation);
 		String[] jarPaths = utils.FileIO.combineFilesToArray(jdkPath,
@@ -246,7 +254,6 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 		} else {
 			if (node.getBody() != null) {
-
 				node.getBody().accept(this);
 			}
 		}
@@ -277,13 +284,10 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		return false;
 	}
 
-	private boolean isLocalInfo(LocalForMethod method) {
-		return true;
-	}
 
 	public String viewSelectedTypeReceiver(IMethodBinding iMethod){
 		
-		String strType=iMethod!=null ?(iMethod.getDeclaredReceiverType() != null ? iMethod.getDeclaredReceiverType()
+		String strType=iMethod!=null ?(iMethod.getDeclaringClass() != null ? iMethod.getDeclaringClass()
 				.getQualifiedName()
 				: ""):":";
 		return strType;
@@ -306,11 +310,15 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		if (typeOfTraverse == 2) {
 			if (levelOfTraverMD == 1) {
 				sbAbstractInformation = new StringBuilder();
-				sbAbstractTypeQuestionMark = new StringBuilder();
+				listAbstractTypeQuestionMark = new ArrayList<String>();
+				setRequiredAPIsForMI=new LinkedHashSet<String>();
 			}
 			Expression exRetriever = node.getExpression();
 			IMethodBinding iMethod=node.resolveMethodBinding();
 			String selectedType =  viewSelectedTypeReceiver(iMethod);
+//			System.out.println("choose select type "+selectedType);
+			String receiverType = exRetriever.resolveTypeBinding().getQualifiedName();
+			setRequiredAPIsForMI.add(receiverType);
 			if (exRetriever instanceof SimpleName) {
 				SimpleName nameRetriever = (SimpleName) exRetriever;
 				String strVariable = nameRetriever.getIdentifier();
@@ -339,7 +347,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 				}
 				if (isLocalEntity) {
 					sbAbstractInformation.append("?");
-					sbAbstractTypeQuestionMark.append(selectedType + "\n");
+					listAbstractTypeQuestionMark.add(selectedType);
 				} else {
 //					sbAbstractInformation.append(exRetriever.toString());
 					exRetriever.accept(this);
@@ -358,7 +366,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 				}
 				if (isLocalEntity) {
 					sbAbstractInformation.append("?");
-					sbAbstractTypeQuestionMark.append(selectedType + "\n");
+					listAbstractTypeQuestionMark.add(selectedType);
 				} else {
 //					sbAbstractInformation.append(exRetriever.toString());
 					exRetriever.accept(this);
@@ -373,6 +381,8 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			for (int i = 0; i < listArgument.size(); i++) {
 				Expression exParam = listArgument.get(i);
 				String selectedParamType = viewSelectedTypeParam(iMethod,i);
+				String paramIType = exParam.resolveTypeBinding().getQualifiedName();
+				setRequiredAPIsForMI.add(paramIType);
 				if (exParam instanceof SimpleName) {
 					SimpleName nameParam = (SimpleName) exParam;
 					String strVariable = nameParam.getIdentifier();
@@ -401,7 +411,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 					}
 					if (isLocalEntity) {
 						sbAbstractInformation.append("?");
-						sbAbstractTypeQuestionMark.append(selectedParamType + "\n");
+						listAbstractTypeQuestionMark.add(selectedParamType);
 					} else {
 //						sbAbstractInformation.append(nameParam.toString());
 						exParam.accept(this);
@@ -421,7 +431,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 					}
 					if (isLocalEntity) {
 						sbAbstractInformation.append("?");
-						sbAbstractTypeQuestionMark.append(selectedParamType + "\n");
+						listAbstractTypeQuestionMark.add(selectedParamType);
 					} else {	
 						exParam.accept(this);
 					}
@@ -435,10 +445,21 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			}
 			sbAbstractInformation.append(")");
 			if(levelOfTraverMD==1){
-				sbTotalBuilder.append(sbAbstractInformation.toString()+" ");
+				
 //				System.out.println("variable: "+sbAbstractTypeQuestionMark.toString());
+				InvocationObject io=new InvocationObject();
+				String methodInfo=JavaASTUtil.buildAllSigIngo(node);
+				io.setStrMethodInfo(methodInfo);
+				io.setStrCodeRepresent(sbAbstractInformation.toString());
+				io.setListQuestionMarkTypes(listAbstractTypeQuestionMark);
+				io.setSetImportedAPIs(setRequiredAPIsForMI);
+				String id="E-"+System.nanoTime()+"";
+				io.setId(id);
+				io.saveToFile(fopInvocationObject);
+				sbTotalBuilder.append(id+" ");
 				sbAbstractInformation = new StringBuilder();
-				sbAbstractTypeQuestionMark = new StringBuilder();
+				listAbstractTypeQuestionMark = new ArrayList<String>();
+				setRequiredAPIsForMI=new LinkedHashSet<String>();
 			}
 
 		}
@@ -478,10 +499,11 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 	public static void main(String[] args) {
 		String projectLocation = "/Users/hungphan/Documents/workspace/SampleMethodInvocationProject/";
+		String outputIdLocation = "/Users/hungphan/Documents/workspace/OutputMethodId/";
 		String jdkPath = "/Library/Java/JavaVirtualMachines/jdk1.8.0_141.jdk/Contents/Home/jre/lib/rt.jar";
 		String fileLocation = "/Users/hungphan/Documents/workspace/SampleMethodInvocationProject/src/examples/CalGetInstance.java";
 		MethodEncoderVisitor visitor = new MethodEncoderVisitor();
-		visitor.parseProject(projectLocation, jdkPath);
+		visitor.parseProject(projectLocation,outputIdLocation, jdkPath);
 		visitor.parseFile(fileLocation);
 		visitor.parseForAbstractingMethodInvocation(fileLocation);
 	}

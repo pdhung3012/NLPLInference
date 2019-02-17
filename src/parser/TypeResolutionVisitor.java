@@ -50,11 +50,11 @@ import utils.FileUtil;
  * @since 2.0
  */
 
-class AnnotationType{
-	public static String Literal="#lit";
-	public static String Variable="#var";
-	public static String Type="#type";
-}
+//class AnnotationType{
+//	public static String Literal="#lit";
+//	public static String Variable="#var";
+//	public static String Type="#type";
+//}
 
 @SuppressWarnings("rawtypes")
 public class TypeResolutionVisitor extends ASTVisitor {

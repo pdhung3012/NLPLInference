@@ -124,7 +124,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	private HashMap<String, String> setSequencesOfMethods, setOfUnResolvedType;
 	private LinkedHashSet<LocalEntity> setFields, setArguments,
 			setLocalVariables;
-	private LinkedHashSet<String> setRequiredAPIsForMI;
+	private LinkedHashSet<String> setRequiredAPIsForMI=new LinkedHashSet<String>();;
 	private String strSplitCharacter=" ";
 
 	private int indent = 0;
@@ -132,6 +132,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	private int typeOfTraverse = 0;
 	private boolean isParsingType;
 	private boolean isVisitInsideMethodDeclaration=false,isSimpleNameMethod=false;
+	private boolean isGetInfoForIdentifer=false;
 	private StringBuffer unresolvedBuffer;
 
 	ASTParser parser = ASTParser.newParser(AST.JLS4);
@@ -140,7 +141,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	LinkedHashMap<String, LocalForMethod> mapLocalcontextForMethod = new LinkedHashMap<String, LocalForMethod>();
 	private boolean isAbstractMethod = false;
 	private StringBuilder sbAbstractInformation = new StringBuilder();
-	private ArrayList<String> listAbstractTypeQuestionMark;
+	private ArrayList<String> listAbstractTypeQuestionMark=new ArrayList<String>();
 	private StringBuilder sbTotalBuilder = new StringBuilder();
 	private LocalForMethod currentLocalMethod = null;
 	private MethodDeclaration currentMethodDecl = null;
@@ -247,10 +248,12 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 	public void parseForAbstractingMethodInvocation(String fileLocation) {
 		try {
-			typeOfTraverse = 2;
+			typeOfTraverse = 3;
+			isParsingType=true;
 			CompilationUnit cu = mapCU.get(fileLocation);
 			cu.accept(this);
 			typeOfTraverse = 0;
+			isParsingType=false;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -399,6 +402,20 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			String methodSig = JavaASTUtil.buildAllSigIngo(node);
 			System.out.println("Method " + methodSig);
 			System.out.println("Content " + sbTotalBuilder.toString());
+
+		}else if (typeOfTraverse == 3) {
+			String strSignature = JavaASTUtil.buildAllSigIngo(node);
+			sbTotalBuilder = new StringBuilder();
+			currentMethodDecl = node;
+			levelOfTraverMD = 0;
+			currentLocalMethod = mapLocalcontextForMethod.get(strSignature);
+			isVisitInsideMethodDeclaration=true;
+			if (node.getBody() != null) {
+				node.getBody().accept(this);
+			}
+			String methodSig = JavaASTUtil.buildAllSigIngo(node);
+			System.out.println("Method " + methodSig);
+			System.out.println("Content " + this.buffer.toString());
 
 		} else {
 			if (node.getBody() != null) {
@@ -630,49 +647,249 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	
 	public boolean visit(MethodInvocation node) {
 		levelOfTraverMD++;
-		this.buffer.append(strSplitCharacter);
-		if (node.getExpression() != null) {
-			node.getExpression().accept(this);
-		//	if(node.getExpression())
+		if(typeOfTraverse==3){
+			if (levelOfTraverMD == 1) {
+				sbAbstractInformation = new StringBuilder();
+				listAbstractTypeQuestionMark = new ArrayList<String>();
+				setRequiredAPIsForMI=new LinkedHashSet<String>();
+			}
+			
+//			this.buffer.append(strSplitCharacter);
+//			if (node.getExpression() != null) {
+//				node.getExpression().accept(this);
+//			//	if(node.getExpression())
+//				this.buffer.append(AnnotationType.Variable);
+//				this.buffer.append(strSplitCharacter);
+//				this.buffer.append(".");//$NON-NLS-1$
+//			}
+//			
+//			//this.buffer.append(strSplitCharacter);
+//			isSimpleNameMethod=true;
+////			handle identifiers
+//			node.getName().accept(this);		
+//			isSimpleNameMethod=false;
+//			this.buffer.append(strSplitCharacter);//$NON-NLS-1$		
+//			this.buffer.append("(");//$NON-NLS-1$
+//			for (Iterator it = node.arguments().iterator(); it.hasNext(); ) {
+//				Expression e = (Expression) it.next();
+//				this.buffer.append(strSplitCharacter);//$NON-NLS-1$		
+////				e.accept(this);
+//				if (it.hasNext()) {
+//					this.buffer.append(strSplitCharacter);
+//					this.buffer.append(",");
+//
+//					//$NON-NLS-1$
+//				}
+//			}
+//			this.buffer.append(strSplitCharacter);
+//			this.buffer.append(")");//$NON-NLS-1$
+//			this.buffer.append(strSplitCharacter);
+//			System.out.println("level "+levelOfTraverMD);
+			
+			Expression exRetriever = node.getExpression();
+			IMethodBinding iMethod=node.resolveMethodBinding();
+			String selectedType =  viewSelectedTypeReceiver(iMethod);
+//			System.out.println("choose select type "+selectedType);
+			String receiverType = exRetriever.resolveTypeBinding().getQualifiedName();
+//			System.out.println("set "+setRequiredAPIsForMI.toString());
+			
+			this.buffer.append(strSplitCharacter);
+			
+
+			
+
+			
+			setRequiredAPIsForMI.add(receiverType);
+			if (exRetriever instanceof SimpleName) {
+				SimpleName nameRetriever = (SimpleName) exRetriever;
+				String strVariable = nameRetriever.getIdentifier();
+				boolean isLocalEntity = false;
+				
+				for (LocalEntity ent : currentLocalMethod.getSetArguments()) {
+					if (ent.getStrCodeReprensent().equals(strVariable)) {
+						isLocalEntity = true;
+						break;
+					}
+				}
+
+				for (LocalEntity ent : currentLocalMethod
+						.getSetLocalVariables()) {
+					if (ent.getStrCodeReprensent().equals(strVariable)) {
+						isLocalEntity = true;
+						break;
+					}
+				}
+
+				for (LocalEntity ent : currentLocalMethod.getSetFields()) {
+					if (ent.checkCodeInLocalRepresent(strVariable)) {
+						isLocalEntity = true;
+						break;
+					}
+				}
+				if (isLocalEntity) {
+					sbAbstractInformation.append("?");
+					listAbstractTypeQuestionMark.add(selectedType);
+					isGetInfoForIdentifer=false;
+					exRetriever.accept(this);
+					isGetInfoForIdentifer=true;
+				} else {
+//					sbAbstractInformation.append(exRetriever.toString());
+					exRetriever.accept(this);
+				}
+			} 
+			else if(exRetriever instanceof FieldAccess){
+				FieldAccess nameRetriever = (FieldAccess) exRetriever;
+				String strVariable = nameRetriever.toString();
+				boolean isLocalEntity = false;
+
+				for (LocalEntity ent : currentLocalMethod.getSetFields()) {
+					if (ent.checkCodeInLocalRepresent(strVariable)) {
+						isLocalEntity = true;
+						break;
+					}
+				}
+				if (isLocalEntity) {
+					sbAbstractInformation.append("?");
+					listAbstractTypeQuestionMark.add(selectedType);
+					isGetInfoForIdentifer=false;
+					exRetriever.accept(this);
+					isGetInfoForIdentifer=true;
+				} else {
+//					sbAbstractInformation.append(exRetriever.toString());
+					exRetriever.accept(this);
+				}
+			}
+			else {
+				exRetriever.accept(this);
+			}
+			
 			this.buffer.append(AnnotationType.Variable);
 			this.buffer.append(strSplitCharacter);
 			this.buffer.append(".");//$NON-NLS-1$
-		}
-		if (node.getAST().apiLevel() >= JLS3) {
-//			if (!node.typeArguments().isEmpty()) {
-//				this.buffer.append("<");//$NON-NLS-1$
-//				for (Iterator it = node.typeArguments().iterator(); it.hasNext(); ) {
-//					Type t = (Type) it.next();
-//					t.accept(this);
-//					if (it.hasNext()) {
-//						this.buffer.append(",");//$NON-NLS-1$
-//					}
-//				}
-//				this.buffer.append(">");//$NON-NLS-1$
-//			}
-		}
-		//this.buffer.append(strSplitCharacter);
-		isSimpleNameMethod=true;
-//		handle identifiers
-		node.getName().accept(this);		
-		isSimpleNameMethod=false;
-		this.buffer.append(strSplitCharacter);//$NON-NLS-1$		
-		this.buffer.append("(");//$NON-NLS-1$
-		for (Iterator it = node.arguments().iterator(); it.hasNext(); ) {
-			Expression e = (Expression) it.next();
+			
+			isSimpleNameMethod=true;
+			isGetInfoForIdentifer=false;
+	//		handle identifiers
+			node.getName().accept(this);
+			isGetInfoForIdentifer=true;
+			isSimpleNameMethod=false;
 			this.buffer.append(strSplitCharacter);//$NON-NLS-1$		
-			e.accept(this);
-			if (it.hasNext()) {
-				this.buffer.append(strSplitCharacter);
-				this.buffer.append(",");
+			this.buffer.append("(");//$NON-NLS-1$
+			
+			
+			sbAbstractInformation.append("."+node.getName().getIdentifier()+"(");
+			List<Expression> listArgument = node.arguments();
+//			ITypeBinding[] arrBindArgs= iMethod.getParameterTypes();
+			for (int i = 0; i < listArgument.size(); i++) {
+				Expression exParam = listArgument.get(i);
+				String selectedParamType = viewSelectedTypeParam(iMethod,i);
+				String paramIType = exParam.resolveTypeBinding().getQualifiedName();
+				setRequiredAPIsForMI.add(paramIType);
+				
+				this.buffer.append(strSplitCharacter);//$NON-NLS-1$		
+////			e.accept(this);
+				
+				if (exParam instanceof SimpleName) {
+					SimpleName nameParam = (SimpleName) exParam;
+					String strVariable = nameParam.getIdentifier();
+					boolean isLocalEntity = false;
+					
+					for (LocalEntity ent : currentLocalMethod.getSetArguments()) {
+						if (ent.getStrCodeReprensent().equals(strVariable)) {
+							isLocalEntity = true;
+							break;
+						}
+					}
 
-				//$NON-NLS-1$
+					for (LocalEntity ent : currentLocalMethod
+							.getSetLocalVariables()) {
+						if (ent.getStrCodeReprensent().equals(strVariable)) {
+							isLocalEntity = true;
+							break;
+						}
+					}
+
+					for (LocalEntity ent : currentLocalMethod.getSetFields()) {
+						if (ent.checkCodeInLocalRepresent(strVariable)) {
+							isLocalEntity = true;
+							break;
+						}
+					}
+					if (isLocalEntity) {
+						sbAbstractInformation.append("?");
+						listAbstractTypeQuestionMark.add(selectedParamType);
+						isGetInfoForIdentifer=false;
+						exParam.accept(this);
+						isGetInfoForIdentifer=true;
+					} else {
+//						sbAbstractInformation.append(nameParam.toString());
+						exParam.accept(this);
+					}
+				} 
+				else if(exParam instanceof FieldAccess){
+					FieldAccess nameParam = (FieldAccess) exParam;
+					String strVariable = nameParam.toString();
+					boolean isLocalEntity = false;
+
+//					System.out.println("param "+strVariable+" "+selectedType);
+					for (LocalEntity ent : currentLocalMethod.getSetFields()) {
+						if (ent.checkCodeInLocalRepresent(strVariable)) {
+							isLocalEntity = true;
+							break;
+						}
+					}
+					if (isLocalEntity) {
+						sbAbstractInformation.append("?");
+						listAbstractTypeQuestionMark.add(selectedParamType);
+						isGetInfoForIdentifer=false;
+						exParam.accept(this);
+						isGetInfoForIdentifer=true;
+						
+					} else {	
+						exParam.accept(this);
+					}
+				}
+				else {
+					exParam.accept(this);
+				}
+				if(i!=listArgument.size()-1){
+					this.buffer.append(strSplitCharacter);
+					this.buffer.append(",");
+					sbAbstractInformation.append(",");
+				}
 			}
+			sbAbstractInformation.append(")");
+			
+			this.buffer.append(strSplitCharacter);
+			this.buffer.append(")");//$NON-NLS-1$
+			this.buffer.append(strSplitCharacter);
+			
+			if(levelOfTraverMD==1){
+				if(!isParsingType){
+					this.buffer.append(node.getName().getIdentifier()+" ");
+				} else{
+					InvocationObject io=new InvocationObject();
+					String methodInfo=JavaASTUtil.buildAllSigIngo(node);
+					io.setStrMethodInfo(methodInfo);
+					io.setStrCodeRepresent(sbAbstractInformation.toString());
+					io.setListQuestionMarkTypes(listAbstractTypeQuestionMark);
+					io.setSetImportedAPIs(setRequiredAPIsForMI);
+					String id="E-"+System.nanoTime()+"";
+					io.setId(id);
+					io.saveToFile(fopInvocationObject);
+					this.buffer.append(id+" ");
+					
+				}
+				sbAbstractInformation = new StringBuilder();
+				listAbstractTypeQuestionMark = new ArrayList<String>();
+				setRequiredAPIsForMI=new LinkedHashSet<String>();
+				
+			}
+
+			
 		}
-		this.buffer.append(strSplitCharacter);
-		this.buffer.append(")");//$NON-NLS-1$
-		this.buffer.append(strSplitCharacter);
-		if (typeOfTraverse == 2) {
+		
+		else if (typeOfTraverse == 2) {
 			if (levelOfTraverMD == 1) {
 				sbAbstractInformation = new StringBuilder();
 				listAbstractTypeQuestionMark = new ArrayList<String>();
@@ -714,6 +931,9 @@ public class MethodEncoderVisitor extends ASTVisitor {
 				if (isLocalEntity) {
 					sbAbstractInformation.append("?");
 					listAbstractTypeQuestionMark.add(selectedType);
+					isGetInfoForIdentifer=false;
+					exRetriever.accept(this);
+					isGetInfoForIdentifer=true;
 				} else {
 //					sbAbstractInformation.append(exRetriever.toString());
 					exRetriever.accept(this);
@@ -733,6 +953,9 @@ public class MethodEncoderVisitor extends ASTVisitor {
 				if (isLocalEntity) {
 					sbAbstractInformation.append("?");
 					listAbstractTypeQuestionMark.add(selectedType);
+					isGetInfoForIdentifer=false;
+					exRetriever.accept(this);
+					isGetInfoForIdentifer=true;
 				} else {
 //					sbAbstractInformation.append(exRetriever.toString());
 					exRetriever.accept(this);
@@ -809,6 +1032,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 					sbAbstractInformation.append(",");
 				}
 			}
+			
 			sbAbstractInformation.append(")");
 			if(levelOfTraverMD==1){
 				if(!isParsingType){
@@ -843,8 +1067,11 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		this.buffer.append(strSplitCharacter);
 		this.buffer.append(".");//$NON-NLS-1$
 		node.getName().accept(this);
-		if (typeOfTraverse==2) {
-			sbAbstractInformation.append(node.toString());
+		if (typeOfTraverse==2|| typeOfTraverse==3) {
+			if(isGetInfoForIdentifer){
+				sbAbstractInformation.append(node.toString());
+			}
+			
 		}
 		return false;
 	}
@@ -864,8 +1091,41 @@ public class MethodEncoderVisitor extends ASTVisitor {
 //	}
 	
 	public boolean visit(SimpleName node) {
-		if (typeOfTraverse==2) {
-			sbAbstractInformation.append(node.toString());
+		if(isVisitInsideMethodDeclaration){
+			
+			//IType typeBind=iBind.
+			if(isSimpleNameMethod){
+				this.buffer.append(node.getIdentifier());
+			}else{
+				ITypeBinding iTypeBind=node.resolveTypeBinding();
+//				numTotalTypeResolve++;
+				if(iTypeBind!=null){
+					
+//					numAbleTypeResolve++;
+					if(isParsingType){
+						this.buffer.append(iTypeBind.getQualifiedName());
+					}else{
+						this.buffer.append(iTypeBind.getName());
+					}
+					
+				} else{
+					this.unresolvedBuffer.append(node.getIdentifier());
+					this.unresolvedBuffer.append(strSplitCharacter);
+//					if(!setOfUnResolvedType.containsKey(node.getIdentifier())){
+//						setOfUnResolvedType.put(node.getIdentifier(), node.getIdentifier());					
+//					}
+				}
+				
+			}
+			
+		//	node.
+		//	this.buffer.append(node.getIdentifier());			
+		}
+		if (typeOfTraverse==2 || typeOfTraverse==3) {
+			if(isGetInfoForIdentifer){
+				sbAbstractInformation.append(node.toString());
+			}
+			
 		}
 		return false;
 	}

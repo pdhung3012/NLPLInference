@@ -111,7 +111,7 @@ public class SequenceGenerator extends ASTVisitor {
 		return sb.toString();
 	}
 
-	static String getUnresolvedType(Type type) {
+	public static String getUnresolvedType(Type type) {
 		if (type.isArrayType()) {
 			ArrayType t = (ArrayType) type;
 			return getUnresolvedType(t.getElementType()) + getDimensions(t.getDimensions());

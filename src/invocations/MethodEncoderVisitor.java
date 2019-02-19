@@ -197,6 +197,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 	public void parseProject(String projectLocation,String fopInvocationObject, String jdkPath) {
 		this.fopInvocationObject=fopInvocationObject;
+		setSequencesOfMethods=new LinkedHashMap<String, String>();
 		Map<String, String> options = JavaCore.getOptions();
 		String[] arrChildJars = utils.FileIO.findAllJarFiles(projectLocation);
 		String[] jarPaths = utils.FileIO.combineFilesToArray(jdkPath,
@@ -416,7 +417,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			String methodSig = JavaASTUtil.buildAllSigIngo(node);
 			System.out.println("Method " + methodSig);
 			System.out.println("Content " + this.buffer.toString());
-
+			setSequencesOfMethods.put(methodSig, this.buffer.toString());
 		} else {
 			if (node.getBody() != null) {
 				node.getBody().accept(this);

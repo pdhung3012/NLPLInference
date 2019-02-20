@@ -429,7 +429,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		lfm.setSetLocalVariables((LinkedHashSet<LocalEntity>) setLocalVariables
 				.clone());
 		lfm.setSetFields((LinkedHashSet<LocalEntity>) setFields.clone());
-		// currentLocalMethod = lfm;
+		// currentLcalMethod = lfm;
 		mapLocalcontextForMethod.put(strSignature, lfm);
 
 		sbTotalBuilder = new StringBuilder();

@@ -22,7 +22,6 @@ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import parser.ClassPathUtil;
-import parser.SequenceGenerator;
 import parser.ClassPathUtil.PomFile;
 import utils.FileUtil;
 
@@ -203,10 +202,10 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 		String name = outer.isEmpty() ? td.getName().getIdentifier() : outer + "." + td.getName().getIdentifier();
 		String className = td.getName().getIdentifier(), superClassName = null;
 		if (td.getSuperclassType() != null)
-			superClassName = SequenceGenerator.getUnresolvedType(td.getSuperclassType());
+			superClassName = MethodEncoderVisitor.getUnresolvedType(td.getSuperclassType());
 		for (MethodDeclaration method : td.getMethods()) {
 			stLog.println(path + "\t" + name + "\t" + method.getName().getIdentifier() + "\t" + getParameters(method));
-			SequenceGenerator sg = new SequenceGenerator(className, superClassName);
+			MethodEncoderVisitor sg = new MethodEncoderVisitor(className, superClassName);
 			method.accept(sg);
 			int numofExpressions = sg.getNumOfExpressions(), numOfResolvedExpressions = sg.getNumOfResolvedExpressions();
 			String source = sg.getPartialSequence(), target = sg.getFullSequence();
@@ -258,7 +257,7 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 		sb.append("(");
 		for (int i = 0; i < method.parameters().size(); i++) {
 			SingleVariableDeclaration d = (SingleVariableDeclaration) (method.parameters().get(i));
-			String type = SequenceGenerator.getUnresolvedType(d.getType());
+			String type = MethodEncoderVisitor.getUnresolvedType(d.getType());
 			sb.append("\t" + type);
 		}
 		sb.append("\t)");

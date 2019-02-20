@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Stack;
 
@@ -21,6 +22,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
+import entities.LocalEntity;
 import parser.ClassPathUtil;
 import parser.ClassPathUtil.PomFile;
 import utils.FileUtil;
@@ -33,13 +35,15 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 	private boolean testing = false;
 	private PrintStream stLocations, stSourceSequences, stTargetSequences, stLog;
 	private HashSet<String> badFiles = new HashSet<>();
+	private String fopInvocationObject;
 	
-	public MethodContextSequenceGenerator(String inPath) {
+	public MethodContextSequenceGenerator(String inPath,String fopInvocationObject) {
 		this.inPath = inPath;
+		this.fopInvocationObject=fopInvocationObject;
 	}
 	
-	public MethodContextSequenceGenerator(String inPath, boolean testing) {
-		this(inPath);
+	public MethodContextSequenceGenerator(String inPath,String fopInvocationObject, boolean testing) {
+		this(inPath,fopInvocationObject);
 		this.testing = testing;
 	}
 	
@@ -201,11 +205,17 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 		int numOfSequences = 0;
 		String name = outer.isEmpty() ? td.getName().getIdentifier() : outer + "." + td.getName().getIdentifier();
 		String className = td.getName().getIdentifier(), superClassName = null;
+		LinkedHashSet<LocalEntity> setFieldsForTD=MethodEncoderVisitor.setInfoOfFieldDeclaration(td);
 		if (td.getSuperclassType() != null)
 			superClassName = MethodEncoderVisitor.getUnresolvedType(td.getSuperclassType());
+		
+//		System.out.println("size "+td.getMethods().length);
 		for (MethodDeclaration method : td.getMethods()) {
 			stLog.println(path + "\t" + name + "\t" + method.getName().getIdentifier() + "\t" + getParameters(method));
 			MethodEncoderVisitor sg = new MethodEncoderVisitor(className, superClassName);
+			sg.setSetFields(setFieldsForTD);
+			sg.setFopInvocationObject(fopInvocationObject);
+//			System.out.println("here "+method.toString());
 			method.accept(sg);
 			int numofExpressions = sg.getNumOfExpressions(), numOfResolvedExpressions = sg.getNumOfResolvedExpressions();
 			String source = sg.getPartialSequence(), target = sg.getFullSequence();

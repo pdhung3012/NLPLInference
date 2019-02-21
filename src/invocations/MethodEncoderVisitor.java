@@ -890,7 +890,9 @@ public class MethodEncoderVisitor extends ASTVisitor {
 //		System.out.println("identifier: "+node.getName().getIdentifier());
 		List<Expression> listArgument = node.arguments();
 		// ITypeBinding[] arrBindArgs= iMethod.getParameterTypes();
-		isGetInfoForParamI=true;
+		if(levelOfTraverMD==1){
+			isGetInfoForParamI=true;
+		}
 		for (int i = 0; i < listArgument.size(); i++) {
 			Expression exParam = listArgument.get(i);
 			currentParamIArgType = viewSelectedTypeParam(iMethod, i);
@@ -943,7 +945,9 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			}
 		}
 		sbAbstractInformation.append(")");
-		isGetInfoForParamI=false;
+		if(levelOfTraverMD==1){
+			isGetInfoForParamI=false;
+		}
 		
 		if (levelOfTraverMD == 1) {
 			InvocationObject io = new InvocationObject();
@@ -1093,22 +1097,25 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			this.fullTokens.append(" " + node.getIdentifier() + " ");
 			this.partialTokens.append(" " + node.getIdentifier() + " ");
 		}
-		
-		if(isGetInfoForReceiver){
-			if (node.resolveBinding() instanceof IVariableBinding){
-			    sbAbstractInformation.append("?");
-				listAbstractTypeQuestionMark.add(currentReceiverArgType);
-			} else{
-				sbAbstractInformation.append(node.toString());	
-			}
-		} else if(isGetInfoForParamI){
-			if (node.resolveBinding() instanceof IVariableBinding){
-			    sbAbstractInformation.append("?");
-				listAbstractTypeQuestionMark.add(currentParamIArgType);
-			} else{
-				sbAbstractInformation.append(node.toString());	
+
+		if(!isInQualifiedName){
+			if(isGetInfoForReceiver){
+				if (node.resolveBinding() instanceof IVariableBinding){
+				    sbAbstractInformation.append("?");
+					listAbstractTypeQuestionMark.add(currentReceiverArgType);
+				} else{
+					sbAbstractInformation.append(node.toString());	
+				}
+			} else if(isGetInfoForParamI){
+				if (node.resolveBinding() instanceof IVariableBinding){
+				    sbAbstractInformation.append("?");
+					listAbstractTypeQuestionMark.add(currentParamIArgType);
+				} else{
+					sbAbstractInformation.append(node.toString());	
+				}
 			}
 		}
+		
 		
 		return false;
 	}
@@ -1384,14 +1391,17 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(InfixExpression node) {
-		if (isGetInfoForReceiver) {
-			sbAbstractInformation.append("?");
-			listAbstractTypeQuestionMark.add(currentReceiverArgType);
-		} else if(isGetInfoForParamI){
-			sbAbstractInformation.append("?");
-			listAbstractTypeQuestionMark.add(currentParamIArgType);
-		}
-		return super.visit(node);
+//		if (isGetInfoForReceiver) {
+//			sbAbstractInformation.append("?");
+//			listAbstractTypeQuestionMark.add(currentReceiverArgType);
+//		} else if(isGetInfoForParamI){
+//			sbAbstractInformation.append("?");
+//			listAbstractTypeQuestionMark.add(currentParamIArgType);
+//		}
+		node.getLeftOperand().accept(this);
+		sbAbstractInformation.append(node.getOperator().toString());
+		node.getRightOperand().accept(this);
+		return false;
 	}
 
 	@Override
@@ -1511,6 +1521,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		return false;
 	}
 
+	private boolean isInQualifiedName=false;
 	@Override
 	public boolean visit(QualifiedName node) {
 		if (isGetInfoForReceiver) {
@@ -1518,6 +1529,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		} else if(isGetInfoForParamI){
 			sbAbstractInformation.append(node.toString());
 		}
+		isInQualifiedName=true;
 		
 		IBinding b = node.resolveBinding();
 		IVariableBinding vb = null;
@@ -1556,25 +1568,27 @@ public class MethodEncoderVisitor extends ASTVisitor {
 				 * else name = "Array" + name;
 				 */
 				
-				if (isGetInfoForReceiver) {
-					sbAbstractInformation.append("?");
-					listAbstractTypeQuestionMark.add(currentReceiverArgType);			
-				} else if(isGetInfoForParamI){
-					sbAbstractInformation.append("?");
-					listAbstractTypeQuestionMark.add(currentParamIArgType);					
-				}
-			} else{
-				if (isGetInfoForReceiver) {
-					sbAbstractInformation.append(node.toString());
+//				if (isGetInfoForReceiver) {
+//					sbAbstractInformation.append("?");
 //					listAbstractTypeQuestionMark.add(currentReceiverArgType);			
-				} else if(isGetInfoForParamI){
-					sbAbstractInformation.append(node.toString());
+//				} else if(isGetInfoForParamI){
+//					sbAbstractInformation.append("?");
 //					listAbstractTypeQuestionMark.add(currentParamIArgType);					
-				}
+//				}
+			} 
+			else{
+//				if (isGetInfoForReceiver) {
+//					sbAbstractInformation.append(node.toString());
+////					listAbstractTypeQuestionMark.add(currentReceiverArgType);			
+//				} else if(isGetInfoForParamI){
+//					sbAbstractInformation.append(node.toString());
+////					listAbstractTypeQuestionMark.add(currentParamIArgType);					
+//				}
 				
 			}
 		}
 		this.fullTokens.append(" " + name + " ");
+		isInQualifiedName=false;
 		return false;
 	}
 
@@ -1614,6 +1628,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			sbAbstractInformation.append("?");
 			listAbstractTypeQuestionMark.add(currentParamIArgType);
 		}
+//		" debug "+node.toString()+isGetInfoForReceiver+isGetInfoForParamI+
 		this.fullTokens.append(" java.lang.String ");
 		this.partialTokens.append(" java.lang.String ");
 		return false;
@@ -1682,12 +1697,15 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			this.partialTokens.append(" " + getName(tb) + " ");
 			this.fullTokens.append(" " + getQualifiedName(tb) + " ");
 //			sbAbstractInformation.append(getName(tb));
+			sbAbstractInformation.append("?");
+			listAbstractTypeQuestionMark.add(getQualifiedName(tb));
 		} else {
 			this.partialTokens.append(" super ");
 			this.fullTokens.append(" super ");
+			sbAbstractInformation.append("super");
 			
 		}
-		sbAbstractInformation.append("super");
+		
 		String name = "." + node.getName().getIdentifier() + "("
 				+ node.arguments().size() + ")";
 		sbAbstractInformation.append("." + node.getName().getIdentifier() + "(");

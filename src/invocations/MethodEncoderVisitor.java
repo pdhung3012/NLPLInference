@@ -805,6 +805,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			}
 			this.fullTokens.append(" ");
 			this.partialTokens.append(" ");
+			
 			if (node.getExpression() != null) {
 				Expression exRetriever = node.getExpression();
 				IMethodBinding iMethod = node.resolveMethodBinding();
@@ -819,63 +820,42 @@ public class MethodEncoderVisitor extends ASTVisitor {
 				setRequiredAPIsForMI.add(receiverType);
 				if (exRetriever instanceof SimpleName) {
 					SimpleName nameRetriever = (SimpleName) exRetriever;
-					String strVariable = nameRetriever.getIdentifier();
-					boolean isLocalEntity = false;
-
-					for (LocalEntity ent : currentLocalMethod.getSetArguments()) {
-						if (ent.getStrCodeReprensent().equals(strVariable)) {
-							isLocalEntity = true;
-							break;
-						}
-					}
-
-					for (LocalEntity ent : currentLocalMethod
-							.getSetLocalVariables()) {
-						if (ent.getStrCodeReprensent().equals(strVariable)) {
-							isLocalEntity = true;
-							break;
-						}
-					}
-
-					for (LocalEntity ent : currentLocalMethod.getSetFields()) {
-						if (ent.checkCodeInLocalRepresent(strVariable)) {
-							isLocalEntity = true;
-							break;
-						}
-					}
-					if (isLocalEntity) {
+					if (nameRetriever.resolveBinding() instanceof IVariableBinding){
+					    // simpleName is a variable identifier
 						sbAbstractInformation.append("?");
 						listAbstractTypeQuestionMark.add(selectedType);
 						isGetInfoForIdentifer = false;
 						exRetriever.accept(this);
 						isGetInfoForIdentifer = true;
-					} else {
-						// sbAbstractInformation.append(exRetriever.toString());
+					} else{
+						sbAbstractInformation.append(nameRetriever.toString());
+						listAbstractTypeQuestionMark.add(selectedType);
+						isGetInfoForIdentifer = false;
 						exRetriever.accept(this);
+						isGetInfoForIdentifer = true;
 					}
+					
+					
 				} else if (exRetriever instanceof FieldAccess) {
-					FieldAccess nameRetriever = (FieldAccess) exRetriever;
-					String strVariable = nameRetriever.toString();
-					boolean isLocalEntity = false;
-
-					for (LocalEntity ent : currentLocalMethod.getSetFields()) {
-						if (ent.checkCodeInLocalRepresent(strVariable)) {
-							isLocalEntity = true;
-							break;
-						}
-					}
-					if (isLocalEntity) {
-						sbAbstractInformation.append("?");
-						listAbstractTypeQuestionMark.add(selectedType);
-						isGetInfoForIdentifer = false;
-						exRetriever.accept(this);
-						isGetInfoForIdentifer = true;
-					} else {
-						// sbAbstractInformation.append(exRetriever.toString());
-						exRetriever.accept(this);
-					}
-				} else {
+					sbAbstractInformation.append("?");
+					listAbstractTypeQuestionMark.add(selectedType);
+					isGetInfoForIdentifer = false;
 					exRetriever.accept(this);
+					isGetInfoForIdentifer = true;
+					
+				} else if (exRetriever instanceof StringLiteral) {
+					sbAbstractInformation.append("?");
+					listAbstractTypeQuestionMark.add(selectedType);
+					isGetInfoForIdentifer = false;
+					exRetriever.accept(this);
+					isGetInfoForIdentifer = true;
+					
+				} else {
+//					sbAbstractInformation.append(exRetriever.toString());
+//					listAbstractTypeQuestionMark.add(selectedType);
+//					isGetInfoForIdentifer = false;
+					exRetriever.accept(this);
+//					isGetInfoForIdentifer = true;
 				}
 
 				// node.getExpression().accept(this);
@@ -911,63 +891,42 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			if (exParam instanceof SimpleName) {
 				SimpleName nameParam = (SimpleName) exParam;
 				String strVariable = nameParam.getIdentifier();
-				boolean isLocalEntity = false;
-
-				for (LocalEntity ent : currentLocalMethod.getSetArguments()) {
-					if (ent.getStrCodeReprensent().equals(strVariable)) {
-						isLocalEntity = true;
-						break;
-					}
-				}
-
-				for (LocalEntity ent : currentLocalMethod
-						.getSetLocalVariables()) {
-					if (ent.getStrCodeReprensent().equals(strVariable)) {
-						isLocalEntity = true;
-						break;
-					}
-				}
-
-				for (LocalEntity ent : currentLocalMethod.getSetFields()) {
-					if (ent.checkCodeInLocalRepresent(strVariable)) {
-						isLocalEntity = true;
-						break;
-					}
-				}
-				if (isLocalEntity) {
+				if (nameParam.resolveBinding() instanceof IVariableBinding){
+				    // simpleName is a variable identifier
 					sbAbstractInformation.append("?");
 					listAbstractTypeQuestionMark.add(selectedParamType);
 					isGetInfoForIdentifer = false;
 					exParam.accept(this);
 					isGetInfoForIdentifer = true;
-				} else {
-					// sbAbstractInformation.append(nameParam.toString());
+				} else{
+					sbAbstractInformation.append(node.toString());
+					listAbstractTypeQuestionMark.add(selectedParamType);
+					isGetInfoForIdentifer = false;
 					exParam.accept(this);
+					isGetInfoForIdentifer = true;
 				}
+				
+				
 			} else if (exParam instanceof FieldAccess) {
-				FieldAccess nameParam = (FieldAccess) exParam;
-				String strVariable = nameParam.toString();
-				boolean isLocalEntity = false;
-
-				// System.out.println("param "+strVariable+" "+selectedType);
-				for (LocalEntity ent : currentLocalMethod.getSetFields()) {
-					if (ent.checkCodeInLocalRepresent(strVariable)) {
-						isLocalEntity = true;
-						break;
-					}
-				}
-				if (isLocalEntity) {
-					sbAbstractInformation.append("?");
-					listAbstractTypeQuestionMark.add(selectedParamType);
-					isGetInfoForIdentifer = false;
-					exParam.accept(this);
-					isGetInfoForIdentifer = true;
-
-				} else {
-					exParam.accept(this);
-				}
-			} else {
+				sbAbstractInformation.append("?");
+				listAbstractTypeQuestionMark.add(selectedParamType);
+				isGetInfoForIdentifer = false;
 				exParam.accept(this);
+				isGetInfoForIdentifer = true;
+			}else if (exParam instanceof StringLiteral) {
+				sbAbstractInformation.append("?");
+				listAbstractTypeQuestionMark.add(selectedParamType);
+				isGetInfoForIdentifer = false;
+				exParam.accept(this);
+				isGetInfoForIdentifer = true;
+				
+			} 
+			else {
+//				sbAbstractInformation.append(exParam.toString());
+//				listAbstractTypeQuestionMark.add(selectedParamType);
+//				isGetInfoForIdentifer = false;
+				exParam.accept(this);
+//				isGetInfoForIdentifer = true;
 			}
 			if (i != listArgument.size() - 1) {
 				sbAbstractInformation.append(",");

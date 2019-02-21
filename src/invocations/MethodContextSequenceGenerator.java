@@ -43,13 +43,13 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 	private LinkedHashMap<String,Integer> mapIDAppear;
 	private LinkedHashMap<String,String> mapIdenAndID;
 	
-	public MethodContextSequenceGenerator(String inPath,String fopInvocationObject) {
+	public MethodContextSequenceGenerator(String inPath) {
 		this.inPath = inPath;
-		this.fopInvocationObject=fopInvocationObject;
+
 	}
 	
-	public MethodContextSequenceGenerator(String inPath,String fopInvocationObject, boolean testing) {
-		this(inPath,fopInvocationObject);
+	public MethodContextSequenceGenerator(String inPath, boolean testing) {
+		this(inPath);
 		this.testing = testing;
 	}
 	

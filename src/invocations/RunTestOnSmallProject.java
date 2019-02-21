@@ -6,8 +6,7 @@ public class RunTestOnSmallProject {
 		// TODO Auto-generated method stub
 		String inPath="/Users/hungphan/Documents/workspace/SampleMethodInvocationProject/";
 		String outPath="/Users/hungphan/git/NLPLTranslation/sequences/SampleMethodInvocationProject/";
-		String outputIdLocation = "/Users/hungphan/Documents/workspace/OutputMethodId/";
-		MethodContextSequenceGenerator mcsg=new MethodContextSequenceGenerator(inPath,outputIdLocation);
+		MethodContextSequenceGenerator mcsg=new MethodContextSequenceGenerator(inPath);
 		mcsg.generateSequences(outPath);
 		mcsg.generateAlignment(true);
 	}

@@ -1564,9 +1564,6 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			if (b instanceof IVariableBinding) {
 				if (tb != null)
 					name = getQualifiedName(tb.getTypeDeclaration()) + name;
-				/*
-				 * else name = "Array" + name;
-				 */
 				
 //				if (isGetInfoForReceiver) {
 //					sbAbstractInformation.append("?");

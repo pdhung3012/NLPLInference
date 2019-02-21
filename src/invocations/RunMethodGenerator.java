@@ -7,8 +7,7 @@ public class RunMethodGenerator {
 //		https://github.com/apache/pig/
 		String inPath="/Users/hungphan/git/pig/";
 		String outPath="/Users/hungphan/git/NLPLTranslation/sequences/pig/";
-		String outputIdLocation = "/Users/hungphan/Documents/workspace/OutputMethodId/";
-		MethodContextSequenceGenerator mcsg=new MethodContextSequenceGenerator(inPath,outputIdLocation);
+		MethodContextSequenceGenerator mcsg=new MethodContextSequenceGenerator(inPath);
 		mcsg.generateSequences(outPath);
 		mcsg.generateAlignment(true);
 		

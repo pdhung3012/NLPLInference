@@ -14,8 +14,16 @@ public class InvocationObject {
 	private String strMethodInfo;
 	private LinkedHashSet<String> setImportedAPIs;
 	private ArrayList<String> listQuestionMarkTypes;
+	private String strIDRepresent;
 	
 	
+	
+	public String getStrIDRepresent() {
+		return strIDRepresent;
+	}
+	public void setStrIDRepresent(String strIDRepresent) {
+		this.strIDRepresent = strIDRepresent;
+	}
 	public String getId() {
 		return id;
 	}
@@ -56,29 +64,29 @@ public class InvocationObject {
 		this.strMethodInfo = strMethodInfo;
 	}
 	
-//	public String setId(){
-//		StringBuilder sbContent=new StringBuilder();
-//		sbContent.append(strCodeRepresent.replaceAll("\n", "")+"\n");
-//		String contentMarkType="";
-//		for(int i=0;i<listQuestionMarkTypes.size();i++){
-//			contentMarkType+=listQuestionMarkTypes.get(i);
-//			if(i!=listQuestionMarkTypes.size()-1){
-//				contentMarkType+="#";
-//			}
-//		}
-//		sbContent.append(contentMarkType.replaceAll("\n", "")+"\n");
-//		String contentImportType="";
-//		for(String strAPI:setImportedAPIs){
-//			contentImportType+=strAPI+"#";
-//		}
-//		sbContent.append(contentImportType.replaceAll("\n", "")+"\n");
-//		id= StringUtil.base64Encode(sbContent.toString());
-//		return id;
-//	}
-	public void saveToFile(String folder){
+	public String setIDRepresent(){
+		StringBuilder sbContent=new StringBuilder();
+		sbContent.append(strCodeRepresent.replaceAll("\n", "").trim()+"_");
+		String contentMarkType="";
+		for(int i=0;i<listQuestionMarkTypes.size();i++){
+			contentMarkType+=listQuestionMarkTypes.get(i);
+			if(i!=listQuestionMarkTypes.size()-1){
+				contentMarkType+="#";
+			}
+		}
+		sbContent.append(contentMarkType.replaceAll("\n", "").trim()+"_");
+		String contentImportType="";
+		for(String strAPI:setImportedAPIs){
+			contentImportType+=strAPI+"#";
+		}
+		sbContent.append(contentImportType.replaceAll("\n", "").trim());
+		strIDRepresent=sbContent.toString().trim();
+		return strIDRepresent;
+	}
+	public void saveToFile(String file){
 		StringBuilder sbContent=new StringBuilder();
 		sbContent.append(strCodeRepresent.replaceAll("\n", "")+"\n");
-		sbContent.append(id+"\n");
+//		sbContent.append(id+"\n");
 		String contentMarkType="";
 		for(int i=0;i<listQuestionMarkTypes.size();i++){
 			contentMarkType+=listQuestionMarkTypes.get(i);
@@ -94,9 +102,7 @@ public class InvocationObject {
 		sbContent.append(contentImportType.replaceAll("\n", "")+"\n");
 		
 		sbContent.append(strMethodInfo.replaceAll("\n", "")+"\n");
-		if(!new File(folder+File.separator+id+".txt").exists()){
-			FileIO.writeStringToFile(sbContent.toString(), folder+File.separator+id+".txt");
-		}
+		FileIO.writeStringToFile(sbContent.toString(), file);
 		
 	}
 	

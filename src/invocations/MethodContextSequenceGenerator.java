@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Stack;
@@ -25,6 +26,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import entities.LocalEntity;
 import parser.ClassPathUtil;
 import parser.ClassPathUtil.PomFile;
+import utils.FileIO;
 import utils.FileUtil;
 
 public class MethodContextSequenceGenerator {
@@ -36,6 +38,10 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 	private PrintStream stLocations, stSourceSequences, stTargetSequences, stLog;
 	private HashSet<String> badFiles = new HashSet<>();
 	private String fopInvocationObject;
+	private String idenHashPath;
+	private LinkedHashMap<String,String> mapIDAndIden;
+	private LinkedHashMap<String,Integer> mapIDAppear;
+	private LinkedHashMap<String,String> mapIdenAndID;
 	
 	public MethodContextSequenceGenerator(String inPath,String fopInvocationObject) {
 		this.inPath = inPath;
@@ -50,6 +56,24 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 	public int  generateSequences(String outPath) {
 		return generateSequences(true, null, outPath);
 	}
+	
+	
+
+	public LinkedHashMap<String, String> getMapIDAndIden() {
+		return mapIDAndIden;
+	}
+
+	public void setMapIDAndIden(LinkedHashMap<String, String> mapIDAndIden) {
+		this.mapIDAndIden = mapIDAndIden;
+	}
+
+	public LinkedHashMap<String, String> getMapIdenAndID() {
+		return mapIdenAndID;
+	}
+
+	public void setMapIdenAndID(LinkedHashMap<String, String> mapIdenAndID) {
+		this.mapIdenAndID = mapIdenAndID;
+	}
 
 	public int generateSequences(final boolean keepUnresolvables, final String lib, final String outPath) {
 		this.outPath = outPath;
@@ -57,6 +81,9 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 		ArrayList<String> rootPaths = getRootPaths();
 		
 		new File(outPath).mkdirs();
+		String hashIdenPath=outPath+"/hash/";
+		this.idenHashPath=hashIdenPath;
+		new File(hashIdenPath).mkdirs();
 		try {
 			stLocations = new PrintStream(new FileOutputStream(outPath + "/locations.txt"));
 			stSourceSequences = new PrintStream(new FileOutputStream(outPath + "/source.txt"));
@@ -82,7 +109,13 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 			parser.setResolveBindings(true);
 			parser.setBindingsRecovery(false);
 			
-			InvocationInformationASTRequestor r = new InvocationInformationASTRequestor(keepUnresolvables, lib);
+			InvocationInformationASTRequestor r = new InvocationInformationASTRequestor(keepUnresolvables, lib,hashIdenPath);
+			mapIDAndIden=new LinkedHashMap<String, String>();
+			mapIdenAndID=new LinkedHashMap<String, String>();
+			mapIDAppear=new LinkedHashMap<String, Integer>();
+			r.setMapIDAndIden(mapIDAndIden);
+			r.setMapIdenAndID(mapIdenAndID);
+			r.setMapIDAppear(mapIDAppear);
 			try {
 				parser.createASTs(sourcePaths, null, new String[0], r, null);
 			} catch (Throwable t) {
@@ -92,19 +125,69 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 					t.printStackTrace();
 				}
 			}
+			saveMapToFile(mapIDAndIden, hashIdenPath+"/mapIDAndIden.txt");
+			saveMapToFile(mapIdenAndID, hashIdenPath+"/mapIdenAndID.txt");
+			saveMapIntToFile(mapIDAppear, hashIdenPath+"/mapIDAppear.txt");
+
 			numOfSequences += r.numOfSequences;
 		}
 		return numOfSequences;
+	}
+	
+	public void saveMapToFile(LinkedHashMap<String,String> map,String fpFile){
+		StringBuilder sb=new StringBuilder();
+		for(String item:map.keySet()){
+			sb.append(item+"\t"+map.get(item)+"\n");
+		}
+		FileIO.writeStringToFile(sb.toString(), fpFile);
+	}
+	public void saveMapIntToFile(LinkedHashMap<String,Integer> map,String fpFile){
+		StringBuilder sb=new StringBuilder();
+		for(String item:map.keySet()){
+			sb.append(item+"\t"+map.get(item)+"\n");
+		}
+		FileIO.writeStringToFile(sb.toString(), fpFile);
 	}
 	
 	private class InvocationInformationASTRequestor extends FileASTRequestor {
 		int numOfSequences = 0;
 		private boolean keepUnresolvables;
 		private String lib;
+		private String idenPath;
+		private LinkedHashMap<String,String> mapIDAndIden;
+		private LinkedHashMap<String,String> mapIdenAndID;
+		private LinkedHashMap<String,Integer> mapIDAppear;
 		
-		public InvocationInformationASTRequestor(boolean keepUnresolvables, String lib) {
+		
+		
+		public LinkedHashMap<String, Integer> getMapIDAppear() {
+			return mapIDAppear;
+		}
+
+		public void setMapIDAppear(LinkedHashMap<String, Integer> mapIDAppear) {
+			this.mapIDAppear = mapIDAppear;
+		}
+
+		public LinkedHashMap<String, String> getMapIDAndIden() {
+			return mapIDAndIden;
+		}
+
+		public void setMapIDAndIden(LinkedHashMap<String, String> mapIDAndIden) {
+			this.mapIDAndIden = mapIDAndIden;
+		}
+
+		public LinkedHashMap<String, String> getMapIdenAndID() {
+			return mapIdenAndID;
+		}
+
+		public void setMapIdenAndID(LinkedHashMap<String, String> mapIdenAndID) {
+			this.mapIdenAndID = mapIdenAndID;
+		}
+
+		public InvocationInformationASTRequestor(boolean keepUnresolvables, String lib,String idenPath) {
 			this.keepUnresolvables = keepUnresolvables;
 			this.lib = lib;
+			this.idenPath=idenPath;
 		}
 
 		@Override
@@ -130,6 +213,7 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 			if (testing)
 				System.out.println(sourceFilePath);
 			stLog.println(sourceFilePath);
+		
 			for (int i = 0; i < ast.types().size(); i++) {
 				if (ast.types().get(i) instanceof TypeDeclaration) {
 					TypeDeclaration td = (TypeDeclaration) ast.types().get(i);
@@ -215,6 +299,10 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 			MethodEncoderVisitor sg = new MethodEncoderVisitor(className, superClassName);
 			sg.setSetFields(setFieldsForTD);
 			sg.setFopInvocationObject(fopInvocationObject);
+			sg.setHashIdenPath(this.idenHashPath);
+			sg.setMapIDAndIden(mapIDAndIden);
+			sg.setMapIdenAndID(mapIdenAndID);
+			sg.setMapIDAppear(mapIDAppear);
 //			System.out.println("here "+method.toString());
 			method.accept(sg);
 			int numofExpressions = sg.getNumOfExpressions(), numOfResolvedExpressions = sg.getNumOfResolvedExpressions();

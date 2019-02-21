@@ -32,6 +32,18 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			partialTokens = new StringBuilder();
 	private String fullSequence = null, partialSequence = null;
 	private String[] fullSequenceTokens, partialSequenceTokens;
+	private LinkedHashMap<String,String> mapIdenAndID,mapIDAndIden;
+	private LinkedHashMap<String,Integer> mapIDAppear;
+	
+	
+	public LinkedHashMap<String, Integer> getMapIDAppear() {
+		return mapIDAppear;
+	}
+
+	public void setMapIDAppear(LinkedHashMap<String, Integer> mapIDAppear) {
+		this.mapIDAppear = mapIDAppear;
+	}
+
 	// end
 	/**
 	 * Internal synonym for {@link AST#JLS2}. Use to alleviate deprecation
@@ -81,7 +93,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	private StringBuffer unresolvedBuffer;
 
 	ASTParser parser = ASTParser.newParser(AST.JLS4);
-	String[] classpath = { "C:\\Program Files\\Java\\jre1.8.0_51\\lib\\rt.jar" };
+	String[] classpath = { "/Library/Java/JavaVirtualMachines/jdk1.8.0_141.jdk/Contents/Home/jre/lib/rt.jar" };
 	HashMap<String, CompilationUnit> mapCU;
 	LinkedHashMap<String, LocalForMethod> mapLocalcontextForMethod = new LinkedHashMap<String, LocalForMethod>();
 	private boolean isAbstractMethod = false;
@@ -92,6 +104,17 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	private MethodDeclaration currentMethodDecl = null;
 	private int levelOfTraverMD = 0;
 	private String fopInvocationObject;
+	private String hashIdenPath;
+	
+	
+	
+	public String getHashIdenPath() {
+		return hashIdenPath;
+	}
+
+	public void setHashIdenPath(String hashIdenPath) {
+		this.hashIdenPath = hashIdenPath;
+	}
 
 	/**
 	 * Internal synonym for
@@ -115,6 +138,24 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	 */
 	private static List thrownExceptions(MethodDeclaration node) {
 		return node.thrownExceptions();
+	}
+
+	
+	
+	public LinkedHashMap<String, String> getMapIdenAndID() {
+		return mapIdenAndID;
+	}
+
+	public void setMapIdenAndID(LinkedHashMap<String, String> mapIdenAndID) {
+		this.mapIdenAndID = mapIdenAndID;
+	}
+
+	public LinkedHashMap<String, String> getMapIDAndIden() {
+		return mapIDAndIden;
+	}
+
+	public void setMapIDAndIden(LinkedHashMap<String, String> mapIDAndIden) {
+		this.mapIDAndIden = mapIDAndIden;
 	}
 
 	public LinkedHashSet<LocalEntity> getSetFields() {
@@ -441,8 +482,10 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		if (node.getBody() != null) {
 			node.getBody().accept(this);
 		}
-		// String methodSig = JavaASTUtil.buildAllSigIngo(node);
-		// System.out.println("Method " + methodSig);
+//		System.out.println(this.partialTokens.toString());
+//		System.out.println(this.fullTokens.toString());
+//		String methodSig = JavaASTUtil.buildAllSigIngo(node);
+//		System.out.println("Method " + methodSig);
 		// System.out.println("Content " + this.buffer.toString());
 		// setSequencesOfMethods.put(methodSig, this.buffer.toString());
 
@@ -500,6 +543,9 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		}
 		ITypeBinding[] arrBindArgs = iMethod.getParameterTypes();
 		if (arrBindArgs == null) {
+			return "";
+		}
+		if(arrBindArgs.length<i+1){
 			return "";
 		}
 		String strType = arrBindArgs[i] != null ? arrBindArgs[i]
@@ -764,8 +810,8 @@ public class MethodEncoderVisitor extends ASTVisitor {
 				IMethodBinding iMethod = node.resolveMethodBinding();
 				String selectedType = viewSelectedTypeReceiver(iMethod);
 				// System.out.println("choose select type "+selectedType);
-				String receiverType = exRetriever.resolveTypeBinding()
-						.getQualifiedName();
+				String receiverType =exRetriever.resolveTypeBinding()!=null? exRetriever.resolveTypeBinding()
+						.getQualifiedName():selectedType;
 				// System.out.println("set "+setRequiredAPIsForMI.toString());
 
 				// this.buffer.append(strSplitCharacter);
@@ -859,7 +905,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		for (int i = 0; i < listArgument.size(); i++) {
 			Expression exParam = listArgument.get(i);
 			String selectedParamType = viewSelectedTypeParam(iMethod, i);
-			String paramIType = exParam.resolveTypeBinding().getQualifiedName();
+			String paramIType = exParam.resolveTypeBinding()!=null?exParam.resolveTypeBinding().getQualifiedName():selectedParamType;
 			setRequiredAPIsForMI.add(paramIType);
 
 			if (exParam instanceof SimpleName) {
@@ -930,7 +976,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		sbAbstractInformation.append(")");
 
 		if (levelOfTraverMD == 1) {
-			this.partialTokens.append(node.getName().getIdentifier() + " ");
+			
 
 			InvocationObject io = new InvocationObject();
 			String methodInfo = JavaASTUtil.buildAllSigIngo(node);
@@ -938,9 +984,22 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			io.setStrCodeRepresent(sbAbstractInformation.toString());
 			io.setListQuestionMarkTypes(listAbstractTypeQuestionMark);
 			io.setSetImportedAPIs(setRequiredAPIsForMI);
-			String id = "E-" + System.nanoTime() + "";
-			io.setId(id);
-			io.saveToFile(fopInvocationObject);
+			String idenInfo = io.setIDRepresent();
+			String id="";
+			if(!mapIdenAndID.containsKey(idenInfo)){
+				id="E-"+String.format("%09d" , mapIDAndIden.size()+1);
+//				
+				mapIdenAndID.put(idenInfo, id);
+				mapIDAndIden.put(id,idenInfo);
+				mapIDAppear.put(id, 1);
+				io.saveToFile(hashIdenPath+"/"+id+".txt");
+			}else{
+				String existId=mapIdenAndID.get(idenInfo);
+				id=existId;
+				mapIDAppear.put(existId,mapIDAppear.get(existId)+1);
+			}
+			
+			this.partialTokens.append(node.getName().getIdentifier()+"#identifier" + " ");
 			this.fullTokens.append(id + " ");
 
 			sbAbstractInformation = new StringBuilder();

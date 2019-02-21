@@ -1681,18 +1681,34 @@ public class MethodEncoderVisitor extends ASTVisitor {
 				return false;
 			this.partialTokens.append(" " + getName(tb) + " ");
 			this.fullTokens.append(" " + getQualifiedName(tb) + " ");
+//			sbAbstractInformation.append(getName(tb));
 		} else {
 			this.partialTokens.append(" super ");
 			this.fullTokens.append(" super ");
+			
 		}
+		sbAbstractInformation.append("super");
 		String name = "." + node.getName().getIdentifier() + "("
 				+ node.arguments().size() + ")";
+		sbAbstractInformation.append("." + node.getName().getIdentifier() + "(");
 		this.partialTokens.append(" " + name + " ");
 		if (tb != null)
 			name = getSignature(b.getMethodDeclaration());
 		this.fullTokens.append(" " + name + " ");
-		for (int i = 0; i < node.arguments().size(); i++)
+		
+		for (int i = 0; i < node.arguments().size(); i++){
+			Expression exParam =(Expression) node.arguments().get(i);
+			currentParamIArgType = viewSelectedTypeParam(b, i);
+			String paramIType = exParam.resolveTypeBinding()!=null?exParam.resolveTypeBinding().getQualifiedName():currentParamIArgType;
+			setRequiredAPIsForMI.add(paramIType);
+			
 			((ASTNode) node.arguments().get(i)).accept(this);
+			if (i != node.arguments().size() - 1) {
+				sbAbstractInformation.append(",");
+			}
+		}
+		sbAbstractInformation.append(")");
+			
 		return false;
 	}
 

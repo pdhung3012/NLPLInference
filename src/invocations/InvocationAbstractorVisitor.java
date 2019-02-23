@@ -821,9 +821,16 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(FieldAccess node) {
-		node.getExpression().accept(this);
-		this.sbAbstractInformation.append(".");//$NON-NLS-1$
-		node.getName().accept(this);
+		if(node.getExpression().toString().equals("this")){
+			this.sbAbstractInformation.append("?");
+			listAbstractTypeQuestionMark.add(currentStrParentType);
+//			setRequiredAPIsForMI.add(currentStrParentType);
+		} else{
+			node.getExpression().accept(this);
+			this.sbAbstractInformation.append(".");//$NON-NLS-1$
+			node.getName().accept(this);
+		}
+		
 		return false;
 	}
 
@@ -1879,8 +1886,8 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(TypeLiteral node) {
-		sbAbstractInformation.append("?");
-		listAbstractTypeQuestionMark.add(currentStrParentType);
+//		sbAbstractInformation.append("?");
+//		listAbstractTypeQuestionMark.add(currentStrParentType);
 		node.getType().accept(this);
 		this.sbAbstractInformation.append(".class");//$NON-NLS-1$
 		return false;

@@ -15,4 +15,14 @@ public class PathConstanct {
 	
 	public static String PATH_DICT_SIGNATURE="/Users/hungphan/git/nlpl/data/dictionary/signatures/";
 	public static String PATH_DICT_DECLARATIONS="/Users/hungphan/git/nlpl/data/dictionary/declarations/";
+	
+//	public static String fop2ndProjectLocation = "G:\\gitHighQualitySpec\\";
+//	public static String fop2ndListLibraryLocation = "G:\\highQualitySpecRepo\\";
+//	
+//	public static String fopProjectLocation = "G:\\gitStatType4\\";
+//	public static String fopExtractedLocation = "G:\\gitExtractedST2\\";
+//	public static String fopListLibraryLocation = "G:\\5Repositories\\";
+//
+//	public static String PATH_DICT_SIGNATURE="/Users/hungphan/git/nlpl/data/dictionary/signatures/";
+//	public static String PATH_DICT_DECLARATIONS="/Users/hungphan/git/nlpl/data/dictionary/declarations/";
 }

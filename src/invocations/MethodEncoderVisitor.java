@@ -426,10 +426,10 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		return false;
 	}
 
-	public boolean visit(FieldDeclaration node) {
-		// node.fragments();
-		return false;
-	}
+//	public boolean visit(FieldDeclaration node) {
+//		// node.fragments();
+//		return false;
+//	}
 
 	// @Override
 	// public boolean visit(MethodDeclaration node) {
@@ -523,28 +523,28 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	// return false;
 	// }
 
-	public boolean visit(VariableDeclarationStatement node) {
-		if (isVisitMethod) {
-			List<VariableDeclarationFragment> listFrags = (List<VariableDeclarationFragment>) node
-					.fragments();
-			for (int i = 0; i < listFrags.size(); i++) {
-				VariableDeclarationFragment item = listFrags.get(i);
-				IVariableBinding varBind = item.resolveBinding();
-				SimpleName varName = item.getName();
-				if (varBind != null && varName != null) {
-					ITypeBinding typeBind = varBind.getType();
-					if (typeBind != null) {
-						LocalEntity le = new LocalEntity();
-						le.setStrCodeReprensent(varName.getIdentifier());
-						le.setStrTypeOfEntity(typeBind.getQualifiedName());
-						setLocalVariables.add(le);
-					}
-
-				}
-			}
-		}
-		return false;
-	}
+//	public boolean visit(VariableDeclarationStatement node) {
+//		if (isVisitMethod) {
+//			List<VariableDeclarationFragment> listFrags = (List<VariableDeclarationFragment>) node
+//					.fragments();
+//			for (int i = 0; i < listFrags.size(); i++) {
+//				VariableDeclarationFragment item = listFrags.get(i);
+//				IVariableBinding varBind = item.resolveBinding();
+//				SimpleName varName = item.getName();
+//				if (varBind != null && varName != null) {
+//					ITypeBinding typeBind = varBind.getType();
+//					if (typeBind != null) {
+//						LocalEntity le = new LocalEntity();
+//						le.setStrCodeReprensent(varName.getIdentifier());
+//						le.setStrTypeOfEntity(typeBind.getQualifiedName());
+//						setLocalVariables.add(le);
+//					}
+//
+//				}
+//			}
+//		}
+//		return false;
+//	}
 
 	public String viewSelectedTypeReceiver(IMethodBinding iMethod) {
 
@@ -941,39 +941,39 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	// return false;
 	// }
 
-	public boolean visit(FieldAccess node) {
-		IVariableBinding b = node.resolveFieldBinding();
-		ITypeBinding tb = null;
-		if (b != null) {
-			tb = b.getDeclaringClass();
-			if (tb != null) {
-				tb = tb.getTypeDeclaration();
-				if (tb.isLocal() || tb.getQualifiedName().isEmpty())
-					return false;
-			}
-		}
-		this.fullTokens.append(" ");
-		this.partialTokens.append(" ");
-		node.getExpression().accept(this);
-		String name = "." + node.getName().getIdentifier();
-		this.partialTokens.append(" " + name + " ");
-		if (b != null) {
-			if (tb != null)
-				name = getQualifiedName(tb.getTypeDeclaration()) + name;
-			/*
-			 * else name = "Array" + name;
-			 */
-		}
-		this.fullTokens.append(" " + name + " ");		
-//		if (isGetInfoForReceiver) {
-//			sbAbstractInformation.append("?");
-//			listAbstractTypeQuestionMark.add(currentReceiverArgType);
-//		} else if(isGetInfoForParamI){
-//			sbAbstractInformation.append("?");
-//			listAbstractTypeQuestionMark.add(currentParamIArgType);
+//	public boolean visit(FieldAccess node) {
+//		IVariableBinding b = node.resolveFieldBinding();
+//		ITypeBinding tb = null;
+//		if (b != null) {
+//			tb = b.getDeclaringClass();
+//			if (tb != null) {
+//				tb = tb.getTypeDeclaration();
+//				if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+//					return false;
+//			}
 //		}
-		return false;
-	}
+//		this.fullTokens.append(" ");
+//		this.partialTokens.append(" ");
+//		node.getExpression().accept(this);
+//		String name = "." + node.getName().getIdentifier();
+//		this.partialTokens.append(" " + name + " ");
+//		if (b != null) {
+//			if (tb != null)
+//				name = getQualifiedName(tb.getTypeDeclaration()) + name;
+//			/*
+//			 * else name = "Array" + name;
+//			 */
+//		}
+//		this.fullTokens.append(" " + name + " ");		
+////		if (isGetInfoForReceiver) {
+////			sbAbstractInformation.append("?");
+////			listAbstractTypeQuestionMark.add(currentReceiverArgType);
+////		} else if(isGetInfoForParamI){
+////			sbAbstractInformation.append("?");
+////			listAbstractTypeQuestionMark.add(currentParamIArgType);
+////		}
+//		return false;
+//	}
 
 	// @Override
 	// public boolean visit(SimpleName node) {
@@ -1006,52 +1006,42 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 	
 	
-	public boolean visit(SimpleName node) {
-		IBinding b = node.resolveBinding();
-		if (b != null) {
-			if (b instanceof IVariableBinding) {
-				IVariableBinding vb = (IVariableBinding) b;
-				ITypeBinding tb = vb.getType();
-				if (tb != null) {
-					tb = tb.getTypeDeclaration();
-					if (tb.isLocal() || tb.getQualifiedName().isEmpty())
-						return false;
-					this.fullTokens.append(" " + getQualifiedName(tb) + " ");
-					this.partialTokens.append(" " + getName(tb) + " ");
-				}
-			} else if (b instanceof ITypeBinding) {
-				ITypeBinding tb = (ITypeBinding) b;
-				tb = tb.getTypeDeclaration();
-				if (tb.isLocal() || tb.getQualifiedName().isEmpty())
-					return false;
-				this.fullTokens.append(" " + getQualifiedName(tb) + " ");
-				this.partialTokens.append(" " + getName(tb) + " ");
-			}
-		} else {
-			this.fullTokens.append(" " + node.getIdentifier() + " ");
-			this.partialTokens.append(" " + node.getIdentifier() + " ");
-		}
-		return false;
-	}
-
-	// Add TypeResolution code
+//	public boolean visit(SimpleName node) {
+//		IBinding b = node.resolveBinding();
+//		if (b != null) {
+//			if (b instanceof IVariableBinding) {
+//				IVariableBinding vb = (IVariableBinding) b;
+//				ITypeBinding tb = vb.getType();
+//				if (tb != null) {
+//					tb = tb.getTypeDeclaration();
+//					if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+//						return false;
+//					this.fullTokens.append(" " + getQualifiedName(tb) + " ");
+//					this.partialTokens.append(" " + getName(tb) + " ");
+//				}
+//			} else if (b instanceof ITypeBinding) {
+//				ITypeBinding tb = (ITypeBinding) b;
+//				tb = tb.getTypeDeclaration();
+//				if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+//					return false;
+//				this.fullTokens.append(" " + getQualifiedName(tb) + " ");
+//				this.partialTokens.append(" " + getName(tb) + " ");
+//			}
+//		} else {
+//			this.fullTokens.append(" " + node.getIdentifier() + " ");
+//			this.partialTokens.append(" " + node.getIdentifier() + " ");
+//		}
+//		return false;
+//	}
 
 	@Override
 	public boolean visit(ArrayAccess node) {
-//		if (isGetInfoForReceiver) {
-//			sbAbstractInformation.append("?");
-//			listAbstractTypeQuestionMark.add(currentReceiverArgType);
-//		} else if(isGetInfoForParamI){
-//			sbAbstractInformation.append("?");
-//			listAbstractTypeQuestionMark.add(currentParamIArgType);
-//		}
-		return super.visit(node);		
+		return super.visit(node);
 	}
 
 	@Override
 	public boolean visit(ArrayCreation node) {
-		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
-				.getType());
+		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node.getType());
 		this.partialTokens.append(" new " + utype + " ");
 		this.fullTokens.append(" new " + rtype + " ");
 		if (node.getInitializer() != null)
@@ -1059,59 +1049,32 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		else
 			for (int i = 0; i < node.dimensions().size(); i++)
 				((Expression) (node.dimensions().get(i))).accept(this);
-		
-//		if (isGetInfoForReceiver) {
-//			sbAbstractInformation.append(node.toString());
-//		} else if(isGetInfoForParamI){
-//			sbAbstractInformation.append(node.toString());
-//		}
 		return false;
 	}
 
 	@Override
 	public boolean visit(ArrayInitializer node) {
-//		if (isGetInfoForReceiver) {
-//			sbAbstractInformation.append(node.toString());
-//		} else if(isGetInfoForParamI){
-//			sbAbstractInformation.append(node.toString());
-//		}
 		return super.visit(node);
-		
 	}
 
 	@Override
 	public boolean visit(AssertStatement node) {
 		this.fullTokens.append(" assert ");
 		this.partialTokens.append(" assert ");
-//		if (isGetInfoForReceiver) {
-//			sbAbstractInformation.append(node.toString());
-//		} else if(isGetInfoForParamI){
-//			sbAbstractInformation.append(node.toString());
-//		}
 		return super.visit(node);
 	}
 
 	@Override
 	public boolean visit(Assignment node) {
-//		if (isGetInfoForReceiver) {
-//			sbAbstractInformation.append(node.toString());
-//		} else if(isGetInfoForParamI){
-//			sbAbstractInformation.append(node.toString());
-//		}
 		node.getLeftHandSide().accept(this);
-		this.fullTokens.append(" " + node.getOperator().toString() + " ");
-		this.partialTokens.append(" " + node.getOperator().toString() + " ");
+		this.fullTokens.append(" "+node.getOperator().toString()+" ");
+		this.partialTokens.append(" "+node.getOperator().toString()+" ");
 		node.getRightHandSide().accept(this);
 		return false;
 	}
 
 	@Override
 	public boolean visit(Block node) {
-//		if (isGetInfoForReceiver) {
-//			sbAbstractInformation.append(node.toString());
-//		} else if(isGetInfoForParamI){
-//			sbAbstractInformation.append(node.toString());
-//		}
 		return super.visit(node);
 	}
 
@@ -1119,13 +1082,6 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	public boolean visit(BooleanLiteral node) {
 		this.fullTokens.append(" boolean ");
 		this.partialTokens.append(" boolean ");
-//		if (isGetInfoForReceiver) {
-//			sbAbstractInformation.append("?");
-//			listAbstractTypeQuestionMark.add(currentReceiverArgType);
-//		} else if(isGetInfoForParamI){
-//			sbAbstractInformation.append("?");
-//			listAbstractTypeQuestionMark.add(currentParamIArgType);
-//		}
 		return false;
 	}
 
@@ -1136,13 +1092,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(CastExpression node) {
-//		if (isGetInfoForReceiver) {
-//			sbAbstractInformation.append(node.toString());
-//		} else if(isGetInfoForParamI){
-//			sbAbstractInformation.append(node.toString());
-//		}
-		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
-				.getType());
+		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node.getType());
 		this.fullTokens.append(" " + rtype + " <cast> ");
 		this.partialTokens.append(" " + utype + " <cast> ");
 		node.getExpression().accept(this);
@@ -1156,13 +1106,6 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(CharacterLiteral node) {
-//		if (isGetInfoForReceiver) {
-//			sbAbstractInformation.append("?");
-//			listAbstractTypeQuestionMark.add(currentReceiverArgType);
-//		} else if(isGetInfoForParamI){
-//			sbAbstractInformation.append("?");
-//			listAbstractTypeQuestionMark.add(currentParamIArgType);
-//		}
 		this.fullTokens.append(" char ");
 		this.partialTokens.append(" char ");
 		return false;
@@ -1170,26 +1113,17 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(ClassInstanceCreation node) {
-		
-//		if (isGetInfoForReceiver) {
-//			sbAbstractInformation.append(node.toString());
-//		} else if(isGetInfoForParamI){
-//			sbAbstractInformation.append(node.toString());
-//		}
 		ITypeBinding tb = node.getType().resolveBinding();
 		if (tb != null && tb.getTypeDeclaration().isLocal())
 			return false;
 		String utype = getUnresolvedType(node.getType());
 		IMethodBinding b = node.resolveConstructorBinding();
 		if (b == null)
-			this.fullTokens.append(" new " + utype + "("
-					+ node.arguments().size() + ") ");
+			this.fullTokens.append(" new " + utype + "(" + node.arguments().size() + ") ");
 		else
-			this.fullTokens.append(" new "
-					+ getSignature(b.getMethodDeclaration()) + " ");
-		this.partialTokens.append(" new " + utype + "("
-				+ node.arguments().size() + ") ");
-		for (Iterator it = node.arguments().iterator(); it.hasNext();) {
+			this.fullTokens.append(" new " + getSignature(b.getMethodDeclaration()) + " ");
+		this.partialTokens.append(" new " + utype + "(" + node.arguments().size() + ") ");
+		for (Iterator it = node.arguments().iterator(); it.hasNext(); ) {
 			Expression e = (Expression) it.next();
 			e.accept(this);
 		}
@@ -1200,26 +1134,11 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(ConditionalExpression node) {
-//		if (isGetInfoForReceiver) {
-//			sbAbstractInformation.append("?");
-//			listAbstractTypeQuestionMark.add(currentReceiverArgType);
-//		} else if(isGetInfoForParamI){
-//			sbAbstractInformation.append("?");
-//			listAbstractTypeQuestionMark.add(currentParamIArgType);
-//		}
 		return super.visit(node);
 	}
 
 	@Override
 	public boolean visit(ConstructorInvocation node) {
-//		if (isGetInfoForReceiver) {
-//			sbAbstractInformation.append(node.toString());
-////			listAbstractTypeQuestionMark.add(currentReceiverArgType);
-//		} else if(isGetInfoForParamI){
-//			sbAbstractInformation.append(node.toString());
-////			listAbstractTypeQuestionMark.add(currentReceiverArgType);
-//
-//		}
 		IMethodBinding b = node.resolveConstructorBinding();
 		ITypeBinding tb = null;
 		if (b != null && b.getDeclaringClass() != null)
@@ -1289,6 +1208,38 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	}
 
 	@Override
+	public boolean visit(FieldAccess node) {
+		IVariableBinding b = node.resolveFieldBinding();
+		ITypeBinding tb = null;
+		if (b != null) {
+			tb = b.getDeclaringClass();
+			if (tb != null) {
+				tb = tb.getTypeDeclaration();
+				if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+					return false;
+			}
+		}
+		this.fullTokens.append(" ");
+		this.partialTokens.append(" ");
+		node.getExpression().accept(this);
+		String name = "." + node.getName().getIdentifier();
+		this.partialTokens.append(" " + name + " ");
+		if (b != null) {
+			if (tb != null)
+				name = getQualifiedName(tb.getTypeDeclaration()) + name;
+			/*else
+				name = "Array" + name;*/
+		}
+		this.fullTokens.append(" " + name + " ");
+		return false;
+	}
+
+	@Override
+	public boolean visit(FieldDeclaration node) {
+		return false;
+	}
+
+	@Override
 	public boolean visit(ForStatement node) {
 		return super.visit(node);
 	}
@@ -1305,17 +1256,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(InfixExpression node) {
-//		if (isGetInfoForReceiver) {
-//			sbAbstractInformation.append("?");
-//			listAbstractTypeQuestionMark.add(currentReceiverArgType);
-//		} else if(isGetInfoForParamI){
-//			sbAbstractInformation.append("?");
-//			listAbstractTypeQuestionMark.add(currentParamIArgType);
-//		}
-		node.getLeftOperand().accept(this);
-//		sbAbstractInformation.append(node.getOperator().toString());
-		node.getRightOperand().accept(this);
-		return false;
+		return super.visit(node);
 	}
 
 	@Override
@@ -1325,20 +1266,12 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(InstanceofExpression node) {
-//		if (isGetInfoForReceiver) {
-//			sbAbstractInformation.append(node.toString());
-////			listAbstractTypeQuestionMark.add(currentReceiverArgType);
-//		} else if(isGetInfoForParamI){
-//			sbAbstractInformation.append(node.toString());
-////			listAbstractTypeQuestionMark.add(currentParamIArgType);
-//		}
 		this.fullTokens.append(" ");
 		this.partialTokens.append(" ");
 		node.getLeftOperand().accept(this);
 		this.fullTokens.append(" <instanceof> ");
 		this.partialTokens.append(" <instanceof> ");
-		String rtype = getResolvedType(node.getRightOperand()), utype = getUnresolvedType(node
-				.getRightOperand());
+		String rtype = getResolvedType(node.getRightOperand()), utype = getUnresolvedType(node.getRightOperand());
 		this.fullTokens.append(rtype + " ");
 		this.partialTokens.append(utype + " ");
 		return false;
@@ -1354,6 +1287,55 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		return false;
 	}
 
+//	@Override
+//	public boolean visit(MethodDeclaration node) {
+//		if (node.getBody() != null && !node.getBody().statements().isEmpty())
+//			node.getBody().accept(this);
+//		return false;
+//	}
+
+//	@Override
+//	public boolean visit(MethodInvocation node) {
+//		if (node.getExpression() != null && node.getExpression() instanceof TypeLiteral) {
+//			TypeLiteral lit = (TypeLiteral) node.getExpression();
+//			String utype = getUnresolvedType(lit.getType()), rtype = getResolvedType(lit.getType());
+//			this.fullTokens.append(" " + rtype + ".class." + node.getName().getIdentifier() + "() ");
+//			this.partialTokens.append(" " + utype + ".class." + node.getName().getIdentifier() + "(" + node.arguments().size() + ") ");
+//		} else {
+//			IMethodBinding b = node.resolveMethodBinding();
+//			ITypeBinding tb = null;
+//			if (b != null) {
+//				tb = b.getDeclaringClass();
+//				if (tb != null) {
+//					tb = tb.getTypeDeclaration();
+//					if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+//						return false;
+//				}
+//			}
+//			this.fullTokens.append(" ");
+//			this.partialTokens.append(" ");
+//			if (node.getExpression() != null) {
+//				node.getExpression().accept(this);
+//			} else {
+//				if (tb != null) {
+//					this.partialTokens.append(" " + getName(tb) + " ");
+//					this.fullTokens.append(" " + getQualifiedName(tb) + " ");
+//				} else {
+//					this.partialTokens.append(" this ");
+//					this.fullTokens.append(" this ");
+//				}
+//			}
+//			String name = "."+ node.getName().getIdentifier() + "(" + node.arguments().size() + ")";
+//			this.partialTokens.append(" " + name + " ");
+//			if (tb != null)
+//				name = getSignature(b.getMethodDeclaration());
+//			this.fullTokens.append(" " + name + " ");
+//		}
+//		for (int i = 0; i < node.arguments().size(); i++)
+//			((ASTNode) node.arguments().get(i)).accept(this);
+//		return false;
+//	}
+
 	@Override
 	public boolean visit(Modifier node) {
 		return false;
@@ -1366,7 +1348,6 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(NullLiteral node) {
-		
 		this.fullTokens.append(" null ");
 		this.partialTokens.append(" null ");
 		return false;
@@ -1374,13 +1355,6 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(NumberLiteral node) {
-//		if (isGetInfoForReceiver) {
-//			sbAbstractInformation.append("?");
-//			listAbstractTypeQuestionMark.add(currentReceiverArgType);
-//		} else if(isGetInfoForParamI){
-//			sbAbstractInformation.append("?");
-//			listAbstractTypeQuestionMark.add(currentParamIArgType);
-//		}
 		this.fullTokens.append(" number ");
 		this.partialTokens.append(" number ");
 		return false;
@@ -1393,57 +1367,21 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(ParenthesizedExpression node) {
-//		if (isGetInfoForReceiver) {
-//			sbAbstractInformation.append("(");
-//			node.getExpression().accept(this);
-//			sbAbstractInformation.append(")");
-//		} else if(isGetInfoForParamI){
-//			sbAbstractInformation.append("(");
-//			node.getExpression().accept(this);
-//			sbAbstractInformation.append(")");
-//		}
-		return false;
+		return super.visit(node);
 	}
 
 	@Override
 	public boolean visit(PostfixExpression node) {
-//		if (isGetInfoForReceiver) {
-//			node.getOperand().accept(this);
-//			sbAbstractInformation.append(node.getOperator().toString());
-//		} else if(isGetInfoForParamI){
-//			node.getOperand().accept(this);
-//			sbAbstractInformation.append(node.getOperator().toString());		
-//		}
-		return false;
+		return super.visit(node);
 	}
 
 	@Override
 	public boolean visit(PrefixExpression node) {
-//		if (isGetInfoForReceiver) {
-//			sbAbstractInformation.append(node.getOperator().toString());
-//			node.getOperand().accept(this);			
-//		} else if(isGetInfoForParamI){
-//			sbAbstractInformation.append(node.getOperator().toString());
-//			node.getOperand().accept(this);					
-//		}
-		return false;
+		return super.visit(node);
 	}
 
-	private boolean isInQualifiedName=false;
 	@Override
 	public boolean visit(QualifiedName node) {
-//		if (isGetInfoForReceiver) {
-//			node.getQualifier().accept(this);
-//			sbAbstractInformation.append(".");
-//			node.getName().accept(this);		
-//		} else if(isGetInfoForParamI){
-//			node.getQualifier().accept(this);
-//			sbAbstractInformation.append(".");
-//			node.getName().accept(this);
-//		}
-//		isInQualifiedName=true;
-		
-		
 		IBinding b = node.resolveBinding();
 		IVariableBinding vb = null;
 		ITypeBinding tb = null;
@@ -1460,8 +1398,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 				tb = ((ITypeBinding) b).getTypeDeclaration();
 				if (tb.isLocal() || tb.getQualifiedName().isEmpty())
 					return false;
-				this.partialTokens.append(" " + node.getFullyQualifiedName()
-						+ " ");
+				this.partialTokens.append(" " + node.getFullyQualifiedName() + " ");
 				this.fullTokens.append(" " + getQualifiedName(tb) + " ");
 				return false;
 			}
@@ -1471,44 +1408,52 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			return false;
 		}
 		node.getQualifier().accept(this);
-//		if(isGetInfoForReceiver||isGetInfoForParamI){
-//			sbAbstractInformation.append(".");
-//		}
-		node.getName().accept(this);
 		String name = "." + node.getName().getIdentifier();
 		this.partialTokens.append(" " + name + " ");
 		if (b != null) {
 			if (b instanceof IVariableBinding) {
 				if (tb != null)
 					name = getQualifiedName(tb.getTypeDeclaration()) + name;
-				
-//				if (isGetInfoForReceiver) {
-//					sbAbstractInformation.append("?");
-//					listAbstractTypeQuestionMark.add(currentReceiverArgType);			
-//				} else if(isGetInfoForParamI){
-//					sbAbstractInformation.append("?");
-//					listAbstractTypeQuestionMark.add(currentParamIArgType);					
-//				}
-			} 
-			else{
-//				if (isGetInfoForReceiver) {
-//					sbAbstractInformation.append(node.toString());
-////					listAbstractTypeQuestionMark.add(currentReceiverArgType);			
-//				} else if(isGetInfoForParamI){
-//					sbAbstractInformation.append(node.toString());
-////					listAbstractTypeQuestionMark.add(currentParamIArgType);					
-//				}
-				
+				/*else
+					name = "Array" + name;*/
 			}
 		}
 		this.fullTokens.append(" " + name + " ");
-//		isInQualifiedName=false;
 		return false;
 	}
 
 	@Override
 	public boolean visit(ReturnStatement node) {
 		return super.visit(node);
+	}
+
+	@Override
+	public boolean visit(SimpleName node) {
+		IBinding b = node.resolveBinding();
+		if (b != null) {
+			if (b instanceof IVariableBinding) {
+				IVariableBinding vb = (IVariableBinding) b;
+				ITypeBinding tb = vb.getType();
+				if (tb != null) {
+					tb = tb.getTypeDeclaration();
+					if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+						return false;
+					this.fullTokens.append(" " + getQualifiedName(tb) + " ");
+					this.partialTokens.append(" " + getName(tb) + " ");
+				}
+			} else if (b instanceof ITypeBinding) {
+				ITypeBinding tb = (ITypeBinding) b;
+				tb = tb.getTypeDeclaration();
+				if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+					return false;
+				this.fullTokens.append(" " + getQualifiedName(tb) + " ");
+				this.partialTokens.append(" " + getName(tb) + " ");
+			}
+		} else {
+			this.fullTokens.append(" " + node.getIdentifier() + " ");
+			this.partialTokens.append(" " + node.getIdentifier() + " ");
+		}
+		return false;
 	}
 
 	@Override
@@ -1521,8 +1466,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		ITypeBinding tb = node.getType().resolveBinding();
 		if (tb != null && tb.getTypeDeclaration().isLocal())
 			return false;
-		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
-				.getType());
+		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node.getType());
 		this.partialTokens.append(" " + utype + " ");
 		this.fullTokens.append(" " + rtype + " ");
 		if (node.getInitializer() != null) {
@@ -1535,14 +1479,6 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(StringLiteral node) {
-//		if(isGetInfoForReceiver){
-//			sbAbstractInformation.append("?");
-//			listAbstractTypeQuestionMark.add(currentReceiverArgType);
-//		}else if(isGetInfoForParamI){
-//			sbAbstractInformation.append("?");
-//			listAbstractTypeQuestionMark.add(currentParamIArgType);
-//		}
-//		" debug "+node.toString()+isGetInfoForReceiver+isGetInfoForParamI+
 		this.fullTokens.append(" java.lang.String ");
 		this.partialTokens.append(" java.lang.String ");
 		return false;
@@ -1558,8 +1494,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			if (tb.isLocal() || tb.getQualifiedName().isEmpty())
 				return false;
 		}
-		String name = "." + superClassName + "(" + node.arguments().size()
-				+ ")";
+		String name = "." + superClassName + "(" + node.arguments().size() + ")";
 		this.partialTokens.append(" " + name + " ");
 		if (tb != null)
 			name = getSignature(b.getMethodDeclaration());
@@ -1571,14 +1506,6 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(SuperFieldAccess node) {
-//		if(isGetInfoForReceiver){
-//			sbAbstractInformation.append("?");
-//			listAbstractTypeQuestionMark.add(currentReceiverArgType);
-//		}else if(isGetInfoForParamI){
-//			sbAbstractInformation.append("?");
-//			listAbstractTypeQuestionMark.add(currentParamIArgType);
-//		}
-		
 		IVariableBinding b = node.resolveFieldBinding();
 		ITypeBinding tb = null;
 		if (b != null && b.getDeclaringClass() != null) {
@@ -1610,37 +1537,17 @@ public class MethodEncoderVisitor extends ASTVisitor {
 				return false;
 			this.partialTokens.append(" " + getName(tb) + " ");
 			this.fullTokens.append(" " + getQualifiedName(tb) + " ");
-//			sbAbstractInformation.append(getName(tb));
-//			sbAbstractInformation.append("?");
-//			listAbstractTypeQuestionMark.add(getQualifiedName(tb));
 		} else {
 			this.partialTokens.append(" super ");
 			this.fullTokens.append(" super ");
-//			sbAbstractInformation.append("super");
-			
 		}
-		
-		String name = "." + node.getName().getIdentifier() + "("
-				+ node.arguments().size() + ")";
-//		sbAbstractInformation.append("." + node.getName().getIdentifier() + "(");
+		String name = "." + node.getName().getIdentifier() + "(" + node.arguments().size() + ")";
 		this.partialTokens.append(" " + name + " ");
 		if (tb != null)
 			name = getSignature(b.getMethodDeclaration());
 		this.fullTokens.append(" " + name + " ");
-		
-		for (int i = 0; i < node.arguments().size(); i++){
-//			Expression exParam =(Expression) node.arguments().get(i);
-//			currentParamIArgType = viewSelectedTypeParam(b, i);
-//			String paramIType = exParam.resolveTypeBinding()!=null?exParam.resolveTypeBinding().getQualifiedName():currentParamIArgType;
-//			setRequiredAPIsForMI.add(paramIType);
-			
+		for (int i = 0; i < node.arguments().size(); i++)
 			((ASTNode) node.arguments().get(i)).accept(this);
-//			if (i != node.arguments().size() - 1) {
-//				sbAbstractInformation.append(",");
-//			}
-		}
-//		sbAbstractInformation.append(")");
-			
 		return false;
 	}
 
@@ -1666,13 +1573,6 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(ThisExpression node) {
-//		if(isGetInfoForReceiver){
-//			sbAbstractInformation.append("?");
-//			listAbstractTypeQuestionMark.add(currentReceiverArgType);
-//		}else if(isGetInfoForParamI){
-//			sbAbstractInformation.append("?");
-//			listAbstractTypeQuestionMark.add(currentParamIArgType);
-//		}
 		ITypeBinding b = node.resolveTypeBinding();
 		if (b != null) {
 			b = b.getTypeDeclaration();
@@ -1697,10 +1597,10 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		return super.visit(node);
 	}
 
-	// @Override
-	// public boolean visit(TypeDeclaration node) {
-	// return false;
-	// }
+//	@Override
+//	public boolean visit(TypeDeclaration node) {
+//		return false;
+//	}
 
 	@Override
 	public boolean visit(TypeDeclarationStatement node) {
@@ -1709,9 +1609,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(TypeLiteral node) {
-		
-		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
-				.getType());
+		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node.getType());
 		this.fullTokens.append(" " + rtype + ".class ");
 		this.partialTokens.append(" " + utype + ".class ");
 		return false;
@@ -1726,14 +1624,26 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	public boolean visit(TypeParameter node) {
 		return super.visit(node);
 	}
-
+	
 	@Override
 	public boolean visit(VariableDeclarationExpression node) {
 		ITypeBinding tb = node.getType().resolveBinding();
 		if (tb != null && tb.getTypeDeclaration().isLocal())
 			return false;
-		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
-				.getType());
+		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node.getType());
+		this.partialTokens.append(" " + utype + " ");
+		this.fullTokens.append(" " + rtype + " ");
+		for (int i = 0; i < node.fragments().size(); i++)
+			((ASTNode) node.fragments().get(i)).accept(this);
+		return false;
+	}
+
+	@Override
+	public boolean visit(VariableDeclarationStatement node) {
+		ITypeBinding tb = node.getType().resolveBinding();
+		if (tb != null && tb.getTypeDeclaration().isLocal())
+			return false;
+		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node.getType());
 		this.partialTokens.append(" " + utype + " ");
 		this.fullTokens.append(" " + rtype + " ");
 		for (int i = 0; i < node.fragments().size(); i++)
@@ -1759,47 +1669,47 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	public boolean visit(WhileStatement node) {
 		return super.visit(node);
 	}
-
+	
 	@Override
 	public boolean visit(ArrayType node) {
 		return false;
 	}
-
+	
 	@Override
 	public boolean visit(IntersectionType node) {
 		return false;
 	}
-
+	
 	@Override
 	public boolean visit(ParameterizedType node) {
 		return false;
 	}
-
+	
 	@Override
 	public boolean visit(UnionType node) {
 		return false;
 	}
-
+	
 	@Override
 	public boolean visit(NameQualifiedType node) {
 		return false;
 	}
-
+	
 	@Override
 	public boolean visit(PrimitiveType node) {
 		return false;
 	}
-
+	
 	@Override
 	public boolean visit(QualifiedType node) {
 		return false;
 	}
-
+	
 	@Override
 	public boolean visit(SimpleType node) {
 		return false;
 	}
-
+	
 	@Override
 	public boolean visit(WildcardType node) {
 		return false;
@@ -1807,17 +1717,16 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 	private String getQualifiedName(ITypeBinding tb) {
 		if (tb.isArray())
-			return getQualifiedName(tb.getComponentType().getTypeDeclaration())
-					+ getDimensions(tb.getDimensions());
+			return getQualifiedName(tb.getComponentType().getTypeDeclaration()) + getDimensions(tb.getDimensions());
 		return tb.getQualifiedName();
 	}
 
 	private String getName(ITypeBinding tb) {
 		if (tb.isArray())
-			return getName(tb.getComponentType().getTypeDeclaration())
-					+ getDimensions(tb.getDimensions());
+			return getName(tb.getComponentType().getTypeDeclaration()) + getDimensions(tb.getDimensions());
 		return tb.getName();
 	}
+
 
 	public static void main(String[] args) {
 		String projectLocation = "/Users/hungphan/Documents/workspace/SampleMethodInvocationProject/";

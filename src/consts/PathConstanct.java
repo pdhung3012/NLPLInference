@@ -3,6 +3,8 @@ package consts;
 public class PathConstanct {
 	
 	public static String PATH_JAVA_CLASSPATH="/Library/Java/JavaVirtualMachines/jdk1.8.0_141.jdk/Contents/Home/jre/lib/rt.jar";
+	public static String PATH_INPUT_IDENTIFER_PROJECT="";
+	public static String PATH_OUTPUT_IDENTIFER_PROJECT="";
 	
 	public static String fopListLibraryLocation="/Users/hungphan/git/NLPLInference/data/StatTypeProjects/";
 	public static String fopProjectLocation="/Users/hungphan/git/NLPLInference/data/downloaded2/";

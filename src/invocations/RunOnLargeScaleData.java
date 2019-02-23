@@ -4,14 +4,16 @@ import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import consts.PathConstanct;
+
 public class RunOnLargeScaleData {
 
 	private static final int MYTHREADS = 4;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String inputProjectPath = "";
-		String outputProjectPath = "";
+		String inputProjectPath = PathConstanct.PATH_INPUT_IDENTIFER_PROJECT;
+		String outputProjectPath = PathConstanct.PATH_OUTPUT_IDENTIFER_PROJECT;
 		ExecutorService executor = Executors.newFixedThreadPool(MYTHREADS);
 
 		File fInput = new File(inputProjectPath);

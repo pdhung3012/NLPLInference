@@ -14,6 +14,7 @@ import java.util.Map;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.*;
 
+import consts.PathConstanct;
 import parser.AnnotationType;
 import utils.DateUtil;
 import utils.JavaASTUtil;
@@ -94,7 +95,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	private StringBuffer unresolvedBuffer;
 
 	ASTParser parser = ASTParser.newParser(AST.JLS4);
-	String[] classpath = { "/Library/Java/JavaVirtualMachines/jdk1.8.0_141.jdk/Contents/Home/jre/lib/rt.jar" };
+	String[] classpath = { PathConstanct.PATH_JAVA_CLASSPATH };
 	HashMap<String, CompilationUnit> mapCU;
 	LinkedHashMap<String, LocalForMethod> mapLocalcontextForMethod = new LinkedHashMap<String, LocalForMethod>();
 	private boolean isAbstractMethod = false;

@@ -24,6 +24,7 @@ import java.util.List;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.internal.compiler.parser.ScannerHelper;
 
+import consts.PathConstanct;
 import entities.LocalEntity;
 import entities.LocalForMethod;
 
@@ -115,7 +116,7 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 	private StringBuffer unresolvedBuffer;
 
 	ASTParser parser = ASTParser.newParser(AST.JLS4);
-	String[] classpath = { "/Library/Java/JavaVirtualMachines/jdk1.8.0_141.jdk/Contents/Home/jre/lib/rt.jar" };
+	String[] classpath = { PathConstanct.PATH_JAVA_CLASSPATH };
 	HashMap<String, CompilationUnit> mapCU;
 	LinkedHashMap<String, LocalForMethod> mapLocalcontextForMethod = new LinkedHashMap<String, LocalForMethod>();
 	private boolean isAbstractMethod = false;

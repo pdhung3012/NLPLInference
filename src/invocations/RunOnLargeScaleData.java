@@ -24,7 +24,7 @@ public class RunOnLargeScaleData {
 						+ File.separator;
 				String itemOutputPath = outputProjectPath + File.separator
 						+ arrFilesInput[i].getName() + File.separator;
-				MyRunnable thread = new MyRunnable(itemInputPath,
+				ExtractSequenceForProjectRunnable thread = new ExtractSequenceForProjectRunnable(itemInputPath,
 						itemOutputPath, i);
 				thread.run();
 			}
@@ -33,11 +33,11 @@ public class RunOnLargeScaleData {
 	}
 }
 
-class MyRunnable implements Runnable {
+class ExtractSequenceForProjectRunnable implements Runnable {
 	private String inputPath = "", outputPath = "";
 	private int index = 0;
 
-	MyRunnable(String inputPath, String outputPath, int index) {
+	ExtractSequenceForProjectRunnable(String inputPath, String outputPath, int index) {
 		this.inputPath = inputPath;
 		this.outputPath = outputPath;
 		this.index = index;

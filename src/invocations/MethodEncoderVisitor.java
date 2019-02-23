@@ -791,10 +791,6 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	// return false;
 	// }
 
-	private String currentReceiverArgType="";
-	private String currentParamIArgType="";
-	private boolean isGetInfoForReceiver=false;
-	private boolean isGetInfoForParamI=false;
 	public boolean visit(MethodInvocation node) {
 		levelOfTraverMD++;
 		if (levelOfTraverMD == 1) {
@@ -827,20 +823,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			
 			if (node.getExpression() != null) {
 				Expression exRetriever = node.getExpression();
-//				IMethodBinding iMethod = node.resolveMethodBinding();
-//				currentReceiverArgType = viewSelectedTypeReceiver(iMethod);
-//				// System.out.println("choose select type "+selectedType);
-//				String receiverType =exRetriever.resolveTypeBinding()!=null? exRetriever.resolveTypeBinding()
-//						.getQualifiedName():currentReceiverArgType;
-				// System.out.println("set "+setRequiredAPIsForMI.toString());
-
-				// this.buffer.append(strSplitCharacter);
-
-						
-//				setRequiredAPIsForMI.add(receiverType);
-//				isGetInfoForReceiver=true;
 				exRetriever.accept(this);
-//				isGetInfoForReceiver=false;
 			} else {
 				if (tb != null) {
 					this.partialTokens.append(" " + getName(tb) + " ");
@@ -858,26 +841,11 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			this.fullTokens.append(" " + name + " ");
 		}
 		IMethodBinding iMethod=node.resolveMethodBinding();
-//		sbAbstractInformation
-//				.append("." + node.getName().getIdentifier() + "(");
-//		System.out.println("identifier: "+node.getName().getIdentifier());
 		List<Expression> listArgument = node.arguments();
-		// ITypeBinding[] arrBindArgs= iMethod.getParameterTypes();
-//		if(levelOfTraverMD==1){
-//			isGetInfoForParamI=true;
-//		}
 		for (int i = 0; i < listArgument.size(); i++) {
 			Expression exParam = listArgument.get(i);			
 			exParam.accept(this);
-			
-//			if (i != listArgument.size() - 1) {
-//				sbAbstractInformation.append(",");
-//			}
 		}
-//		sbAbstractInformation.append(")");
-//		if(levelOfTraverMD==1){
-//			isGetInfoForParamI=false;
-//		}
 		
 		if (levelOfTraverMD == 1) {
 			InvocationObject io = new InvocationObject();
@@ -886,28 +854,31 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			if(iaVisitor!=null){
 				node.accept(iaVisitor);				
 			}
-			
-			io.setStrCodeRepresent(iaVisitor.getSbAbstractInformation().toString());
-			io.setListQuestionMarkTypes(iaVisitor.getListAbstractTypeQuestionMark());
-			io.setSetImportedAPIs(iaVisitor.getSetRequiredAPIsForMI());
-			String idenInfo = io.setIDRepresent();
-			String id="";
-			if(!mapIdenAndID.containsKey(idenInfo)){
-				id="E-"+String.format("%09d" , mapIDAndIden.size()+1);
-//				
-				mapIdenAndID.put(idenInfo, id);
-				mapIDAndIden.put(id,idenInfo);
-				mapIDAppear.put(id, 1);
-				io.saveToFile(hashIdenPath+"/"+id+".txt");
-			}else{
-				String existId=mapIdenAndID.get(idenInfo);
-				id=existId;
-				mapIDAppear.put(existId,mapIDAppear.get(existId)+1);
+			if(!iaVisitor.getSbAbstractInformation().toString().equals("#")){
+				iaVisitor.sortRequiredAPI();
+				io.setStrCodeRepresent(iaVisitor.getSbAbstractInformation().toString());
+				io.setListQuestionMarkTypes(iaVisitor.getListAbstractTypeQuestionMark());
+				io.setSetImportedAPIs(iaVisitor.getSetRequiredAPIsForMI());
+				String idenInfo = io.setIDRepresent();
+				String id="";
+				if(!mapIdenAndID.containsKey(idenInfo)){
+					id="E-"+String.format("%09d" , mapIDAndIden.size()+1);
+//					
+					mapIdenAndID.put(idenInfo, id);
+					mapIDAndIden.put(id,idenInfo);
+					mapIDAppear.put(id, 1);
+					io.saveToFile(hashIdenPath+"/"+id+".txt");
+				}else{
+					String existId=mapIdenAndID.get(idenInfo);
+					id=existId;
+					mapIDAppear.put(existId,mapIDAppear.get(existId)+1);
+				}
+				
+				this.partialTokens.append(node.getName().getIdentifier()+"#identifier" + " ");
+				this.fullTokens.append(id + " ");
+
 			}
 			
-			this.partialTokens.append(node.getName().getIdentifier()+"#identifier" + " ");
-			this.fullTokens.append(id + " ");
-
 			iaVisitor.refreshInformation();
 		}
 		levelOfTraverMD--;

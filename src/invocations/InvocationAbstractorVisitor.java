@@ -14,6 +14,7 @@
 package invocations;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -94,6 +95,8 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 	 * written.
 	 */
 	private int indent = 0;
+	private static final String SEPARATOR = "#";
+	
 	private HashMap<String, String> setSequencesOfMethods, setOfUnResolvedType;
 	private LinkedHashSet<LocalEntity> setFields, setArguments,
 			setLocalVariables;
@@ -128,6 +131,18 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 	
 	
 
+	public void sortRequiredAPI(){
+		ArrayList<String> lst=new ArrayList<String>();
+		for(String str:setRequiredAPIsForMI){
+			lst.add(str);
+		}
+		Collections.sort(lst);
+		setRequiredAPIsForMI.clear();
+		for(int i=0;i<lst.size();i++){
+			setRequiredAPIsForMI.add(lst.get(i));
+		}
+	}
+	
 	public String getCurrentMethodDeclaration() {
 		return currentMethodDeclaration;
 	}
@@ -420,8 +435,28 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 		return false;
 	}
 
+	public String getFQN(Expression exp){
+		ITypeBinding itype=exp.resolveTypeBinding();
+		return itype!=null?itype.getQualifiedName():"Unknown";
+	}
+	public void addRequiredAPIForImport(Expression exp){
+		String requiredType=getFQN(exp);
+		if(!requiredType.equals("Unknown")){
+			setRequiredAPIsForMI.add(requiredType);
+		}
+	}
+	
+	public void addRequiredAPIForImport(ITypeBinding exp){
+		String requiredType=exp!=null?exp.getQualifiedName():"Unknown";
+		if(!requiredType.equals("Unknown")){
+			setRequiredAPIsForMI.add(requiredType);
+		}
+	}
+	
 	@Override
 	public boolean visit(ArrayAccess node) {
+		addRequiredAPIForImport(node.getArray());
+		
 		node.getArray().accept(this);
 		this.sbAbstractInformation.append("[");//$NON-NLS-1$
 		node.getIndex().accept(this);
@@ -529,9 +564,13 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 	@Override
 	public boolean visit(BooleanLiteral node) {
 		if (node.booleanValue() == true) {
-			this.sbAbstractInformation.append("true");//$NON-NLS-1$
+//			this.sbAbstractInformation.append("true");//$NON-NLS-1$
+			this.sbAbstractInformation.append("#");
+			listAbstractTypeQuestionMark.add("boolean");
 		} else {
-			this.sbAbstractInformation.append("false");//$NON-NLS-1$
+//			this.sbAbstractInformation.append("false");//$NON-NLS-1$
+			this.sbAbstractInformation.append("#");
+			listAbstractTypeQuestionMark.add("boolean");
 		}
 		return false;
 	}
@@ -551,8 +590,10 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 	@Override
 	public boolean visit(CastExpression node) {
 		this.sbAbstractInformation.append("(");//$NON-NLS-1$
+		addRequiredAPIForImport(node.getType().resolveBinding());
 		node.getType().accept(this);
 		this.sbAbstractInformation.append(")");//$NON-NLS-1$
+		addRequiredAPIForImport(node.getExpression());
 		node.getExpression().accept(this);
 		return false;
 	}
@@ -568,13 +609,15 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(CharacterLiteral node) {
-		this.sbAbstractInformation.append(node.getEscapedValue());
+		this.sbAbstractInformation.append("");
+		listAbstractTypeQuestionMark.add("java.lang.Character");
 		return false;
 	}
 
 	@Override
 	public boolean visit(ClassInstanceCreation node) {
 		if (node.getExpression() != null) {
+			addRequiredAPIForImport(node.getExpression());
 			node.getExpression().accept(this);
 			this.sbAbstractInformation.append(".");//$NON-NLS-1$
 		}
@@ -599,6 +642,7 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 		this.sbAbstractInformation.append("(");//$NON-NLS-1$
 		for (Iterator it = node.arguments().iterator(); it.hasNext(); ) {
 			Expression e = (Expression) it.next();
+			addRequiredAPIForImport(e);
 			e.accept(this);
 			if (it.hasNext()) {
 				this.sbAbstractInformation.append(",");//$NON-NLS-1$
@@ -606,6 +650,7 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 		}
 		this.sbAbstractInformation.append(")");//$NON-NLS-1$
 		if (node.getAnonymousClassDeclaration() != null) {
+			addRequiredAPIForImport(node.getAnonymousClassDeclaration().resolveBinding());
 			node.getAnonymousClassDeclaration().accept(this);
 		}
 		return false;
@@ -634,10 +679,13 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(ConditionalExpression node) {
+		addRequiredAPIForImport(node.getExpression());
 		node.getExpression().accept(this);
 		this.sbAbstractInformation.append(" ? ");//$NON-NLS-1$
+		addRequiredAPIForImport(node.getThenExpression());
 		node.getThenExpression().accept(this);
 		this.sbAbstractInformation.append(" : ");//$NON-NLS-1$
+		addRequiredAPIForImport(node.getElseExpression());
 		node.getElseExpression().accept(this);
 		return false;
 	}
@@ -661,6 +709,7 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 		this.sbAbstractInformation.append("this(");//$NON-NLS-1$
 		for (Iterator it = node.arguments().iterator(); it.hasNext(); ) {
 			Expression e = (Expression) it.next();
+			addRequiredAPIForImport(e);
 			e.accept(this);
 			if (it.hasNext()) {
 				this.sbAbstractInformation.append(",");//$NON-NLS-1$
@@ -822,10 +871,13 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 	@Override
 	public boolean visit(FieldAccess node) {
 		if(node.getExpression().toString().equals("this")){
-			this.sbAbstractInformation.append("?");
+			ITypeBinding iType=node.resolveTypeBinding();
+			currentStrParentType=iType!=null?iType.getQualifiedName():"Unknown";
+			this.sbAbstractInformation.append("#");
 			listAbstractTypeQuestionMark.add(currentStrParentType);
-//			setRequiredAPIsForMI.add(currentStrParentType);
+			setRequiredAPIsForMI.add(currentStrParentType);
 		} else{
+			addRequiredAPIForImport(node.getExpression());
 			node.getExpression().accept(this);
 			this.sbAbstractInformation.append(".");//$NON-NLS-1$
 			node.getName().accept(this);
@@ -916,10 +968,12 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(InfixExpression node) {
+		addRequiredAPIForImport(node.getLeftOperand());
 		node.getLeftOperand().accept(this);
 		this.sbAbstractInformation.append(' ');  // for cases like x= i - -1; or x= i++ + ++i;
 		this.sbAbstractInformation.append(node.getOperator().toString());
 		this.sbAbstractInformation.append(' ');
+		addRequiredAPIForImport(node.getRightOperand());
 		node.getRightOperand().accept(this);
 		final List extendedOperands = node.extendedOperands();
 		if (extendedOperands.size() != 0) {
@@ -927,6 +981,7 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 			for (Iterator it = extendedOperands.iterator(); it.hasNext(); ) {
 				this.sbAbstractInformation.append(node.getOperator().toString()).append(' ');
 				Expression e = (Expression) it.next();
+				addRequiredAPIForImport(e);
 				e.accept(this);
 			}
 		}
@@ -950,8 +1005,10 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(InstanceofExpression node) {
+		addRequiredAPIForImport(node.getLeftOperand());
 		node.getLeftOperand().accept(this);
 		this.sbAbstractInformation.append(" instanceof ");//$NON-NLS-1$
+		addRequiredAPIForImport(node.getRightOperand().resolveBinding());
 		node.getRightOperand().accept(this);
 		return false;
 	}
@@ -960,6 +1017,7 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 	public boolean visit(IntersectionType node) {
 		for (Iterator it = node.types().iterator(); it.hasNext(); ) {
 			Type t = (Type) it.next();
+			addRequiredAPIForImport(t.resolveBinding());
 			t.accept(this);
 			if (it.hasNext()) {
 				this.sbAbstractInformation.append(" & "); //$NON-NLS-1$
@@ -1173,13 +1231,25 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 	@Override
 	public boolean visit(MethodInvocation node) {
 		IMethodBinding iMethod=node.resolveMethodBinding();
-		if (node.getExpression() != null) {
+		if(node.getExpression()==null){
+			this.sbAbstractInformation.append("#");
+			if(iMethod!=null){
+				currentStrParentType=iMethod.getReturnType()!=null?iMethod.getReturnType().getQualifiedName():"Unknown";
+			} else{
+				currentStrParentType="Unknown";
+			}
+			listAbstractTypeQuestionMark.add(currentStrParentType);
+			return false;
+		}
+		else {
+			
 			Expression exRetriever=node.getExpression();
+			addRequiredAPIForImport(exRetriever);
 			currentStrParentType = viewSelectedTypeReceiver(iMethod);
 			// System.out.println("choose select type "+selectedType);
 			String currentStrImmediateType =exRetriever.resolveTypeBinding()!=null? exRetriever.resolveTypeBinding()
 					.getQualifiedName():currentStrParentType;
-			setRequiredAPIsForMI.add(currentStrImmediateType);
+//			setRequiredAPIsForMI.add(currentStrImmediateType);
 			node.getExpression().accept(this);
 			this.sbAbstractInformation.append(".");//$NON-NLS-1$
 		}
@@ -1202,9 +1272,10 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 		for (Iterator it = node.arguments().iterator(); it.hasNext(); ) {
 			indexParam++;
 			Expression e = (Expression) it.next();
+			addRequiredAPIForImport(e);
 			currentStrParentType = viewSelectedTypeParam(iMethod, indexParam);
 			String paramIType = e.resolveTypeBinding()!=null?e.resolveTypeBinding().getQualifiedName():currentStrParentType;
-			setRequiredAPIsForMI.add(paramIType);
+//			setRequiredAPIsForMI.add(paramIType);
 			e.accept(this);
 			if (it.hasNext()) {
 				this.sbAbstractInformation.append(",");//$NON-NLS-1$
@@ -1322,7 +1393,8 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(NullLiteral node) {
-		sbAbstractInformation.append("?");
+		sbAbstractInformation.append("#");
+		currentStrParentType="Nullable";
 		listAbstractTypeQuestionMark.add(currentStrParentType);
 //		this.sbAbstractInformation.append("null");//$NON-NLS-1$
 		return false;
@@ -1330,7 +1402,8 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(NumberLiteral node) {
-		sbAbstractInformation.append("?");
+		sbAbstractInformation.append("#");
+		currentStrParentType="Numeric";
 		listAbstractTypeQuestionMark.add(currentStrParentType);
 //		this.sbAbstractInformation.append(node.getToken());
 		return false;
@@ -1378,6 +1451,7 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 	@Override
 	public boolean visit(ParenthesizedExpression node) {
 		this.sbAbstractInformation.append("(");//$NON-NLS-1$
+		addRequiredAPIForImport(node.getExpression());
 		node.getExpression().accept(this);
 		this.sbAbstractInformation.append(")");//$NON-NLS-1$
 		return false;
@@ -1385,6 +1459,7 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(PostfixExpression node) {
+		addRequiredAPIForImport(node.getOperand());
 		node.getOperand().accept(this);
 		this.sbAbstractInformation.append(node.getOperator().toString());
 		return false;
@@ -1393,6 +1468,7 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 	@Override
 	public boolean visit(PrefixExpression node) {
 		this.sbAbstractInformation.append(node.getOperator().toString());
+		addRequiredAPIForImport(node.getOperand());
 		node.getOperand().accept(this);
 		return false;
 	}
@@ -1484,9 +1560,17 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 	public boolean visit(SimpleName node) {
 //		this.sbAbstractInformation.append(node.getIdentifier());
 		if (node.resolveBinding() instanceof IVariableBinding && (checkVarInLocalField(((IVariableBinding) node.resolveBinding()))|| checkVarInLocalMethod(((IVariableBinding) node.resolveBinding())))){
-			sbAbstractInformation.append("?");
+			ITypeBinding iType=node.resolveTypeBinding();
+			currentStrParentType=iType!=null?iType.getQualifiedName():"Unknown";
+			sbAbstractInformation.append("#");
 			listAbstractTypeQuestionMark.add(currentStrParentType);
+			setRequiredAPIsForMI.add(currentStrParentType);
 		} else{
+			ITypeBinding iType=node.resolveTypeBinding();
+			String strTypeImport=iType!=null?iType.getQualifiedName():"Unknown";
+			if(!strTypeImport.equals("Unknown")){
+				setRequiredAPIsForMI.add(strTypeImport);
+			}
 			sbAbstractInformation.append(node.getIdentifier());	
 		}
 		return false;
@@ -1553,7 +1637,8 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(StringLiteral node) {
-		sbAbstractInformation.append("?");
+		sbAbstractInformation.append("#");
+		currentStrParentType="java.lang.String";
 		listAbstractTypeQuestionMark.add(currentStrParentType);
 //		this.sbAbstractInformation.append(node.getEscapedValue());
 		return false;
@@ -1579,7 +1664,17 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 				this.sbAbstractInformation.append(">");//$NON-NLS-1$
 			}
 		}
-		this.sbAbstractInformation.append("super(");//$NON-NLS-1$
+		IMethodBinding b = node.resolveConstructorBinding();
+		ITypeBinding tb = null;
+		if (b != null && b.getDeclaringClass() != null)
+			tb = b.getDeclaringClass().getTypeDeclaration();
+		currentStrParentType="Unknown";
+		if (tb != null) {
+			currentStrParentType=getQualifiedName(tb);
+		}
+		this.sbAbstractInformation.append("#(");//$NON-NLS-1$
+		listAbstractTypeQuestionMark.add(currentStrParentType);
+		setRequiredAPIsForMI.add(currentStrParentType);
 		for (Iterator it = node.arguments().iterator(); it.hasNext(); ) {
 			Expression e = (Expression) it.next();
 			e.accept(this);
@@ -1597,7 +1692,16 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 			node.getQualifier().accept(this);
 			this.sbAbstractInformation.append(".");//$NON-NLS-1$
 		}
-		this.sbAbstractInformation.append("super.");//$NON-NLS-1$
+
+		ITypeBinding tb = node.resolveTypeBinding();
+		currentStrParentType="Unknown";
+		if (tb != null) {
+			currentStrParentType=getQualifiedName(tb);
+		}
+		this.sbAbstractInformation.append("#.");//$NON-NLS-1$
+		listAbstractTypeQuestionMark.add(currentStrParentType);
+		setRequiredAPIsForMI.add(currentStrParentType);
+		
 		node.getName().accept(this);
 		return false;
 	}
@@ -1609,7 +1713,19 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 			node.getQualifier().accept(this);
 			this.sbAbstractInformation.append(".");//$NON-NLS-1$
 		}
-		this.sbAbstractInformation.append("super.");//$NON-NLS-1$
+		IMethodBinding b = node.resolveMethodBinding();
+		ITypeBinding tb = null;
+		if (b != null && b.getDeclaringClass() != null)
+			tb = b.getDeclaringClass().getTypeDeclaration();
+		currentStrParentType="Unknown";
+		if (tb != null) {
+			currentStrParentType=getQualifiedName(tb);
+		}
+		
+//		this.sbAbstractInformation.append("super.");//$NON-NLS-1$
+		this.sbAbstractInformation.append("#.");
+		listAbstractTypeQuestionMark.add(currentStrParentType);
+		
 		if (node.getAST().apiLevel() >= JLS3) {
 			if (!node.typeArguments().isEmpty()) {
 				this.sbAbstractInformation.append("<");//$NON-NLS-1$
@@ -1630,9 +1746,10 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 		for (Iterator it = node.arguments().iterator(); it.hasNext(); ) {
 			indexParam++;
 			Expression e = (Expression) it.next();
-			currentStrParentType = viewSelectedTypeParam(iMethod, indexParam);
-			String paramIType = e.resolveTypeBinding()!=null?e.resolveTypeBinding().getQualifiedName():currentStrParentType;
-			setRequiredAPIsForMI.add(paramIType);
+//			currentStrParentType = viewSelectedTypeParam(iMethod, indexParam);
+//			String paramIType = e.resolveTypeBinding()!=null?e.resolveTypeBinding().getQualifiedName():currentStrParentType;
+//			setRequiredAPIsForMI.add(paramIType);
+			addRequiredAPIForImport(e);
 			e.accept(this);
 			if (it.hasNext()) {
 				this.sbAbstractInformation.append(",");//$NON-NLS-1$
@@ -1754,7 +1871,11 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 			node.getQualifier().accept(this);
 			this.sbAbstractInformation.append(".");//$NON-NLS-1$
 		}
-		this.sbAbstractInformation.append("this");//$NON-NLS-1$
+		this.sbAbstractInformation.append("#");//$NON-NLS-1$
+		ITypeBinding itype=node.resolveTypeBinding();
+		currentStrParentType=itype!=null?itype.getQualifiedName():"Unknown";
+		this.listAbstractTypeQuestionMark.add(currentStrParentType);
+		addRequiredAPIForImport(itype);
 		return false;
 	}
 
@@ -1888,6 +2009,8 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 	public boolean visit(TypeLiteral node) {
 //		sbAbstractInformation.append("?");
 //		listAbstractTypeQuestionMark.add(currentStrParentType);
+		addRequiredAPIForImport(node.getType().resolveBinding());
+		
 		node.getType().accept(this);
 		this.sbAbstractInformation.append(".class");//$NON-NLS-1$
 		return false;
@@ -2043,4 +2166,150 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 		node.getComponentType().accept(this);
 	}
 
+	private String getQualifiedName(ITypeBinding tb) {
+		if (tb.isArray())
+			return getQualifiedName(tb.getComponentType().getTypeDeclaration()) + getDimensions(tb.getDimensions());
+		return tb.getQualifiedName();
+	}
+
+	private String getName(ITypeBinding tb) {
+		if (tb.isArray())
+			return getName(tb.getComponentType().getTypeDeclaration()) + getDimensions(tb.getDimensions());
+		return tb.getName();
+	}
+	
+	private Type getType(VariableDeclarationFragment node) {
+		ASTNode p = node.getParent();
+		if (p instanceof VariableDeclarationExpression)
+			return ((VariableDeclarationExpression) p).getType();
+		if (p instanceof VariableDeclarationStatement)
+			return ((VariableDeclarationStatement) p).getType();
+		return null;
+	}
+
+	private String getSignature(IMethodBinding method) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(method.getDeclaringClass().getTypeDeclaration()
+				.getQualifiedName());
+		sb.append("." + method.getName());
+		sb.append("(");
+		sb.append(SEPARATOR);
+		for (ITypeBinding tb : method.getParameterTypes())
+			sb.append(tb.getTypeDeclaration().getName() + "#");
+		sb.append(")");
+		return sb.toString();
+	}
+
+	public static String getUnresolvedType(Type type) {
+		if (type.isArrayType()) {
+			ArrayType t = (ArrayType) type;
+			return getUnresolvedType(t.getElementType())
+					+ getDimensions(t.getDimensions());
+		} else if (type.isIntersectionType()) {
+			IntersectionType it = (IntersectionType) type;
+			@SuppressWarnings("unchecked")
+			ArrayList<Type> types = new ArrayList<>(it.types());
+			String s = getUnresolvedType(types.get(0));
+			for (int i = 1; i < types.size(); i++)
+				s += " & " + getUnresolvedType(types.get(i));
+			return s;
+		} else if (type.isParameterizedType()) {
+			ParameterizedType t = (ParameterizedType) type;
+			return getUnresolvedType(t.getType());
+		} else if (type.isUnionType()) {
+			UnionType it = (UnionType) type;
+			@SuppressWarnings("unchecked")
+			ArrayList<Type> types = new ArrayList<>(it.types());
+			String s = getUnresolvedType(types.get(0));
+			for (int i = 1; i < types.size(); i++)
+				s += " | " + getUnresolvedType(types.get(i));
+			return s;
+		} else if (type.isNameQualifiedType()) {
+			NameQualifiedType qt = (NameQualifiedType) type;
+			return qt.getQualifier().getFullyQualifiedName() + "."
+					+ qt.getName().getIdentifier();
+		} else if (type.isPrimitiveType()) {
+			return type.toString();
+		} else if (type.isQualifiedType()) {
+			QualifiedType qt = (QualifiedType) type;
+			return getUnresolvedType(qt.getQualifier()) + "."
+					+ qt.getName().getIdentifier();
+		} else if (type.isSimpleType()) {
+			return type.toString();
+		} else if (type.isWildcardType()) {
+			WildcardType wt = (WildcardType) type;
+			String s = "?";
+			if (wt.getBound() != null) {
+				if (wt.isUpperBound())
+					s += "extends ";
+				else
+					s += "super ";
+				s += getUnresolvedType(wt.getBound());
+			}
+			return s;
+		}
+
+		return null;
+	}
+
+	private static String getDimensions(int dimensions) {
+		String s = "";
+		for (int i = 0; i < dimensions; i++)
+			s += "[]";
+		return s;
+	}
+
+	static String getResolvedType(Type type) {
+		ITypeBinding tb = type.resolveBinding();
+		if (tb == null || tb.isRecovered())
+			return getUnresolvedType(type);
+		tb = tb.getTypeDeclaration();
+		if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+			return getUnresolvedType(type);
+		if (type.isArrayType()) {
+			ArrayType t = (ArrayType) type;
+			return getResolvedType(t.getElementType())
+					+ getDimensions(t.getDimensions());
+		} else if (type.isIntersectionType()) {
+			IntersectionType it = (IntersectionType) type;
+			@SuppressWarnings("unchecked")
+			ArrayList<Type> types = new ArrayList<>(it.types());
+			String s = getResolvedType(types.get(0));
+			for (int i = 1; i < types.size(); i++)
+				s += " & " + getResolvedType(types.get(i));
+			return s;
+		} else if (type.isParameterizedType()) {
+			ParameterizedType t = (ParameterizedType) type;
+			return getResolvedType(t.getType());
+		} else if (type.isUnionType()) {
+			UnionType it = (UnionType) type;
+			@SuppressWarnings("unchecked")
+			ArrayList<Type> types = new ArrayList<>(it.types());
+			String s = getResolvedType(types.get(0));
+			for (int i = 1; i < types.size(); i++)
+				s += " | " + getResolvedType(types.get(i));
+			return s;
+		} else if (type.isNameQualifiedType()) {
+			return tb.getQualifiedName();
+		} else if (type.isPrimitiveType()) {
+			return type.toString();
+		} else if (type.isQualifiedType()) {
+			return tb.getQualifiedName();
+		} else if (type.isSimpleType()) {
+			return tb.getQualifiedName();
+		} else if (type.isWildcardType()) {
+			WildcardType wt = (WildcardType) type;
+			String s = "?";
+			if (wt.getBound() != null) {
+				if (wt.isUpperBound())
+					s += "extends ";
+				else
+					s += "super ";
+				s += getResolvedType(wt.getBound());
+			}
+			return s;
+		}
+
+		return null;
+	}
 }

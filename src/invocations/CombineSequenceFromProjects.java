@@ -50,7 +50,7 @@ public class CombineSequenceFromProjects {
 				File fileMapIdenAndId=new File(fpMapIdenAndId);
 				if(fileMapIdenAndId.isFile()){
 					String fpMapIdAndIden=arrIn[i].getAbsolutePath()+File.separator+"hash"+File.separator+"mapIdAndIden.txt";
-					String fpMapIdAppear=arrIn[i].getAbsolutePath()+File.separator+"hash"+File.separator+"mapIdAndIden.txt";
+					String fpMapIdAppear=arrIn[i].getAbsolutePath()+File.separator+"hash"+File.separator+"mapIdAppear.txt";
 					String fopHash=arrIn[i].getAbsolutePath()+File.separator+"hash"+File.separator;
 					HashMap<String,String> mapIdenAndId=getMapFromFileStringString(fpMapIdenAndId);
 					HashMap<String,String> mapIdAndIden=getMapFromFileStringString(fpMapIdAndIden);

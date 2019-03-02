@@ -4,7 +4,10 @@ import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 
 public class FileIO {
@@ -12,6 +15,28 @@ public class FileIO {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	public static void copyFileUsingChannel(File source, File dest) {
+	    FileChannel sourceChannel = null;
+	    FileChannel destChannel = null;
+	    try {
+	        sourceChannel = new FileInputStream(source).getChannel();
+	        destChannel = new FileOutputStream(dest).getChannel();
+	        destChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
+	       }
+	    catch(Exception ex){
+	    	ex.printStackTrace();
+	    }
+	    finally{
+	    	try{
+	    		sourceChannel.close();
+		        destChannel.close();
+	    	}catch(Exception ex){
+	    		
+	    	}
+	           
+	   }
 	}
 	
 	public static void writeStringToFile(String string, String outputFile) {

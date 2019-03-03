@@ -10,7 +10,7 @@ import consts.PathConstanct;
 
 public class RunOnLargeScaleData {
 
-	private static final int MYTHREADS = 8;
+	private static final int MYTHREADS = 10;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -63,7 +63,7 @@ class ExtractSequenceForProjectRunnable implements Runnable {
 			
 			File fOut=new File(outputPath);
 			File fSourceOut=new File(outputPath+"source.txt");
-			if(fSourceOut.isFile() && fSourceOut.length()>0){
+			if(fSourceOut.isFile() && fSourceOut.length()>100){
 				System.out.println(index+"\tAlready for " + outputPath);
 				FileIO.appendStringToFile(index+"\t"+fIn.getName()+"\tDownloaded\n", logPath);
 			} else{

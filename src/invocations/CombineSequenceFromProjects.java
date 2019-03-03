@@ -87,13 +87,21 @@ public class CombineSequenceFromProjects {
 		System.out.println("Compose total mapIdenAndAppear");
 		StringBuilder sbAppear=new StringBuilder();
 		StringBuilder sbId=new StringBuilder();
+		int indexCount=0;
+		FileIO.writeStringToFile("", inputFolder+"a_mapTotalIdenAndId.txt");
+		FileIO.writeStringToFile("", inputFolder+"a_mapTotalIdenAppear.txt");
 		for(String iden:mapTotalIdenAndAppear.keySet()){
+			indexCount++;
 			sbAppear.append(iden+"\t"+mapTotalIdenAndAppear.get(iden)+"\n");
 			sbId.append(iden+"\t"+mapTotalIdenAndId.get(iden)+"\n");
+			if(indexCount%100000==0 || indexCount==mapTotalIdenAndAppear.size()){
+				FileIO.appendStringToFile(sbId.toString(), inputFolder+"a_mapTotalIdenAndId.txt");
+				FileIO.appendStringToFile(sbAppear.toString(), inputFolder+"a_mapTotalIdenAppear.txt");
+			}
+			
 		}
 		
-		FileIO.writeStringToFile(sbId.toString(), inputFolder+"a_mapTotalIdenAndId.txt");
-		FileIO.writeStringToFile(sbAppear.toString(), inputFolder+"a_mapTotalIdenAppear.txt");
+		
 		
 		
 	}

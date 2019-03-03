@@ -73,7 +73,7 @@ public class CombineSequenceFromProjects {
 //								FileIO.copyFileUsingChannel(new File(fopHash+id+".txt"), new File(totalSignatureFolder+totalId+".txt"));
 							} else{
 								int numAppear=mapIdAppear.get(id);
-								totalId=mapTotalIdenAndId.get(iden);
+								// totalId=mapTotalIdenAndId.get(iden);
 								mapTotalIdenAndAppear.put(iden, mapTotalIdenAndAppear.get(iden)+numAppear);
 							}
 							sbIdAndTotalId.append(id+"\t"+totalId+"\n");

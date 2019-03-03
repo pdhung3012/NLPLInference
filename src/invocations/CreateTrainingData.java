@@ -1,0 +1,81 @@
+package invocations;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
+import utils.FileIO;
+import consts.PathConstanct;
+
+public class CreateTrainingData {
+
+	public static String replaceTargetWithTotalId(String target,HashMap<String,String> mapReplaceId){
+		String strResult="";
+		String[] arrOldTarget=target.split("\n");
+		for(int i=0;i<arrOldTarget.length;i++){
+			String[] arrItem=arrOldTarget[i].trim().split("\\s+");
+			String line="";
+			for(int j=0;j<arrItem.length;j++){
+				if(arrItem[j].startsWith("E-") ){
+					String totalId=mapReplaceId.get(arrItem[j]);
+					if(totalId!=null){
+						line+=totalId+" ";
+					} else{
+						line+=arrItem[j]+" ";
+					}
+					
+				} else{
+					line+=arrItem[j]+" ";
+				}
+			}
+			strResult+=line+"\n";
+		}
+		return strResult;
+	}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		String inputFolder = PathConstanct.PATH_OUTPUT_IDENTIFER_PROJECT;
+		String outputFolder = "";
+
+		File fInFolder = new File(inputFolder);
+
+		File[] arrIn = fInFolder.listFiles();
+		
+		FileIO.writeStringToFile("", outputFolder+"target.txt");
+		FileIO.writeStringToFile("", outputFolder+"source.txt");
+		FileIO.writeStringToFile("", outputFolder+"location.txt");
+		
+		for (int i = 0; i < arrIn.length; i++) {
+			if (arrIn[i].isDirectory()) {
+				String fpLocation=arrIn[i].getAbsolutePath()
+						+ File.separator+"location.txt";
+				String fpSource=arrIn[i].getAbsolutePath()
+						+ File.separator+"source.txt";
+				String fpTarget=arrIn[i].getAbsolutePath()
+						+ File.separator+"target.txt";
+				String fpMapIdenAndId = arrIn[i].getAbsolutePath()
+						+ File.separator + "hash" + File.separator
+						+ "mapIdenAndId.txt";
+				
+				File fileMapIdenAndId = new File(fpMapIdenAndId);
+				if (fileMapIdenAndId.isFile()) {
+					String fpMapReplaceId = arrIn[i].getAbsolutePath()
+							+ File.separator + "hash" + File.separator
+							+ "mapReplaceId.txt";
+					HashMap<String,String> mapReplaceId=CombineSequenceFromProjects.getMapFromFileStringString(fpMapReplaceId);
+					
+					String strTarget=FileIO.readStringFromFile(fpTarget);
+					String strNewTarget=replaceTargetWithTotalId(strTarget, mapReplaceId);
+					FileIO.appendStringToFile(strNewTarget, outputFolder+"target.txt");
+					String strSource=FileIO.readStringFromFile(fpSource);
+					FileIO.appendStringToFile(strSource, outputFolder+"source.txt");
+					String strLocation=FileIO.readStringFromFile(fpSource);
+					FileIO.appendStringToFile(strLocation, outputFolder+"location.txt");
+					
+				}
+				System.out.println(i + " finish " + arrIn[i].getName()
+						+ " size " );
+			}
+		}
+	}
+}

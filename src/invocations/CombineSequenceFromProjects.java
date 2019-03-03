@@ -58,21 +58,28 @@ public class CombineSequenceFromProjects {
 					HashMap<String,String> mapIdAndIden=getMapFromFileStringString(fpMapIdAndIden);
 					HashMap<String,Integer> mapIdAppear=getMapFromFileStringInt(fpMapIdAppear);
 					
+					HashMap<String,String> mapIdAndTotalId=new LinkedHashMap<String, String>();
+					StringBuilder sbIdAndTotalId=new StringBuilder();
 					for(String iden:mapIdenAndId.keySet()){
 						String id=mapIdenAndId.get(iden);
 						if(mapIdAndIden.containsKey(id)){
-							if(!mapTotalIdenAndAppear.containsKey(iden)){
-								String totalId="E-Total-"+String.format("%09d" , mapTotalIdenAndAppear.size()+1);
+							String totalId=mapTotalIdenAndId.get(iden);
+							if(totalId==null){
+								totalId="E-Total-"+String.format("%09d" , mapTotalIdenAndAppear.size()+1);
 								int numAppear=mapIdAppear.get(id);
 								mapTotalIdenAndAppear.put(iden,numAppear);
 								mapTotalIdenAndId.put(iden, totalId);
-								FileIO.copyFileUsingChannel(new File(fopHash+id+".txt"), new File(totalSignatureFolder+totalId+".txt"));
+								mapIdAndTotalId.put(id, totalId);
+//								FileIO.copyFileUsingChannel(new File(fopHash+id+".txt"), new File(totalSignatureFolder+totalId+".txt"));
 							} else{
 								int numAppear=mapIdAppear.get(id);
+								totalId=mapTotalIdenAndId.get(iden);
 								mapTotalIdenAndAppear.put(iden, mapTotalIdenAndAppear.get(iden)+numAppear);
 							}
+							sbIdAndTotalId.append(id+"\t"+totalId+"\n");
 						}
 					}
+					FileIO.writeStringToFile(sbIdAndTotalId.toString(), fopHash+"mapReplaceId.txt");
 				}
 				System.out.println(i+" finish "+arrIn[i].getName()+" size "+mapTotalIdenAndAppear.size());
 			}

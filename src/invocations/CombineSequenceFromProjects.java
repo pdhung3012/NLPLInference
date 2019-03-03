@@ -97,6 +97,8 @@ public class CombineSequenceFromProjects {
 			if(indexCount%100000==0 || indexCount==mapTotalIdenAndAppear.size()){
 				FileIO.appendStringToFile(sbId.toString(), inputFolder+"a_mapTotalIdenAndId.txt");
 				FileIO.appendStringToFile(sbAppear.toString(), inputFolder+"a_mapTotalIdenAppear.txt");
+				sbId=new StringBuilder();
+				sbAppear=new StringBuilder();
 			}
 			
 		}

@@ -35,7 +35,7 @@ public class CreateTrainingData {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String inputFolder = PathConstanct.PATH_OUTPUT_IDENTIFER_PROJECT;
-		String outputFolder = "";
+		String outputFolder = PathConstanct.PATH_COMBINE_TRANS;
 
 		File fInFolder = new File(inputFolder);
 
@@ -43,12 +43,12 @@ public class CreateTrainingData {
 		
 		FileIO.writeStringToFile("", outputFolder+"target.txt");
 		FileIO.writeStringToFile("", outputFolder+"source.txt");
-		FileIO.writeStringToFile("", outputFolder+"location.txt");
+		FileIO.writeStringToFile("", outputFolder+"locations.txt");
 		
 		for (int i = 0; i < arrIn.length; i++) {
 			if (arrIn[i].isDirectory()) {
 				String fpLocation=arrIn[i].getAbsolutePath()
-						+ File.separator+"location.txt";
+						+ File.separator+"locations.txt";
 				String fpSource=arrIn[i].getAbsolutePath()
 						+ File.separator+"source.txt";
 				String fpTarget=arrIn[i].getAbsolutePath()
@@ -69,8 +69,8 @@ public class CreateTrainingData {
 					FileIO.appendStringToFile(strNewTarget, outputFolder+"target.txt");
 					String strSource=FileIO.readStringFromFile(fpSource);
 					FileIO.appendStringToFile(strSource, outputFolder+"source.txt");
-					String strLocation=FileIO.readStringFromFile(fpSource);
-					FileIO.appendStringToFile(strLocation, outputFolder+"location.txt");
+					String strLocation=FileIO.readStringFromFile(fpLocation);
+					FileIO.appendStringToFile(strLocation, outputFolder+"locations.txt");
 					
 				}
 				System.out.println(i + " finish " + arrIn[i].getName()

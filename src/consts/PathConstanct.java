@@ -6,6 +6,7 @@ public class PathConstanct {
 	public static String PATH_JAVA_CLASSPATH="C:\\Program Files\\Java\\jdk1.8.0_144\\jre\\lib\\rt.jar";
 	public static String PATH_INPUT_IDENTIFER_PROJECT="G:\\gitExtractedST2\\";
 	public static String PATH_OUTPUT_IDENTIFER_PROJECT="G:\\SeqImplInf\\";
+	public static String PATH_COMBINE_TRANS="G:\\CombineTrans\\";
 	public static String PATH_COMBINE_SIG_PROJECT="G:\\CombineSigs\\";
 	
 	public static String fopListLibraryLocation="/Users/hungphan/git/NLPLInference/data/StatTypeProjects/";

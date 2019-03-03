@@ -10,27 +10,28 @@ import consts.PathConstanct;
 public class CreateTrainingData {
 
 	public static String replaceTargetWithTotalId(String target,HashMap<String,String> mapReplaceId){
-		String strResult="";
+		StringBuilder strResult=new StringBuilder();
 		String[] arrOldTarget=target.split("\n");
 		for(int i=0;i<arrOldTarget.length;i++){
 			String[] arrItem=arrOldTarget[i].trim().split("\\s+");
-			String line="";
+			StringBuilder line=new StringBuilder();
 			for(int j=0;j<arrItem.length;j++){
 				if(arrItem[j].startsWith("E-") ){
 					String totalId=mapReplaceId.get(arrItem[j]);
 					if(totalId!=null){
-						line+=totalId+" ";
+						line.append(totalId+" ");
 					} else{
-						line+=arrItem[j]+" ";
+						line.append(arrItem[j]+" ");
 					}
+//					line.append(arrItem[j]+" ");
 					
 				} else{
-					line+=arrItem[j]+" ";
+					line.append(arrItem[j]+" ");
 				}
 			}
-			strResult+=line+"\n";
+			strResult.append(line.toString().trim()+"\n");
 		}
-		return strResult;
+		return strResult.toString();
 	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -66,6 +67,7 @@ public class CreateTrainingData {
 					
 					String strTarget=FileIO.readStringFromFile(fpTarget);
 					String strNewTarget=replaceTargetWithTotalId(strTarget, mapReplaceId);
+//					String strNewTarget=strTarget;
 					FileIO.appendStringToFile(strNewTarget, outputFolder+"target.txt");
 					String strSource=FileIO.readStringFromFile(fpSource);
 					FileIO.appendStringToFile(strSource, outputFolder+"source.txt");

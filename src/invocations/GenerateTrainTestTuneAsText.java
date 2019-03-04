@@ -12,7 +12,7 @@ public class GenerateTrainTestTuneAsText {
 		// TODO Auto-generated method stub
 		String fopSequence=PathConstanct.PATH_OUTPUT_IDENTIFER_PROJECT;
 		String fopProjectTTTList=PathConstanct.PATH_PROJECT_TRAIN_TEST_NAME;
-		String fopOutput="";
+		String fopOutput=PathConstanct.PATH_PROJECT_TTT_DATA;
 		
 		String[] arrTrainName=FileIO.readStringFromFile(fopProjectTTTList+"train.project.txt").split("\n");
 		String[] arrTuneName=FileIO.readStringFromFile(fopProjectTTTList+"tune.project.txt").split("\n");

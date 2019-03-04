@@ -25,7 +25,6 @@ public class AliasingParallelCorpusToInt {
 	}
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		String folderInput=PathConstanct.PATH_PROJECT_TTT_DATA;
 		String folderNormalize=PathConstanct.PATH_PROJECT_TTT_ALIAS;
 

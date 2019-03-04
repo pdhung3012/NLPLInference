@@ -13,10 +13,21 @@ import utils.FileIO;
 
 public class AliasingParallelCorpusToInt {
 
+	public static String tryGetLine(BufferedReader br) {
+		String line=null;
+		try {
+			line = br.readLine();
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		return line;
+	}
+	
 	public static void addToHashMap(HashMap<String,Integer> mapVocabStrInt,String fpFile){
 		
-		try (BufferedReader br = Files.newBufferedReader(Paths.get(fpFile), StandardCharsets.UTF_8)) {
-		    for (String line = null; (line = br.readLine()) != null;) {
+		try (BufferedReader br = Files.newBufferedReader(Paths.get(fpFile), StandardCharsets.US_ASCII)) {
+		    for (String line = null; (line = tryGetLine(br)) != null;) {
+		    	//System.out.println(line);
 		    	String[] arrItems=line.trim().split("\\s+");
 				for(int j=0;j<arrItems.length;j++){
 					if(!mapVocabStrInt.containsKey(arrItems[j])){
@@ -52,12 +63,17 @@ public class AliasingParallelCorpusToInt {
 		HashMap<String,Integer> mapVocabStrInt=new LinkedHashMap<>();
 		
 		addToHashMap(mapVocabStrInt, fpInTrainSource);
+		System.out.println("Done hash");
 		addToHashMap(mapVocabStrInt, fpInTrainTarget);
+		System.out.println("Done hash");
 		addToHashMap(mapVocabStrInt, fpInTuneSource);
+		System.out.println("Done hash");
 		addToHashMap(mapVocabStrInt, fpInTuneTarget);
+		System.out.println("Done hash");
 		addToHashMap(mapVocabStrInt, fpInTestSource);
+		System.out.println("Done hash");
 		addToHashMap(mapVocabStrInt, fpInTestTarget);
-		
+		System.out.println("Done hash");
 		System.out.println("Done library of alias "+mapVocabStrInt.size());
 		
 		normalize(fpInTrainSource,fpOutTrainSource,mapVocabStrInt);
@@ -83,26 +99,37 @@ public class AliasingParallelCorpusToInt {
 	}
 	
 	public static void normalize(String fpInput,String fpOutput,HashMap<String,Integer> mapVocabStrInt){
-		String[] arrTrainS=FileIO.readStringFromFile(fpInput).trim().split("\n");
 		StringBuilder sbResult=new StringBuilder();
 		FileIO.writeStringToFile("", fpOutput);
-		for(int i=0;i<arrTrainS.length;i++){
-			String[] arrItemsS=arrTrainS[i].trim().split("\\s+");
-			StringBuilder strItem=new StringBuilder();
-			
-			for(int j=0;j<arrItemsS.length;j++){
-				if(!mapVocabStrInt.containsKey(arrItemsS[j])){
-					mapVocabStrInt.put(arrItemsS[j], mapVocabStrInt.size()+1);
-				}
-				strItem.append(mapVocabStrInt.get(arrItemsS[j])+" ");
+		int i=0;
+		try (BufferedReader br = Files.newBufferedReader(Paths.get(fpInput), StandardCharsets.US_ASCII)) {
+		    for (String line = null; (line = tryGetLine(br)) != null;) {
+		    	//System.out.println(line);
+		    	i++;
+		    	String[] arrItemsS=line.trim().split("\\s+");
+				StringBuilder strItem=new StringBuilder();
 				
-			}
-			sbResult.append(strItem.toString().trim()+"\n");
-			
-			if(i+1==1000000 || i+1==arrTrainS.length){
-				FileIO.appendStringToFile(sbResult.toString(),fpOutput);
-				sbResult=new StringBuilder();
-			}
+				for(int j=0;j<arrItemsS.length;j++){
+					if(!mapVocabStrInt.containsKey(arrItemsS[j])){
+						mapVocabStrInt.put(arrItemsS[j], mapVocabStrInt.size()+1);
+					}
+					strItem.append(mapVocabStrInt.get(arrItemsS[j])+" ");
+					
+				}
+				sbResult.append(strItem.toString().trim()+"\n");
+				
+				if(i+1==1000000 ){
+					FileIO.appendStringToFile(sbResult.toString(),fpOutput);
+					sbResult=new StringBuilder();
+				}
+		    }
+		 
+		} catch(Exception ex){
+			ex.printStackTrace();
+		}
+		if(!sbResult.toString().isEmpty()) {
+			FileIO.appendStringToFile(sbResult.toString(),fpOutput);
+			sbResult=new StringBuilder();
 		}
 		
 		

@@ -6,8 +6,8 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Random;
 
-import utils.FileIO;
 import consts.PathConstanct;
+import utils.FileIO;
 
 public class ChooseJavaProject {
 
@@ -31,11 +31,14 @@ public class ChooseJavaProject {
 			String[] arrProjectName=FileIO.readStringFromFile(fopPathLogProject+arrExtractLibaryName[i]).trim().split("\n");
 			ArrayList<String> listName=new ArrayList<String>();
 			for(int j=0;j<arrProjectName.length;j++){
-				File fileProjectLocations=new File(fopProjectSequences+arrProjectName[i]+File.separator+"locations.txt");
+				String projectFolder=arrProjectName[j].replaceFirst("_", "-");
+				File fileProjectLocations=new File(fopProjectSequences+projectFolder+File.separator+"locations.txt");
+				System.out.println(fileProjectLocations.getAbsolutePath());
 				if(fileProjectLocations.isFile() && fileProjectLocations.length()>0){
-					if(!listTotalProjNames.contains(arrProjectName[j])){
-						listName.add(arrProjectName[j]);
-						listTotalProjNames.add(arrProjectName[j]);
+					if(!listTotalProjNames.contains(projectFolder)){
+						
+						listName.add(projectFolder);
+						listTotalProjNames.add(projectFolder);
 						if(listName.size()==numProjectRequired){
 							break;
 						}

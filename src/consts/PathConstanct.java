@@ -2,14 +2,15 @@ package consts;
 
 public class PathConstanct {
 	
-//	public static String PATH_JAVA_CLASSPATH="C:\\Program Files\\Java\\jdk1.8.0_144\\jre\\lib\\rt.jar";
-//	public static String PATH_INPUT_IDENTIFER_PROJECT="G:\\gitExtractedST2\\";
-//	public static String PATH_OUTPUT_IDENTIFER_PROJECT="G:\\SeqImplInf\\";
-//	public static String PATH_COMBINE_TRANS="G:\\CombineTrans\\";
-//	public static String PATH_COMBINE_SIG_PROJECT="G:\\CombineSigs\\";
-//	public static String PATH_PROJECT_LOG="/Users/hungphan/git/NLPLTranslation/projectLog/";
-//	public static String PATH_PROJECT_TRAIN_TEST_NAME="/Users/hungphan/git/NLPLTranslation/projectTrainTestName/";
-	
+public static String PATH_JAVA_CLASSPATH="C:\\Program Files\\Java\\jdk1.8.0_144\\jre\\lib\\rt.jar";
+public static String PATH_INPUT_IDENTIFER_PROJECT="G:\\gitExtractedST2\\";
+public static String PATH_OUTPUT_IDENTIFER_PROJECT="G:\\SeqImplInf\\";
+public static String PATH_COMBINE_TRANS="G:\\CombineTrans\\";
+public static String PATH_COMBINE_SIG_PROJECT="G:\\CombineSigs\\";
+public static String PATH_PROJECT_LOG="G:\\5Repositories\\";
+public static String PATH_PROJECT_TRAIN_TEST_NAME="G:\\projectTrainTestName\\";
+
+	/*
 	public static String PATH_JAVA_CLASSPATH="/Library/Java/JavaVirtualMachines/jdk1.8.0_141.jdk/Contents/Home/jre/lib/rt.jar";
 	public static String PATH_INPUT_IDENTIFER_PROJECT="/Users/hungphan/git/NLPLTranslation/abc/";
 	public static String PATH_OUTPUT_IDENTIFER_PROJECT="/Users/hungphan/git/NLPLTranslation/sequences/";
@@ -17,7 +18,7 @@ public class PathConstanct {
 	public static String PATH_COMBINE_SIG_PROJECT="/Users/hungphan/git/NLPLTranslation/combineSig/";
 	public static String PATH_PROJECT_LOG="/Users/hungphan/git/NLPLTranslation/projectLog/";
 	public static String PATH_PROJECT_TRAIN_TEST_NAME="/Users/hungphan/git/NLPLTranslation/projectTrainTestName/";
-	
+	*/
 	
 	public static String fopListLibraryLocation="/Users/hungphan/git/NLPLInference/data/StatTypeProjects/";
 	public static String fopProjectLocation="/Users/hungphan/git/NLPLInference/data/downloaded2/";

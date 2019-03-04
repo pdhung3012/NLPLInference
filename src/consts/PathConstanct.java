@@ -9,6 +9,7 @@ public static String PATH_COMBINE_TRANS="G:\\CombineTrans\\";
 public static String PATH_COMBINE_SIG_PROJECT="G:\\CombineSigs\\";
 public static String PATH_PROJECT_LOG="G:\\5Repositories\\";
 public static String PATH_PROJECT_TRAIN_TEST_NAME="G:\\projectTrainTestName\\";
+public static String PATH_PROJECT_TTT_DATA="G:\\projectTrainTestData\\";
 
 	/*
 	public static String PATH_JAVA_CLASSPATH="/Library/Java/JavaVirtualMachines/jdk1.8.0_141.jdk/Contents/Home/jre/lib/rt.jar";

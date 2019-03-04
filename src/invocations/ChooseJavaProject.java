@@ -33,7 +33,7 @@ public class ChooseJavaProject {
 			for(int j=0;j<arrProjectName.length;j++){
 				String projectFolder=arrProjectName[j].replaceFirst("_", "-");
 				File fileProjectLocations=new File(fopProjectSequences+projectFolder+File.separator+"locations.txt");
-				System.out.println(fileProjectLocations.getAbsolutePath());
+//				System.out.println(fileProjectLocations.getAbsolutePath());
 				if(fileProjectLocations.isFile() && fileProjectLocations.length()>0){
 					if(!listTotalProjNames.contains(projectFolder)){
 						

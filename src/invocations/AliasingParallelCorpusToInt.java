@@ -1,5 +1,9 @@
 package invocations;
 
+import java.io.BufferedReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -10,17 +14,19 @@ import utils.FileIO;
 public class AliasingParallelCorpusToInt {
 
 	public static void addToHashMap(HashMap<String,Integer> mapVocabStrInt,String fpFile){
-		String[] arrContent=FileIO.readStringFromFile(fpFile).trim().split("\n");
 		
-		for(int i=0;i<arrContent.length;i++){
-			String[] arrItems=arrContent[i].trim().split("\\s+");
-			for(int j=0;j<arrItems.length;j++){
-				if(!mapVocabStrInt.containsKey(arrItems[j])){
-					mapVocabStrInt.put(arrItems[j], mapVocabStrInt.size()+1);
+		try (BufferedReader br = Files.newBufferedReader(Paths.get(fpFile), StandardCharsets.UTF_8)) {
+		    for (String line = null; (line = br.readLine()) != null;) {
+		    	String[] arrItems=line.trim().split("\\s+");
+				for(int j=0;j<arrItems.length;j++){
+					if(!mapVocabStrInt.containsKey(arrItems[j])){
+						mapVocabStrInt.put(arrItems[j], mapVocabStrInt.size()+1);
+					}
 				}
-			}
+		    }
+		} catch(Exception ex){
+			ex.printStackTrace();
 		}
-		
 		
 	}
 	
@@ -57,6 +63,9 @@ public class AliasingParallelCorpusToInt {
 		normalize(fpInTrainSource,fpOutTrainSource,mapVocabStrInt);
 		normalize(fpInTuneSource,fpOutTuneSource,mapVocabStrInt);
 		normalize(fpInTestSource,fpOutTestSource,mapVocabStrInt);
+		normalize(fpInTrainTarget,fpOutTrainTarget,mapVocabStrInt);
+		normalize(fpInTuneTarget,fpOutTuneTarget,mapVocabStrInt);
+		normalize(fpInTestTarget,fpOutTestTarget,mapVocabStrInt);
 		
 		StringBuilder sbResult=new StringBuilder();
 		FileIO.writeStringToFile("",fpAlias);

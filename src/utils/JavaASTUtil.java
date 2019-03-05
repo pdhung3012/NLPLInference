@@ -530,10 +530,10 @@ public class JavaASTUtil {
 			// WildcardType t = (WildcardType) type;
 			System.err
 					.println("ERROR: Declare a variable with wildcard type!!!");
-			System.exit(0);
+			//System.exit(0);
 		}
 		System.err.println("ERROR: Declare a variable with unknown type!!!");
-		System.exit(0);
+	//	System.exit(0);
 		return null;
 	}
 

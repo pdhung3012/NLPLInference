@@ -46,7 +46,7 @@ public class AliasingParallelCorpusToIntPerLibrary {
 		"hibernate","jodatime"};
 	
 	public static void main(String[] args) {
-			int selectLibIndex=1;
+		int selectLibIndex=1;
 		String folderInput=PathConstanct.PATH_PROJECT_TTT_DATA+File.separator+arrCompactLibaryName[selectLibIndex]+File.separator;
 		String folderNormalize=PathConstanct.PATH_PROJECT_TTT_ALIAS+File.separator+arrCompactLibaryName[selectLibIndex]+File.separator;
 

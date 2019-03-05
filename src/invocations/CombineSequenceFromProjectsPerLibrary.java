@@ -4,11 +4,11 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import consts.PathConstanct;
 import utils.FileIO;
+import consts.PathConstanct;
 
-public class CombineSequenceFromProjects {
-	
+public class CombineSequenceFromProjectsPerLibrary {
+
 	public static HashMap<String,String> getMapFromFileStringString(String fp){
 		HashMap<String,String> map=new LinkedHashMap<String, String>();
 		String[] arrContent=FileIO.readStringFromFile(fp).split("\n");
@@ -32,12 +32,17 @@ public class CombineSequenceFromProjects {
 		}
 		return map;
 	}
+	
+	public static String[] arrCompactLibaryName={"android",
+		"gwt","xstream",
+		"hibernate","jodatime"};
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		int selectLibIndex=1;
 		String inputFolder=PathConstanct.PATH_OUTPUT_IDENTIFER_PROJECT;
-		String totalSignatureFolder=PathConstanct.PATH_COMBINE_SIG_PROJECT;
-		
+		String totalSignatureFolder=PathConstanct.PATH_COMBINE_SIG_PROJECT+arrCompactLibaryName[selectLibIndex]+File.separator;
+		new File(totalSignatureFolder).mkdir();
 		File fInFolder=new File(inputFolder);
 		
 		File[] arrIn=fInFolder.listFiles();
@@ -105,5 +110,6 @@ public class CombineSequenceFromProjects {
 		
 		
 	}
+
 
 }

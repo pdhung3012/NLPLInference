@@ -69,7 +69,7 @@ public class GenerateSplitLineTrainTestPerLibrary {
 		String fopIn=PathConstanct.PATH_PROJECT_TTT_ALIAS+arrCompactLibaryName[selectLibIndex]+File.separator;
 		String fopOut=PathConstanct.PATH_PROJECT_TTT_SPLIT_ALIAS+arrCompactLibaryName[selectLibIndex]+File.separator;
 		new File(fopOut).mkdir();
-		int numLine=50;
+		int numLine=30;
 		getSplitData(fopIn+"train.source.txt", fopOut+"train.source.txt", fopOut+"train.source.line.txt",numLine);
 		getSplitData(fopIn+"train.target.txt", fopOut+"train.target.txt", fopOut+"train.target.line.txt",numLine);
 		getSplitData(fopIn+"tune.source.txt", fopOut+"tune.source.txt", fopOut+"tune.source.line.txt",numLine);

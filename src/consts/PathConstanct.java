@@ -12,6 +12,7 @@ public class PathConstanct {
 	public static String PATH_PROJECT_TTT_DATA = "G:\\projectTrainTestData\\";
 	public static String PATH_PROJECT_TTT_ALIAS = "G:\\projectTrainTestAlias\\";
 	public static String PATH_PROJECT_TTT_SPLIT_ALIAS = "G:\\projectTrainTestSplitAlias\\";
+	public static String PATH_PROJECT_STATTYPE_DATA = "G:\\Stattype_old_data\\";
 
 	/*
 	 * public static String PATH_JAVA_CLASSPATH=

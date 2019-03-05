@@ -51,7 +51,7 @@ public class RunOnFixProjectSetPerLibrary {
 			sbResult.append(arrTuneProjects[i]+"\n");
 		}
 		
-		FileIO.writeStringToFile(sbResult.toString(), fopOutput+"_"+arrLibraryPrefix[selectLibIndex]+"txt");
+		FileIO.writeStringToFile(sbResult.toString(), fopOutput+"_"+arrLibraryPrefix[selectLibIndex]+".txt");
 		
 		for(int i=0;i<listRequiredProjects.size();i++){
 			String folderName=listRequiredProjects.get(i).replaceFirst("_","-");

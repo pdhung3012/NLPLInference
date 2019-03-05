@@ -29,7 +29,7 @@ public class GenerateTrainTestTuneAsTextPerLibrary {
 		FileIO.writeStringToFile("", fopOutput+"train.source.txt");
 		FileIO.writeStringToFile("", fopOutput+"train.target.txt");
 		
-		for(int i=selectLibIndex*200;i<(selectLibIndex+1)*200;i++){
+		for(int i=selectLibIndex*160;i<(selectLibIndex+1)*160;i++){
 			String fopProjSeq=fopSequence+arrTrainName[i]+File.separator;
 			String fpLocation=fopProjSeq
 					+ File.separator+"locations.txt";
@@ -49,6 +49,7 @@ public class GenerateTrainTestTuneAsTextPerLibrary {
 				HashMap<String,String> mapReplaceId=CombineSequenceFromProjects.getMapFromFileStringString(fpMapReplaceId);				
 				String strTarget=FileIO.readStringFromFile(fpTarget);
 				String strNewTarget=CreateTrainingData.replaceTargetWithTotalId(strTarget, mapReplaceId);
+				FileIO.writeStringToFile(strNewTarget, fopProjSeq+"totalIdTarget.txt");
 				FileIO.appendStringToFile(strNewTarget, fopOutput+"train.target.txt");
 				String strSource=FileIO.readStringFromFile(fpSource);
 				FileIO.appendStringToFile(strSource, fopOutput+"train.source.txt");
@@ -84,6 +85,7 @@ public class GenerateTrainTestTuneAsTextPerLibrary {
 				HashMap<String,String> mapReplaceId=CombineSequenceFromProjects.getMapFromFileStringString(fpMapReplaceId);				
 				String strTarget=FileIO.readStringFromFile(fpTarget);
 				String strNewTarget=CreateTrainingData.replaceTargetWithTotalId(strTarget, mapReplaceId);
+				FileIO.writeStringToFile(strNewTarget, fopProjSeq+"totalIdTarget.txt");
 				FileIO.appendStringToFile(strNewTarget, fopOutput+"tune.target.txt");
 				String strSource=FileIO.readStringFromFile(fpSource);
 				FileIO.appendStringToFile(strSource, fopOutput+"tune.source.txt");
@@ -119,6 +121,7 @@ public class GenerateTrainTestTuneAsTextPerLibrary {
 				HashMap<String,String> mapReplaceId=CombineSequenceFromProjects.getMapFromFileStringString(fpMapReplaceId);				
 				String strTarget=FileIO.readStringFromFile(fpTarget);
 				String strNewTarget=CreateTrainingData.replaceTargetWithTotalId(strTarget, mapReplaceId);
+				FileIO.writeStringToFile(strNewTarget, fopProjSeq+"totalIdTarget.txt");
 				FileIO.appendStringToFile(strNewTarget, fopOutput+"test.target.txt");
 				String strSource=FileIO.readStringFromFile(fpSource);
 				FileIO.appendStringToFile(strSource, fopOutput+"test.source.txt");

@@ -36,6 +36,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	private LinkedHashMap<String,String> mapIdenAndID,mapIDAndIden;
 	private LinkedHashMap<String,Integer> mapIDAppear;
 	private InvocationAbstractorVisitor iaVisitor;
+	private String[] arrLibrariesPrefix;
 	
 	
 	
@@ -111,6 +112,14 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	
 	
 	
+	public String[] getArrLibrariesPrefix() {
+		return arrLibrariesPrefix;
+	}
+
+	public void setArrLibrariesPrefix(String[] arrLibrariesPrefix) {
+		this.arrLibrariesPrefix = arrLibrariesPrefix;
+	}
+
 	public String getHashIdenPath() {
 		return hashIdenPath;
 	}
@@ -554,6 +563,17 @@ public class MethodEncoderVisitor extends ASTVisitor {
 				: ":";
 		return strType;
 	}
+	
+	public String viewReceiverOfExpression(Expression node) {
+
+		String strType = "";
+		try{
+			strType=node.resolveTypeBinding().getQualifiedName();
+		}catch(Exception ex){
+			
+		}
+		return strType;
+	}
 
 	public String viewSelectedTypeParam(IMethodBinding iMethod, int i) {
 		if (iMethod == null) {
@@ -713,6 +733,32 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 		return null;
 	}
+	
+	public boolean checkPrefix(String type,String[] arrPrex){
+		boolean result=false;
+		
+		for(int i=0;i<arrPrex.length;i++){
+			if(type.startsWith(arrPrex[i])){
+				result=true;
+				break;
+			}
+		}
+		
+		if(type.contains("<")){
+			result=false;
+			String[] arrTypeInside=type.split("<");
+			if(arrTypeInside.length>=2){
+				for(int i=0;i<arrPrex.length;i++){
+					if(arrTypeInside[1].startsWith(arrPrex[i])){
+						result=true;
+						break;
+					}
+				}
+			}
+		}
+		
+		return result;
+	}
 
 	@Override
 	public void preVisit(ASTNode node) {
@@ -849,38 +895,45 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		}
 		
 		if (levelOfTraverMD == 1) {
-			InvocationObject io = new InvocationObject();
-			String methodInfo = JavaASTUtil.buildAllSigIngo(node);
-			io.setStrMethodInfo(methodInfo);
-			if(iaVisitor!=null){
-				node.accept(iaVisitor);				
-			}
-			if(!iaVisitor.getSbAbstractInformation().toString().equals("#")){
-				iaVisitor.sortRequiredAPI();
-				io.setStrCodeRepresent(iaVisitor.getSbAbstractInformation().toString());
-				io.setListQuestionMarkTypes(iaVisitor.getListAbstractTypeQuestionMark());
-				io.setSetImportedAPIs(iaVisitor.getSetRequiredAPIsForMI());
-				String idenInfo = io.setIDRepresent();
-				String id="";
-				if(!mapIdenAndID.containsKey(idenInfo)){
-					id="E-"+String.format("%09d" , mapIDAndIden.size()+1);
-//					
-					mapIdenAndID.put(idenInfo, id);
-					mapIDAndIden.put(id,idenInfo);
-					mapIDAppear.put(id, 1);
-					io.saveToFile(hashIdenPath+"/"+id+".txt");
-				}else{
-					String existId=mapIdenAndID.get(idenInfo);
-					id=existId;
-					mapIDAppear.put(existId,mapIDAppear.get(existId)+1);
+			
+			
+			
+			String receiverType=viewReceiverOfExpression(node.getExpression());
+			if(!receiverType.isEmpty() && checkPrefix(receiverType, arrLibrariesPrefix)){
+				InvocationObject io = new InvocationObject();
+				String methodInfo = JavaASTUtil.buildAllSigIngo(node);
+				io.setStrMethodInfo(methodInfo);
+				if(iaVisitor!=null){
+					node.accept(iaVisitor);				
+				}
+				if(!iaVisitor.getSbAbstractInformation().toString().equals("#")){
+					iaVisitor.sortRequiredAPI();
+					io.setStrCodeRepresent(iaVisitor.getSbAbstractInformation().toString());
+					io.setListQuestionMarkTypes(iaVisitor.getListAbstractTypeQuestionMark());
+					io.setSetImportedAPIs(iaVisitor.getSetRequiredAPIsForMI());
+					String idenInfo = io.setIDRepresent();
+					String id="";
+					if(!mapIdenAndID.containsKey(idenInfo)){
+						id="E-"+String.format("%09d" , mapIDAndIden.size()+1);
+//						
+						mapIdenAndID.put(idenInfo, id);
+						mapIDAndIden.put(id,idenInfo);
+						mapIDAppear.put(id, 1);
+						io.saveToFile(hashIdenPath+"/"+id+".txt");
+					}else{
+						String existId=mapIdenAndID.get(idenInfo);
+						id=existId;
+						mapIDAppear.put(existId,mapIDAppear.get(existId)+1);
+					}
+					
+					this.partialTokens.append(node.getName().getIdentifier()+"#identifier" + " ");
+					this.fullTokens.append(id + " ");
+
 				}
 				
-				this.partialTokens.append(node.getName().getIdentifier()+"#identifier" + " ");
-				this.fullTokens.append(id + " ");
-
-			}
-			
-			iaVisitor.refreshInformation();
+				iaVisitor.refreshInformation();
+				
+			}				
 		}
 		levelOfTraverMD--;
 		return false;

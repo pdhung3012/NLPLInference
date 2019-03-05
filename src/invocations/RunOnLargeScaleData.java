@@ -12,6 +12,8 @@ public class RunOnLargeScaleData {
 
 	private static final int MYTHREADS = 10;
 
+	public static String[] arrLibraryPrefix={"android","com.google.gwt","com.thoughtworks.xstream","org.hibernate","org.joda.time","java"};
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String inputProjectPath = PathConstanct.PATH_INPUT_IDENTIFER_PROJECT;
@@ -35,7 +37,7 @@ public class RunOnLargeScaleData {
 				String itemOutputPath = outputProjectPath + File.separator
 						+ arrFilesInput[i].getName() + File.separator;
 				ExtractSequenceForProjectRunnable thread = new ExtractSequenceForProjectRunnable(itemInputPath,
-						itemOutputPath, i,fpOutputLog);
+						itemOutputPath, arrLibraryPrefix,i,fpOutputLog);
 //				thread.run();
 				executor.execute(thread);
 			}
@@ -48,10 +50,12 @@ class ExtractSequenceForProjectRunnable implements Runnable {
 	private String inputPath = "", outputPath = "";
 	private int index = 0;
 	private String logPath="";
+	private String[] arrLibNames;
 
-	ExtractSequenceForProjectRunnable(String inputPath, String outputPath, int index,String logPath) {
+	ExtractSequenceForProjectRunnable(String inputPath, String outputPath, String[] arrLibName, int index,String logPath) {
 		this.inputPath = inputPath;
 		this.outputPath = outputPath;
+		this.arrLibNames=arrLibName;
 		this.index = index;
 		this.logPath=logPath;
 	}
@@ -68,7 +72,7 @@ class ExtractSequenceForProjectRunnable implements Runnable {
 				FileIO.appendStringToFile(index+"\t"+fIn.getName()+"\tDownloaded\n", logPath);
 			} else{
 				MethodContextSequenceGenerator mcsg = new MethodContextSequenceGenerator(
-						inputPath);
+						inputPath,arrLibNames);
 				mcsg.generateSequences(outputPath);
 				mcsg.generateAlignment(true);
 				System.out.println(index+"\tFinish success for " + outputPath);

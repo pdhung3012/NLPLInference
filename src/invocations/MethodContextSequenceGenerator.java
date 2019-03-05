@@ -42,14 +42,15 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 	private LinkedHashMap<String,String> mapIDAndIden;
 	private LinkedHashMap<String,Integer> mapIDAppear;
 	private LinkedHashMap<String,String> mapIdenAndID;
+	private String[] arrPrefix;
 	
-	public MethodContextSequenceGenerator(String inPath) {
+	public MethodContextSequenceGenerator(String inPath,String[] arrPrefix) {
 		this.inPath = inPath;
-
+		this.arrPrefix=arrPrefix;
 	}
 	
-	public MethodContextSequenceGenerator(String inPath, boolean testing) {
-		this(inPath);
+	public MethodContextSequenceGenerator(String inPath,String[] arrPrefix, boolean testing) {
+		this(inPath,arrPrefix);
 		this.testing = testing;
 	}
 	
@@ -116,6 +117,7 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 			r.setMapIDAndIden(mapIDAndIden);
 			r.setMapIdenAndID(mapIdenAndID);
 			r.setMapIDAppear(mapIDAppear);
+			r.setArrLibNames(this.arrPrefix);
 			try {
 				parser.createASTs(sourcePaths, null, new String[0], r, null);
 			} catch (Throwable t) {
@@ -157,9 +159,20 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 		private LinkedHashMap<String,String> mapIDAndIden;
 		private LinkedHashMap<String,String> mapIdenAndID;
 		private LinkedHashMap<String,Integer> mapIDAppear;
+		private String[] arrLibNames;
 		
 		
 		
+		
+		
+		public String[] getArrLibNames() {
+			return arrLibNames;
+		}
+
+		public void setArrLibNames(String[] arrLibNames) {
+			this.arrLibNames = arrLibNames;
+		}
+
 		public LinkedHashMap<String, Integer> getMapIDAppear() {
 			return mapIDAppear;
 		}
@@ -298,6 +311,7 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 			stLog.println(path + "\t" + name + "\t" + method.getName().getIdentifier() + "\t" + getParameters(method));
 			MethodEncoderVisitor sg = new MethodEncoderVisitor(className, superClassName);
 			sg.setSetFields(setFieldsForTD);
+			sg.setArrLibrariesPrefix(this.arrPrefix);
 			sg.setFopInvocationObject(fopInvocationObject);
 			sg.setHashIdenPath(this.idenHashPath);
 			sg.setMapIDAndIden(mapIDAndIden);

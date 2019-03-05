@@ -33,7 +33,7 @@ public class GenerateVocabulary {
 		for(String strItem:setVocab){
 			index++;
 			sbResult.append(strItem+"\n");
-			if(index==1000000){
+			if(index%1000000==0){
 				FileIO.appendStringToFile(sbResult.toString(),fpVocab);
 				sbResult=new StringBuilder();
 			}

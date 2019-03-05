@@ -42,15 +42,16 @@ public class AnalyzeStatTypeData {
 		
 	}
 	
-	public static String fopOldProjectLoc="G:\\github\\repos-5stars-50commits\\";
+	public static String fopOldProjectLoc="G:AAAgithubAAArepos-5stars-50commitsAAA";
 	
 	public static void statisticProject(HashSet<String> setProject,HashSet<String> setPercentage,String fpFile){
 		
 		try (BufferedReader br = Files.newBufferedReader(Paths.get(fpFile), StandardCharsets.US_ASCII)) {
 		    for (String line = null; (line = tryGetLine(br)) != null;) {
-		    	//System.out.println(line);
-		    	String strProjectItem=line.trim().replaceFirst(fopOldProjectLoc,"");
-		    	String[] arrItems=strProjectItem.split("\\\\");
+		    	String strProjectItem=line.trim().replaceAll("\\\\", "AAA").replaceFirst(fopOldProjectLoc,"");
+		    	//System.out.println(strProjectItem);
+		    	
+		    	String[] arrItems=strProjectItem.split("AAA");
 		    	if(arrItems.length>=3){
 		    		setProject.add(arrItems[0]+"-"+arrItems[1]);
 		    		String[] arrTemp=arrItems[arrItems.length-1].split("\\s+");
@@ -77,31 +78,6 @@ public class AnalyzeStatTypeData {
 		String fpTestTarget=fopStatType+"test.t";
 		String fpTestLocation=fopStatType+"test.locations.txt";	
 		
-		HashMap<String,Integer> mapVocab=new LinkedHashMap<String, Integer>();
-		
-		addToHashMap(mapVocab, fpTrainSource);
-		addToHashMap(mapVocab, fpTrainTarget);
-		addToHashMap(mapVocab, fpTuneSource);
-		addToHashMap(mapVocab, fpTuneTarget);
-		addToHashMap(mapVocab, fpTestSource);
-		addToHashMap(mapVocab, fpTestTarget);
-		
-		System.out.println("done add");
-		
-		FileIO.writeStringToFile("", fopStatType+"fullVocab.txt");
-		int indexCount=0;
-		StringBuilder sbResult=new StringBuilder();
-		for(String iden:mapVocab.keySet()){
-			indexCount++;
-			sbResult.append(iden+"\t"+mapVocab.get(iden)+"\n");
-			
-			if(indexCount%100000==0 || indexCount==+mapVocab.size()){
-				FileIO.appendStringToFile(sbResult.toString(), fopStatType+"fullVocab.txt");
-				sbResult=new StringBuilder();
-			}
-			
-		}
-		
 		HashSet<String> setProjects=new LinkedHashSet<>();
 		HashSet<String> setPercentage=new LinkedHashSet<>();
 		
@@ -111,14 +87,14 @@ public class AnalyzeStatTypeData {
 		
 		System.out.println("done statistics");
 		
-		indexCount=0;
-		sbResult=new StringBuilder();
+		int indexCount=0;
+		StringBuilder sbResult=new StringBuilder();
 		FileIO.writeStringToFile("", fopStatType+"allProjectName.txt");
 		for(String iden:setProjects){
 			indexCount++;
 			sbResult.append(iden+"\n");
 			
-			if(indexCount%100000==0 || indexCount==+mapVocab.size()){
+			if(indexCount%100000==0 || indexCount==+setProjects.size()){
 				FileIO.appendStringToFile(sbResult.toString(), fopStatType+"allProjectName.txt");
 				sbResult=new StringBuilder();
 			}
@@ -132,13 +108,40 @@ public class AnalyzeStatTypeData {
 			indexCount++;
 			sbResult.append(iden+"\n");
 			
-			if(indexCount%100000==0 || indexCount==+mapVocab.size()){
+			if(indexCount%100000==0 || indexCount==+setPercentage.size()){
 				FileIO.appendStringToFile(sbResult.toString(), fopStatType+"allPercentage.txt");
 				sbResult=new StringBuilder();
 			}
 			
 		}
+
 		
+		HashMap<String,Integer> mapVocab=new LinkedHashMap<String, Integer>();
+		
+		addToHashMap(mapVocab, fpTrainSource);
+		addToHashMap(mapVocab, fpTrainTarget);
+		addToHashMap(mapVocab, fpTuneSource);
+		addToHashMap(mapVocab, fpTuneTarget);
+		addToHashMap(mapVocab, fpTestSource);
+		addToHashMap(mapVocab, fpTestTarget);
+		
+		System.out.println("done add");
+		
+		FileIO.writeStringToFile("", fopStatType+"fullVocab.txt");
+		indexCount=0;
+		sbResult=new StringBuilder();
+		for(String iden:mapVocab.keySet()){
+			indexCount++;
+			sbResult.append(iden+"\t"+mapVocab.get(iden)+"\n");
+			
+			if(indexCount%100000==0 || indexCount==+mapVocab.size()){
+				FileIO.appendStringToFile(sbResult.toString(), fopStatType+"fullVocab.txt");
+				sbResult=new StringBuilder();
+			}
+			
+		}
+		
+				
 		System.out.println("OK");
 		
 	}

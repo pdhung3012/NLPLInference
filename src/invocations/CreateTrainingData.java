@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import utils.FileIO;
 import consts.PathConstanct;
+import utils.FileIO;
 
 public class CreateTrainingData {
 

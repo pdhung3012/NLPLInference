@@ -11,7 +11,7 @@ import consts.PathConstanct;
 
 public class RunOnFixProjectSetPerLibrary {
 
-	private static final int MYTHREADS = 10;
+	private static final int MYTHREADS = 8;
 	public static String[] arrLibraryPrefix={"android","com.google.gwt","com.thoughtworks.xstream","org.hibernate","org.joda.time","java"};
 	public static String[] arrCompactLibaryName={"android",
 		"gwt","xstream",
@@ -36,17 +36,17 @@ public class RunOnFixProjectSetPerLibrary {
 		ArrayList<String> listRequiredProjects=new ArrayList<>();
 		StringBuilder sbResult=new StringBuilder();
 		
-		for(int i=(selectLibIndex+1)*160;i<(selectLibIndex+2)*160;i++){
+		for(int i=(selectLibIndex)*160;i<(selectLibIndex+1)*160;i++){
 			listRequiredProjects.add(arrTrainProjects[i]);
 			sbResult.append(arrTrainProjects[i]+"\n");
 		}
 		
-		for(int i=(selectLibIndex+1)*20;i<(selectLibIndex+2)*20;i++){
+		for(int i=(selectLibIndex)*20;i<(selectLibIndex+1)*20;i++){
 			listRequiredProjects.add(arrTestProjects[i]);
 			sbResult.append(arrTestProjects[i]+"\n");
 		}
 		
-		for(int i=(selectLibIndex+1)*20;i<(selectLibIndex+2)*20;i++){
+		for(int i=(selectLibIndex)*20;i<(selectLibIndex+1)*20;i++){
 			listRequiredProjects.add(arrTuneProjects[i]);
 			sbResult.append(arrTuneProjects[i]+"\n");
 		}

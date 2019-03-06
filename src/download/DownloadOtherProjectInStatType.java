@@ -44,7 +44,7 @@ public class DownloadOtherProjectInStatType {
 			FileIO.writeStringToFile("", fUnable.getAbsolutePath());
 		} else {
 			String[] arrUnable = FileIO.readStringFromFile(
-					PathConstanct.fopListLibraryLocation + "unable-" + keyword
+					PathConstanct.fopListLibraryLocation + "unable-stattype" 
 							+ ".txt").split("\n");
 			for (int i = 0; i < arrUnable.length; i++) {
 				setExistProjects.add(arrUnable[i].trim().split("\t")[0].trim());

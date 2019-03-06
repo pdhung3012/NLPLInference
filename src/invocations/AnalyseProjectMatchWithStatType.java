@@ -13,8 +13,8 @@ public class AnalyseProjectMatchWithStatType {
 		String fopIdenIfer=PathConstanct.PATH_PROJECT_TRAIN_TEST_NAME;
 		String fopStatType=PathConstanct.PATH_PROJECT_STATTYPE_DATA;
 		
-		String[] allProjectCurrent=FileIO.readStringFromFile(fopIdenIfer+"all.projects.txt").split("\n");
-		String[] arrStatType=FileIO.readStringFromFile(fopStatType+"allProjects.txt").split("\n");
+		String[] allProjectCurrent=FileIO.readStringFromFile(fopIdenIfer+"all.project.txt").split("\n");
+		String[] arrStatType=FileIO.readStringFromFile(fopStatType+"allProjectName.txt").split("\n");
 		int countAppear=0;
 		
 		HashSet<String> setST=new LinkedHashSet<String>();

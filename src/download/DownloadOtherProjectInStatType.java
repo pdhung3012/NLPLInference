@@ -109,7 +109,7 @@ public class DownloadOtherProjectInStatType {
 								ex.printStackTrace();
 								FileIO.appendStringToFile(keyCheck + "\t" + ex.getMessage()
 										+ "\tjava.io.IOException\n",
-										PathConstanct.fopListLibraryLocation
+										PathConstanct.PATH_PROJECT_TRAIN_TEST_NAME
 												+ "unable-stattype.txt");
 								break;
 							}
@@ -122,7 +122,7 @@ public class DownloadOtherProjectInStatType {
 												+ "\t"
 												+ ex.getMessage()
 												+ "\torg.eclipse.jgit.api.errors.TransportException\n",
-										PathConstanct.fopListLibraryLocation
+												PathConstanct.PATH_PROJECT_TRAIN_TEST_NAME
 												+ "unable-stattype.txt");
 								break;
 							} catch (Exception ex) {
@@ -131,7 +131,7 @@ public class DownloadOtherProjectInStatType {
 							if (gotIt) {
 								System.out.println(" project " + keyCheck + " downloaded");
 								FileIO.appendStringToFile(keyCheck + "\n",
-										PathConstanct.fopListLibraryLocation
+										PathConstanct.PATH_PROJECT_TRAIN_TEST_NAME
 												+ "downloaded-stattype.txt");
 								break;
 							}

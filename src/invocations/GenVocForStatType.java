@@ -47,9 +47,9 @@ public class GenVocForStatType {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String fopVocab=PathConstanct.PATH_PROJECT_STATTYPE_DATA;
-		getVocabulary(fopVocab+"train.s", fopVocab+"vocab.s");
-		getVocabulary(fopVocab+"train.t", fopVocab+"vocab.t");
+		String fopVocab="/Users/hungphan/git/nmt/stattype/origin/";
+		getVocabulary(fopVocab+"train.s", fopVocab+"vocab_2.s");
+		getVocabulary(fopVocab+"train.t", fopVocab+"vocab_2.t");
 	}
 
 }

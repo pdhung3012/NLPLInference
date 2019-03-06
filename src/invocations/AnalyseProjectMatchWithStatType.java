@@ -22,6 +22,13 @@ public class AnalyseProjectMatchWithStatType {
 			setST.add(arrStatType[i]);
 		
 		}
+		
+		HashSet<String> setNLPLInference=new LinkedHashSet<String>();
+		for(int i=0;i<allProjectCurrent.length;i++){
+			setNLPLInference.add(allProjectCurrent[i]);
+		
+		}
+		
 		StringBuilder sbResult=new StringBuilder();
 		for(int i=0;i<allProjectCurrent.length;i++){
 			boolean exist=setST.contains(allProjectCurrent[i]);
@@ -30,8 +37,22 @@ public class AnalyseProjectMatchWithStatType {
 			}
 			sbResult.append(allProjectCurrent[i]+"\t"+exist+"\n");
 		}
-		FileIO.writeStringToFile(sbResult.toString(), fopIdenIfer+"projectStats.txt");
-		System.out.println("count appear: "+countAppear);
+		
+		int countInStatType=0;
+		StringBuilder sbR2=new StringBuilder();
+		for(int i=0;i<arrStatType.length;i++){
+			boolean exist=setNLPLInference.contains(arrStatType[i]);
+			if(exist){
+				countInStatType++;
+			}
+			sbR2.append(arrStatType[i]+"\t"+exist+"\n");
+		}
+		
+		
+		FileIO.writeStringToFile(sbResult.toString(), fopIdenIfer+"overlapInNLPLInference.txt");
+		FileIO.writeStringToFile(sbR2.toString(), fopIdenIfer+"overlapInNLPLInference.txt");
+		System.out.println("count overlap in NLPL: "+countAppear);
+		System.out.println("count overlap in StatType: "+countInStatType);
 		
 		
 	}

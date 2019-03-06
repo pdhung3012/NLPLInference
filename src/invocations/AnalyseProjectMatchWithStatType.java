@@ -50,7 +50,7 @@ public class AnalyseProjectMatchWithStatType {
 		
 		
 		FileIO.writeStringToFile(sbResult.toString(), fopIdenIfer+"overlapInNLPLInference.txt");
-		FileIO.writeStringToFile(sbR2.toString(), fopIdenIfer+"overlapInNLPLInference.txt");
+		FileIO.writeStringToFile(sbR2.toString(), fopIdenIfer+"overlapInST.txt");
 		System.out.println("count overlap in NLPL: "+countAppear);
 		System.out.println("count overlap in StatType: "+countInStatType);
 		

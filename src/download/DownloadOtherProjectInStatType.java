@@ -24,6 +24,13 @@ public class DownloadOtherProjectInStatType {
 		String keyword="stattype";
 		Scanner sc = new Scanner(listContent);
 		int index = 0;
+		
+		if(!new File(PathConstanct.PATH_PROJECT_TRAIN_TEST_NAME + "downloaded-" + keyword
+						+ ".txt").isFile()){
+			FileIO.writeStringToFile("", PathConstanct.PATH_PROJECT_TRAIN_TEST_NAME + "downloaded-" + keyword
+						+ ".txt");
+		}
+		
 		String[] arrProjectName = FileIO.readStringFromFile(
 				PathConstanct.PATH_PROJECT_TRAIN_TEST_NAME + "downloaded-" + keyword
 						+ ".txt").split("\n");

@@ -52,7 +52,6 @@ public class GenSplitForStatType {
 		if(!sbResult.toString().isEmpty()){
 			FileIO.appendStringToFile(sbResult.toString(),fpOut);
 			FileIO.appendStringToFile(sbLine.toString(),fpLine);
-//			sbResult=new StringBuilder();
 		}
 		
 		

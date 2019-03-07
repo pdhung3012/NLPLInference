@@ -115,8 +115,7 @@ public class ExtractOtherProjectInStatType {
 												+ ex.getMessage()
 												+ "\tnet.lingala.zip4j.exception.ZipException\n",
 										PathConstanct.PATH_PROJECT_TRAIN_TEST_NAME
-												+ "notExtracted-"
-												+ keyw
+												+ "notExtracted-stattype"
 												+ ".txt");
 								break;
 							} catch (Exception ex) {
@@ -128,7 +127,7 @@ public class ExtractOtherProjectInStatType {
 								FileIO.appendStringToFile(
 										keyw + "\n",
 										PathConstanct.PATH_PROJECT_TRAIN_TEST_NAME
-												+ "extracted-" + keyw + ".txt");
+												+ "extracted-stattype.txt");
 								break;
 							}
 

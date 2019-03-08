@@ -52,8 +52,9 @@ public class DownloadOtherProjectInStatType {
 		}
 
 		while (sc.hasNextLine()) {
-			String projectContent = sc.nextLine().split("\t")[0];
-			if(projectContent.split("\t")[1].equals("true")){
+			String line=sc.nextLine();
+			String projectContent = line.split("\t")[0];
+			if(line.split("\t")[1].equals("true")){
 				continue;
 			}
 //			String[] arrContent = projectContent.split("/");

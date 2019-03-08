@@ -35,7 +35,7 @@ public class CheckLM {
 	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String fpLM=PathConstanct.PATH_PROJECT_STATTYPE_DATA+"lm"+File.separator+"4gm.arm";
+		String fpLM=PathConstanct.PATH_PROJECT_STATTYPE_DATA+"lm"+File.separator+"4gm.arpa";
 		readFile(fpLM);
 	}
 

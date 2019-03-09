@@ -22,20 +22,21 @@ public class CheckLM {
 	}
 	
 	public static void readFile(String fpFile){
-		
+		int num=0;
 		try (BufferedReader br = Files.newBufferedReader(Paths.get(fpFile), StandardCharsets.US_ASCII)) {
 		    for (String line = null; (line = tryGetLine(br)) != null;) {
-		    	System.out.println(line);
-		    	
+//		    	System.out.println(line);
+		    	num++;
 		    }
 		} catch(Exception ex){
 			ex.printStackTrace();
 		}
+		System.out.println("num "+num);
 		
 	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String fpLM=PathConstanct.PATH_PROJECT_STATTYPE_DATA+"lm"+File.separator+"4gm.arpa";
+		String fpLM=PathConstanct.PATH_PROJECT_STATTYPE_DATA+"training.s-t.A3";
 		readFile(fpLM);
 	}
 

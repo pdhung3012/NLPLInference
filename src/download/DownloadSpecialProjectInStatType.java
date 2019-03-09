@@ -141,7 +141,7 @@ public class DownloadSpecialProjectInStatType {
 									e1.printStackTrace();
 								}
 							}
-							// System.out.println("project index " +index);
+
 
 						}
 					});

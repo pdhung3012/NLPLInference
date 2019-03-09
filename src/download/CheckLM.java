@@ -27,6 +27,9 @@ public class CheckLM {
 		    for (String line = null; (line = tryGetLine(br)) != null;) {
 //		    	System.out.println(line);
 		    	num++;
+		    	if(num<=100) {
+		    		System.out.println(num+": "+line);
+		    	}
 		    }
 		} catch(Exception ex){
 			ex.printStackTrace();
@@ -37,6 +40,8 @@ public class CheckLM {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String fpLM=PathConstanct.PATH_PROJECT_STATTYPE_DATA+"training.s-t.A3";
+		String fp2=PathConstanct.PATH_PROJECT_STATTYPE_DATA+"train.t";
+		readFile(fp2);
 		readFile(fpLM);
 	}
 

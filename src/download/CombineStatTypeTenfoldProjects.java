@@ -25,11 +25,11 @@ public class CombineStatTypeTenfoldProjects {
 		for(int i=0;i<arrTotalSTProject.length;i++){
 			String[] arrItemSt=arrTotalSTProject[i].split("\t");
 			if(arrItemSt[1].equals("false")){
-				if(setSupplyProject.contains(arrTotalSTProject[i])){
-					strContent+=arrTotalSTProject[i]+"\n";
+				if(setSupplyProject.contains(arrItemSt[0])){
+					strContent+=arrItemSt[0]+"\n";
 				}
 			} else{
-				strContent+=arrTotalSTProject[i]+"\n";
+				strContent+=arrItemSt[0]+"\n";
 			}
 		}
 		FileIO.writeStringToFile(strContent, fpRequiredProject);

@@ -37,7 +37,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	private LinkedHashMap<String,Integer> mapIDAppear;
 	private InvocationAbstractorVisitor iaVisitor;
 	private String[] arrLibrariesPrefix;
-	
+	private static final boolean USE_SIMPLE_METHOD_NAME = false;
 	
 	
 	public LinkedHashMap<String, Integer> getMapIDAppear() {
@@ -791,52 +791,54 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		}
 	}
 
-	// @Override
-	// public boolean visit(MethodInvocation node) {
-	// if (node.getExpression() != null && node.getExpression() instanceof
-	// TypeLiteral) {
-	// TypeLiteral lit = (TypeLiteral) node.getExpression();
-	// String utype = getUnresolvedType(lit.getType()), rtype =
-	// getResolvedType(lit.getType());
-	// this.fullTokens.append(" " + rtype + ".class." +
-	// node.getName().getIdentifier() + "() ");
-	// this.partialTokens.append(" " + utype + ".class." +
-	// node.getName().getIdentifier() + "(" + node.arguments().size() + ") ");
-	// } else {
-	// IMethodBinding b = node.resolveMethodBinding();
-	// ITypeBinding tb = null;
-	// if (b != null) {
-	// tb = b.getDeclaringClass();
-	// if (tb != null) {
-	// tb = tb.getTypeDeclaration();
-	// if (tb.isLocal() || tb.getQualifiedName().isEmpty())
-	// return false;
-	// }
-	// }
-	// this.fullTokens.append(" ");
-	// this.partialTokens.append(" ");
-	// if (node.getExpression() != null) {
-	// node.getExpression().accept(this);
-	// } else {
-	// if (tb != null) {
-	// this.partialTokens.append(" " + getName(tb) + " ");
-	// this.fullTokens.append(" " + getQualifiedName(tb) + " ");
-	// } else {
-	// this.partialTokens.append(" this ");
-	// this.fullTokens.append(" this ");
-	// }
-	// }
-	// String name = "."+ node.getName().getIdentifier() + "(" +
-	// node.arguments().size() + ")";
-	// this.partialTokens.append(" " + name + " ");
-	// if (tb != null)
-	// name = getSignature(b.getMethodDeclaration());
-	// this.fullTokens.append(" " + name + " ");
-	// }
-	// for (int i = 0; i < node.arguments().size(); i++)
-	// ((ASTNode) node.arguments().get(i)).accept(this);
-	// return false;
-	// }
+//	@Override
+//	public boolean visit(MethodInvocation node) {
+//		if (node.getExpression() != null && node.getExpression() instanceof TypeLiteral) {
+//			TypeLiteral lit = (TypeLiteral) node.getExpression();
+//			String utype = getUnresolvedType(lit.getType()), rtype = getResolvedType(lit.getType());
+//			this.fullTokens.append(" " + rtype + ".class." + node.getName().getIdentifier() + "() ");
+//			this.partialTokens.append(" " + utype + ".class." + node.getName().getIdentifier() + "() ");
+//		} else {
+//			IMethodBinding b = node.resolveMethodBinding();
+//			ITypeBinding tb = null;
+//			if (b != null) {
+//				tb = b.getDeclaringClass();
+//				if (tb != null) {
+//					tb = tb.getTypeDeclaration();
+//					if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+//						return false;
+//				}
+//			}
+//			this.fullTokens.append(" ");
+//			this.partialTokens.append(" ");
+//			if (node.getExpression() != null) {
+//				node.getExpression().accept(this);
+//			} else {
+//				if (tb != null) {
+//					this.partialTokens.append(" " + getName(tb) + " ");
+//					this.fullTokens.append(" " + getQualifiedName(tb) + " ");
+//				} else {
+//					this.partialTokens.append(" this ");
+//					this.fullTokens.append(" this ");
+//				}
+//			}
+//			String name = "."+ node.getName().getIdentifier() + "()";
+//			this.partialTokens.append(" " + name + " ");
+//			if (!USE_SIMPLE_METHOD_NAME && tb != null 
+////					&& !name.equals(".toString()") 
+////					&& !name.equals(".equals()") 
+////					&& !name.equals(".clone()") 
+////					&& !name.equals(".getClass()")
+////					&& !name.equals(".hashCode()")
+////					&& !name.equals(".valueOf()")
+//					)
+//				name = getQualifiedName(tb) + name;
+//			this.fullTokens.append(" " + name + " ");
+//		}
+//		for (int i = 0; i < node.arguments().size(); i++)
+//			((ASTNode) node.arguments().get(i)).accept(this);
+//		return false;
+//	}
 
 	public boolean visit(MethodInvocation node) {
 		levelOfTraverMD++;
@@ -844,16 +846,11 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			iaVisitor.refreshInformation();
 		}
 
-		if (node.getExpression() != null
-				&& node.getExpression() instanceof TypeLiteral) {
+		if (node.getExpression() != null && node.getExpression() instanceof TypeLiteral) {
 			TypeLiteral lit = (TypeLiteral) node.getExpression();
-			String utype = getUnresolvedType(lit.getType()), rtype = getResolvedType(lit
-					.getType());
-			this.fullTokens.append(" " + rtype + ".class."
-					+ node.getName().getIdentifier() + "() ");
-			this.partialTokens.append(" " + utype + ".class."
-					+ node.getName().getIdentifier() + "("
-					+ node.arguments().size() + ") ");
+			String utype = getUnresolvedType(lit.getType()), rtype = getResolvedType(lit.getType());
+			this.fullTokens.append(" " + rtype + ".class." + node.getName().getIdentifier() + "() ");
+			this.partialTokens.append(" " + utype + ".class." + node.getName().getIdentifier() + "() ");
 		} else {
 			IMethodBinding b = node.resolveMethodBinding();
 			ITypeBinding tb = null;
@@ -867,10 +864,8 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			}
 			this.fullTokens.append(" ");
 			this.partialTokens.append(" ");
-			
 			if (node.getExpression() != null) {
-				Expression exRetriever = node.getExpression();
-				exRetriever.accept(this);
+				node.getExpression().accept(this);
 			} else {
 				if (tb != null) {
 					this.partialTokens.append(" " + getName(tb) + " ");
@@ -880,21 +875,22 @@ public class MethodEncoderVisitor extends ASTVisitor {
 					this.fullTokens.append(" this ");
 				}
 			}
-			String name = "." + node.getName().getIdentifier() + "("
-					+ node.arguments().size() + ")";
+			String name = "."+ node.getName().getIdentifier() + "()";
 			this.partialTokens.append(" " + name + " ");
-			if (tb != null)
-				name = getSignature(b.getMethodDeclaration());
+			if (!USE_SIMPLE_METHOD_NAME && tb != null 
+//					&& !name.equals(".toString()") 
+//					&& !name.equals(".equals()") 
+//					&& !name.equals(".clone()") 
+//					&& !name.equals(".getClass()")
+//					&& !name.equals(".hashCode()")
+//					&& !name.equals(".valueOf()")
+					)
+				name = getQualifiedName(tb) + name;
 			this.fullTokens.append(" " + name + " ");
 		}
-		IMethodBinding iMethod=node.resolveMethodBinding();
-		List<Expression> listArgument = node.arguments();
-		for (int i = 0; i < listArgument.size(); i++) {
-			Expression exParam = listArgument.get(i);			
-			exParam.accept(this);
-		}
-		
-		if (levelOfTraverMD == 1) {
+		for (int i = 0; i < node.arguments().size(); i++)
+			((ASTNode) node.arguments().get(i)).accept(this);
+if (levelOfTraverMD == 1) {
 			
 			
 			
@@ -936,128 +932,12 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			}				
 		}
 		levelOfTraverMD--;
+				
+		
 		return false;
 	}
 
-	// @Override
-	// public boolean visit(FieldAccess node) {
-	// IVariableBinding b = node.resolveFieldBinding();
-	// ITypeBinding tb = null;
-	// if (b != null) {
-	// tb = b.getDeclaringClass();
-	// if (tb != null) {
-	// tb = tb.getTypeDeclaration();
-	// if (tb.isLocal() || tb.getQualifiedName().isEmpty())
-	// return false;
-	// }
-	// }
-	// this.fullTokens.append(" ");
-	// this.partialTokens.append(" ");
-	// node.getExpression().accept(this);
-	// String name = "." + node.getName().getIdentifier();
-	// this.partialTokens.append(" " + name + " ");
-	// if (b != null) {
-	// if (tb != null)
-	// name = getQualifiedName(tb.getTypeDeclaration()) + name;
-	// /*else
-	// name = "Array" + name;*/
-	// }
-	// this.fullTokens.append(" " + name + " ");
-	// return false;
-	// }
-
-//	public boolean visit(FieldAccess node) {
-//		IVariableBinding b = node.resolveFieldBinding();
-//		ITypeBinding tb = null;
-//		if (b != null) {
-//			tb = b.getDeclaringClass();
-//			if (tb != null) {
-//				tb = tb.getTypeDeclaration();
-//				if (tb.isLocal() || tb.getQualifiedName().isEmpty())
-//					return false;
-//			}
-//		}
-//		this.fullTokens.append(" ");
-//		this.partialTokens.append(" ");
-//		node.getExpression().accept(this);
-//		String name = "." + node.getName().getIdentifier();
-//		this.partialTokens.append(" " + name + " ");
-//		if (b != null) {
-//			if (tb != null)
-//				name = getQualifiedName(tb.getTypeDeclaration()) + name;
-//			/*
-//			 * else name = "Array" + name;
-//			 */
-//		}
-//		this.fullTokens.append(" " + name + " ");		
-////		if (isGetInfoForReceiver) {
-////			sbAbstractInformation.append("?");
-////			listAbstractTypeQuestionMark.add(currentReceiverArgType);
-////		} else if(isGetInfoForParamI){
-////			sbAbstractInformation.append("?");
-////			listAbstractTypeQuestionMark.add(currentParamIArgType);
-////		}
-//		return false;
-//	}
-
-	// @Override
-	// public boolean visit(SimpleName node) {
-	// IBinding b = node.resolveBinding();
-	// if (b != null) {
-	// if (b instanceof IVariableBinding) {
-	// IVariableBinding vb = (IVariableBinding) b;
-	// ITypeBinding tb = vb.getType();
-	// if (tb != null) {
-	// tb = tb.getTypeDeclaration();
-	// if (tb.isLocal() || tb.getQualifiedName().isEmpty())
-	// return false;
-	// this.fullTokens.append(" " + getQualifiedName(tb) + " ");
-	// this.partialTokens.append(" " + getName(tb) + " ");
-	// }
-	// } else if (b instanceof ITypeBinding) {
-	// ITypeBinding tb = (ITypeBinding) b;
-	// tb = tb.getTypeDeclaration();
-	// if (tb.isLocal() || tb.getQualifiedName().isEmpty())
-	// return false;
-	// this.fullTokens.append(" " + getQualifiedName(tb) + " ");
-	// this.partialTokens.append(" " + getName(tb) + " ");
-	// }
-	// } else {
-	// this.fullTokens.append(" " + node.getIdentifier() + " ");
-	// this.partialTokens.append(" " + node.getIdentifier() + " ");
-	// }
-	// return false;
-	// }
-
 	
-	
-//	public boolean visit(SimpleName node) {
-//		IBinding b = node.resolveBinding();
-//		if (b != null) {
-//			if (b instanceof IVariableBinding) {
-//				IVariableBinding vb = (IVariableBinding) b;
-//				ITypeBinding tb = vb.getType();
-//				if (tb != null) {
-//					tb = tb.getTypeDeclaration();
-//					if (tb.isLocal() || tb.getQualifiedName().isEmpty())
-//						return false;
-//					this.fullTokens.append(" " + getQualifiedName(tb) + " ");
-//					this.partialTokens.append(" " + getName(tb) + " ");
-//				}
-//			} else if (b instanceof ITypeBinding) {
-//				ITypeBinding tb = (ITypeBinding) b;
-//				tb = tb.getTypeDeclaration();
-//				if (tb.isLocal() || tb.getQualifiedName().isEmpty())
-//					return false;
-//				this.fullTokens.append(" " + getQualifiedName(tb) + " ");
-//				this.partialTokens.append(" " + getName(tb) + " ");
-//			}
-//		} else {
-//			this.fullTokens.append(" " + node.getIdentifier() + " ");
-//			this.partialTokens.append(" " + node.getIdentifier() + " ");
-//		}
-//		return false;
-//	}
 
 	@Override
 	public boolean visit(ArrayAccess node) {
@@ -1092,8 +972,8 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	@Override
 	public boolean visit(Assignment node) {
 		node.getLeftHandSide().accept(this);
-		this.fullTokens.append(" "+node.getOperator().toString()+" ");
-		this.partialTokens.append(" "+node.getOperator().toString()+" ");
+		this.fullTokens.append(" = ");
+		this.partialTokens.append(" = ");
 		node.getRightHandSide().accept(this);
 		return false;
 	}
@@ -1141,13 +1021,9 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		ITypeBinding tb = node.getType().resolveBinding();
 		if (tb != null && tb.getTypeDeclaration().isLocal())
 			return false;
-		String utype = getUnresolvedType(node.getType());
-		IMethodBinding b = node.resolveConstructorBinding();
-		if (b == null)
-			this.fullTokens.append(" new " + utype + "(" + node.arguments().size() + ") ");
-		else
-			this.fullTokens.append(" new " + getSignature(b.getMethodDeclaration()) + " ");
-		this.partialTokens.append(" new " + utype + "(" + node.arguments().size() + ") ");
+		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node.getType());
+		this.fullTokens.append(" new " + rtype + "() ");
+		this.partialTokens.append(" new " + utype + "() ");
 		for (Iterator it = node.arguments().iterator(); it.hasNext(); ) {
 			Expression e = (Expression) it.next();
 			e.accept(this);
@@ -1172,10 +1048,10 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			if (tb.isLocal() || tb.getQualifiedName().isEmpty())
 				return false;
 		}
-		String name = "." + className + "(" + node.arguments().size() + ")";
+		String name = "." + className + "()";
 		this.partialTokens.append(" " + name + " ");
 		if (tb != null)
-			name = getSignature(b.getMethodDeclaration());
+			name = getQualifiedName(tb) + name;
 		this.fullTokens.append(" " + name + " ");
 		for (int i = 0; i < node.arguments().size(); i++)
 			((ASTNode) node.arguments().get(i)).accept(this);
@@ -1319,47 +1195,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 //		return false;
 //	}
 
-//	@Override
-//	public boolean visit(MethodInvocation node) {
-//		if (node.getExpression() != null && node.getExpression() instanceof TypeLiteral) {
-//			TypeLiteral lit = (TypeLiteral) node.getExpression();
-//			String utype = getUnresolvedType(lit.getType()), rtype = getResolvedType(lit.getType());
-//			this.fullTokens.append(" " + rtype + ".class." + node.getName().getIdentifier() + "() ");
-//			this.partialTokens.append(" " + utype + ".class." + node.getName().getIdentifier() + "(" + node.arguments().size() + ") ");
-//		} else {
-//			IMethodBinding b = node.resolveMethodBinding();
-//			ITypeBinding tb = null;
-//			if (b != null) {
-//				tb = b.getDeclaringClass();
-//				if (tb != null) {
-//					tb = tb.getTypeDeclaration();
-//					if (tb.isLocal() || tb.getQualifiedName().isEmpty())
-//						return false;
-//				}
-//			}
-//			this.fullTokens.append(" ");
-//			this.partialTokens.append(" ");
-//			if (node.getExpression() != null) {
-//				node.getExpression().accept(this);
-//			} else {
-//				if (tb != null) {
-//					this.partialTokens.append(" " + getName(tb) + " ");
-//					this.fullTokens.append(" " + getQualifiedName(tb) + " ");
-//				} else {
-//					this.partialTokens.append(" this ");
-//					this.fullTokens.append(" this ");
-//				}
-//			}
-//			String name = "."+ node.getName().getIdentifier() + "(" + node.arguments().size() + ")";
-//			this.partialTokens.append(" " + name + " ");
-//			if (tb != null)
-//				name = getSignature(b.getMethodDeclaration());
-//			this.fullTokens.append(" " + name + " ");
-//		}
-//		for (int i = 0; i < node.arguments().size(); i++)
-//			((ASTNode) node.arguments().get(i)).accept(this);
-//		return false;
-//	}
+	
 
 	@Override
 	public boolean visit(Modifier node) {
@@ -1519,10 +1355,10 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			if (tb.isLocal() || tb.getQualifiedName().isEmpty())
 				return false;
 		}
-		String name = "." + superClassName + "(" + node.arguments().size() + ")";
+		String name = "." + superClassName + "()";
 		this.partialTokens.append(" " + name + " ");
 		if (tb != null)
-			name = getSignature(b.getMethodDeclaration());
+			name = getQualifiedName(tb) + name;
 		this.fullTokens.append(" " + name + " ");
 		for (int i = 0; i < node.arguments().size(); i++)
 			((ASTNode) node.arguments().get(i)).accept(this);
@@ -1566,10 +1402,17 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			this.partialTokens.append(" super ");
 			this.fullTokens.append(" super ");
 		}
-		String name = "." + node.getName().getIdentifier() + "(" + node.arguments().size() + ")";
+		String name = "." + node.getName().getIdentifier() + "()";
 		this.partialTokens.append(" " + name + " ");
-		if (tb != null)
-			name = getSignature(b.getMethodDeclaration());
+		if (!USE_SIMPLE_METHOD_NAME && tb != null 
+//				&& !name.equals(".toString()") 
+//				&& !name.equals(".equals()") 
+//				&& !name.equals(".clone()") 
+//				&& !name.equals(".getClass()")
+//				&& !name.equals(".hashCode()")
+//				&& !name.equals(".valueOf()")
+				)
+			name = getQualifiedName(tb) + name;
 		this.fullTokens.append(" " + name + " ");
 		for (int i = 0; i < node.arguments().size(); i++)
 			((ASTNode) node.arguments().get(i)).accept(this);

@@ -903,10 +903,12 @@ if (levelOfTraverMD == 1) {
 					node.accept(iaVisitor);				
 				}
 				if(!iaVisitor.getSbAbstractInformation().toString().equals("#")){
+					String strIdentifier=node.getName().getIdentifier()+"#identifier";
 					iaVisitor.sortRequiredAPI();
 					io.setStrCodeRepresent(iaVisitor.getSbAbstractInformation().toString());
 					io.setListQuestionMarkTypes(iaVisitor.getListAbstractTypeQuestionMark());
 					io.setSetImportedAPIs(iaVisitor.getSetRequiredAPIsForMI());
+					io.setStrIdentifier(strIdentifier);
 					String idenInfo = io.setIDRepresent();
 					String id="";
 					if(!mapIdenAndID.containsKey(idenInfo)){
@@ -922,7 +924,7 @@ if (levelOfTraverMD == 1) {
 						mapIDAppear.put(existId,mapIDAppear.get(existId)+1);
 					}
 					
-					this.partialTokens.append(node.getName().getIdentifier()+"#identifier" + " ");
+					this.partialTokens.append(strIdentifier + " ");
 					this.fullTokens.append(id + " ");
 
 				}

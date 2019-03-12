@@ -15,9 +15,17 @@ public class InvocationObject {
 	private LinkedHashSet<String> setImportedAPIs;
 	private ArrayList<String> listQuestionMarkTypes;
 	private String strIDRepresent;
+	private String strIdentifier;
 	
 	
 	
+	
+	public String getStrIdentifier() {
+		return strIdentifier;
+	}
+	public void setStrIdentifier(String strIdentifier) {
+		this.strIdentifier = strIdentifier;
+	}
 	public String getStrIDRepresent() {
 		return strIDRepresent;
 	}
@@ -102,6 +110,7 @@ public class InvocationObject {
 		sbContent.append(contentImportType.replaceAll("\n", "")+"\n");
 		
 		sbContent.append(strMethodInfo.replaceAll("\n", "")+"\n");
+		sbContent.append(strIdentifier.replaceAll("\n", "")+"\n");
 		FileIO.writeStringToFile(sbContent.toString(), file);
 		
 	}

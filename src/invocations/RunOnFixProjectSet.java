@@ -22,16 +22,18 @@ public class RunOnFixProjectSet {
 		String fpOutputLog=outputProjectPath+File.separator+"alog.txt";
 		ExecutorService executor = Executors.newFixedThreadPool(MYTHREADS);
 		
+		File fInput = new File(inputProjectPath);
+		File fOutput = new File(outputProjectPath);
+		
+		if(!fOutput.isDirectory()){
+			fOutput.mkdir();
+		}
 		if(!new File(fpOutputLog).isFile()){
 			FileUtil.writeToFile(fpOutputLog, "");
 		}
 		
 
-		File fInput = new File(inputProjectPath);
-		File fOutput = new File(outputProjectPath);
-		if(!fOutput.isDirectory()){
-			fOutput.mkdir();
-		}
+		
 		String[] arrProjectName = FileIO.readStringFromFile(fpProjectList).split("\n");
 
 		for (int i = 0; i < arrProjectName.length; i++) {

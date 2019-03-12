@@ -10,7 +10,7 @@ import consts.PathConstanct;
 
 public class RunOnFixProjectSet {
 
-	private static final int MYTHREADS = 10;
+	private static final int MYTHREADS = 8;
 
 	public static String[] arrLibraryPrefix={"android","com.google.gwt","com.thoughtworks.xstream","org.hibernate","org.joda.time","java"};
 

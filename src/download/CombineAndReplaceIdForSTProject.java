@@ -90,9 +90,7 @@ public class CombineAndReplaceIdForSTProject {
 			
 			for(int j=0;j<arrProjLibName.length;j++){
 			
-				if(j<=40){
-					continue;
-				}
+				
 				String fopProjSeq=fopSequence+arrProjLibName[j]+File.separator;
 				String fpLocation=fopProjSeq
 						+ File.separator+"locations.txt";

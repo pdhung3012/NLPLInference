@@ -68,7 +68,6 @@ public class GenerateStatMethodIdenTenFolds {
 		
 		HashSet<String> setMethodInfo=new HashSet<String>();
 		int numberOfMethodsTotal=0;
-		
 		HashMap<String,Integer> mapPercentagePerLibrary=new HashMap<String, Integer>();
 		
 		System.out.println("Finish combine corpus! "+numberOfMethodsTotal+" in corpus");
@@ -123,12 +122,12 @@ public class GenerateStatMethodIdenTenFolds {
 			}
 		}
 		
-		ArrayList<String> arrFold1TestLoc = FileUtil.getFileStringArray(fop_output+"\\fold-1\\test_old\\"+"test.locations.txt");
+//		ArrayList<String> arrFold1TestLoc = FileUtil.getFileStringArray(fop_output+"\\fold-1\\test_old\\"+"test.locations.txt");
 		//create hash set to store all possible test line after each fold;
-		HashSet<String> setTestOld=new HashSet<String>();
-		for(int j=0;j<arrFold1TestLoc.size();j++){
-			setTestOld.add(arrFold1TestLoc.get(j));
-		}
+//		HashSet<String> setTestOld=new HashSet<String>();
+//		for(int j=0;j<arrFold1TestLoc.size();j++){
+//			setTestOld.add(arrFold1TestLoc.get(j));
+//		}
 		
 		for(int i=0;i<arr5LibPrefix.length;i++){
 //			if(arrLstFiles[i].getName().equals("org.apache.commons")){
@@ -151,41 +150,35 @@ public class GenerateStatMethodIdenTenFolds {
 			
 			//from fold 1 to fold 10, the list will be reduced						
 			ArrayList<Integer> listPossibleTestPerEachFold=new ArrayList<Integer>();
-			ArrayList<String> setTestOldPerLib=new ArrayList<String>();
-			HashSet<Integer> setTestForFold1=new HashSet<Integer>();
+//			ArrayList<String> setTestOldPerLib=new ArrayList<String>();
+//			HashSet<Integer> setTestForFold1=new HashSet<Integer>();
 			for(int j=0;j<arrSource.size();j++){
-				if(setTestOld.contains(arrLocation.get(j))){
-					setTestOldPerLib.add(arrLocation.get(j));
-					setTestForFold1.add(j);
-				}else{
-					listPossibleTestPerEachFold.add(j);
-					
-				}
+				listPossibleTestPerEachFold.add(j);
 				
 				//String[] arrItemSource=arrSource.get(j).split("\n");
 				
 			}
 			
-			System.out.println(setTestForFold1.size()+" tests is from previous");
+//			System.out.println(setTestForFold1.size()+" tests is from previous");
 			
 			for(int indexFold=1;indexFold<=10;indexFold++){
 				int indexForTest=0;
 				HashSet<Integer> setTestPerFold=new HashSet<Integer>();
 				HashSet<Integer> setTunePerFold=new HashSet<Integer>();
-				if(indexFold==1){
-					setTestPerFold=setTestForFold1;
-					indexForTest=setTestPerFold.size();
-					
-					
-					while ( indexForTest<=numberForTestInLib ){
-						indexForTest++;
-						int randomIndexForTest=randInt(0, listPossibleTestPerEachFold.size()-1);
-						if(!setTestPerFold.contains(randomIndexForTest)){
-							setTestPerFold.add(listPossibleTestPerEachFold.get(randomIndexForTest));
-							listPossibleTestPerEachFold.remove(randomIndexForTest);
-						}				
-					}
-				}
+//				if(indexFold==1){
+//					setTestPerFold=setTestForFold1;
+//					indexForTest=setTestPerFold.size();
+//					
+//					
+//					while ( indexForTest<=numberForTestInLib ){
+//						indexForTest++;
+//						int randomIndexForTest=randInt(0, listPossibleTestPerEachFold.size()-1);
+//						if(!setTestPerFold.contains(randomIndexForTest)){
+//							setTestPerFold.add(listPossibleTestPerEachFold.get(randomIndexForTest));
+//							listPossibleTestPerEachFold.remove(randomIndexForTest);
+//						}				
+//					}
+//				}
 				if(indexFold<10){
 					while ( indexForTest<=numberForTestInLib ){
 						indexForTest++;
@@ -205,8 +198,7 @@ public class GenerateStatMethodIdenTenFolds {
 				int indexForTune=0;
 				while ( indexForTune<numberForTuneInLib ){				
 					if(!setTestPerFold.contains(indexForTune)){
-						setTunePerFold.add(indexForTune);
-						
+						setTunePerFold.add(indexForTune);						
 					}
 					indexForTune++;
 				}

@@ -1,6 +1,7 @@
 package utils;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,6 +9,9 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class FileIO {
@@ -79,6 +83,24 @@ public class FileIO {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public static String readFromLargeFile(String inputFile){
+		StringBuilder sbResult=new StringBuilder();
+		
+		try (BufferedReader br = Files.newBufferedReader(Paths.get(inputFile), StandardCharsets.UTF_8)) {
+		    
+			for (String line = null; (line = br.readLine()) != null;) {
+		    	sbResult.append(line+"\n");
+//				prevLine=line;
+		    }
+		} catch(Exception ex){
+			ex.printStackTrace();
+		}
+		
+		return sbResult.toString();
+		
+		
 	}
 	
 	public static void findFiles(File root, String extension,

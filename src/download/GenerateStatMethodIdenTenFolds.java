@@ -134,13 +134,9 @@ public class GenerateStatMethodIdenTenFolds {
 //			if(arrLstFiles[i].getName().equals("org.apache.commons")){
 //				continue;
 //			}
-			ArrayList<String> arrOldSource = FileUtil.getFileStringArray(fop_output+arr5LibPrefix[i]+".source.txt");
-			ArrayList<String> arrOldTarget = FileUtil.getFileStringArray(fop_output+arr5LibPrefix[i]+".target.txt");
-			ArrayList<String> arrOldLocation = FileUtil.getFileStringArray(fop_output+arr5LibPrefix[i]+".locations.txt");
-			
-			ArrayList<String> arrLocation = FileUtil.getFileStringArray(fop_output+arr5LibPrefix[i]+".locations.txt");
-			ArrayList<String> arrSource = ;
+			ArrayList<String> arrSource = FileUtil.getFileStringArray(fop_output+arr5LibPrefix[i]+".source.txt");
 			ArrayList<String> arrTarget = FileUtil.getFileStringArray(fop_output+arr5LibPrefix[i]+".target.txt");
+			ArrayList<String> arrLocation = FileUtil.getFileStringArray(fop_output+arr5LibPrefix[i]+".locations.txt");
 			
 			int lengthOfPairs=arrSource.size();
 			
@@ -231,19 +227,19 @@ public class GenerateStatMethodIdenTenFolds {
 						arrPrtTestSource[indexFold-1].print(arrSource.get(j)+"\n");
 						arrPrtTestTarget[indexFold-1].print(arrTarget.get(j)+"\n");
 						arrPrtTestLocation[indexFold-1].print(arrLocation.get(j)+"\n");
-						arrPrtTestLine[indexFold-1].print((j+1)+"\t"+arrLstFiles[i].getName()+"\n");
+						arrPrtTestLine[indexFold-1].print((j+1)+"\t"+arr5LibPrefix[i]+"\n");
 						
 					} else{
 						arrPrtTrainSource[indexFold-1].print(arrSource.get(j)+"\n");
 						arrPrtTrainTarget[indexFold-1].print(arrTarget.get(j)+"\n");
 						arrPrtTrainLocation[indexFold-1].print(arrLocation.get(j)+"\n");
-						arrPrtTrainLine[indexFold-1].print((j+1)+"\t"+arrLstFiles[i].getName()+"\n");
+						arrPrtTrainLine[indexFold-1].print((j+1)+"\t"+arr5LibPrefix[i]+"\n");
 						
 						if(setTune.contains(j)){
 							arrPrtTuneSource[indexFold-1].print(arrSource.get(j)+"\n");
 							arrPrtTuneTarget[indexFold-1].print(arrTarget.get(j)+"\n");
 							arrPrtTuneLocation[indexFold-1].print(arrLocation.get(j)+"\n");
-							arrPrtTuneLine[indexFold-1].print((j+1)+"\t"+arrLstFiles[i].getName()+"\n");
+							arrPrtTuneLine[indexFold-1].print((j+1)+"\t"+arr5LibPrefix[i]+"\n");
 						}
 						
 					}
@@ -259,7 +255,7 @@ public class GenerateStatMethodIdenTenFolds {
 			arrLocation.clear();
 			
 			//append for align s2t
-			ArrayList<String> arrTrainSt = FileUtil.getFileStringArray(fop_output+arrLstFiles[i].getName()+".training.s-t.A3");			
+			ArrayList<String> arrTrainSt = FileUtil.getFileStringArray(fop_output+arr5LibPrefix[i]+".training.s-t.A3");			
 			for(int indexFold=1;indexFold<=10;indexFold++){
 				HashSet<Integer> setTest=mapTestOver10Fold.get(indexFold);
 				
@@ -282,7 +278,7 @@ public class GenerateStatMethodIdenTenFolds {
 			}
 			arrTrainSt.clear();
 			//append for align t2s
-			ArrayList<String> arrTrainTs = FileUtil.getFileStringArray(fop_output+arrLstFiles[i].getName()+".training.t-s.A3");			
+			ArrayList<String> arrTrainTs = FileUtil.getFileStringArray(fop_output+arr5LibPrefix[i]+".training.t-s.A3");			
 			for(int indexFold=1;indexFold<=10;indexFold++){
 				HashSet<Integer> setTest=mapTestOver10Fold.get(indexFold);
 				

@@ -93,8 +93,8 @@ public class CombineAndReplaceIdForSTProject {
 							+ File.separator + "hash" + File.separator
 							+ "mapReplaceId.txt";
 					
-					String strSource=FileIO.readStringFromFile(fpSource);					
-					String strLocation=FileIO.readStringFromFile(fpLocation);
+//					String strSource=FileIO.readStringFromFile(fpSource);					
+//					String strLocation=FileIO.readStringFromFile(fpLocation);
 					ArrayList<String> listSource=FileUtil.getFileStringArray(fpSource);
 					ArrayList<String> listLocation=FileUtil.getFileStringArray(fpLocation);
 					
@@ -118,13 +118,13 @@ public class CombineAndReplaceIdForSTProject {
 					
 					String strTrainSoTa=FileIO.readStringFromFile(fpTrainingSoTa);
 					String strNewTrainSoTa=CreateTrainingData.replaceTargetWithTotalId(strTrainSoTa, mapReplaceId);
-					String strFilterTrainSoTa=getFilterSourceTarget(listNumbers,strNewTrainSoTa);
+					String strFilterTrainSoTa=getFilterAlignment(listNumbers,strNewTrainSoTa);
 					FileIO.writeStringToFile(strNewTrainSoTa, fopProjSeq+"total.training.s-t.txt");
 					FileIO.appendStringToFile(strFilterTrainSoTa, fopOutput+arr5LibPrefix[i]+".training.s-t.A3");
 
 					String strTrainReverse=FileIO.readStringFromFile(fpTrainingReverse);
 					String strNewTrainReverse=CreateTrainingData.replaceTargetWithTotalId(strTrainReverse, mapReplaceId);
-					String strFilterTrainReverse=getFilterSourceTarget(listNumbers,strNewTrainReverse);
+					String strFilterTrainReverse=getFilterAlignment(listNumbers,strNewTrainReverse);
 					FileIO.writeStringToFile(strNewTrainReverse, fopProjSeq+"total.training.t-s.txt");
 					FileIO.appendStringToFile(strFilterTrainReverse, fopOutput+arr5LibPrefix[i]+".training.t-s.A3");
 					

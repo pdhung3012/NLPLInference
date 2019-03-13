@@ -129,7 +129,7 @@ public class CombineAndReplaceIdForSTProject {
 					FileIO.appendStringToFile(strFilterTrainReverse, fopOutput+arr5LibPrefix[i]+".training.t-s.A3");
 					
 					
-					
+					//
 					
 				}
 				System.out.println(j + " finish " + arrProjLibName[j]

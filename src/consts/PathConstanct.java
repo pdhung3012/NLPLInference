@@ -15,6 +15,7 @@ public class PathConstanct {
 	public static String PATH_PROJECT_STATTYPE_DATA = "G:\\StatTypeOldData\\";
 	public static String PATH_PROJECT_STATTYPE_ALIAS = "G:\\StatTypeAlias\\";
 	public static String PATH_PROJECT_STATTYPE_SPLIT = "G:\\StatTypeSplit\\";
+	public static String PATH_PROJECT_STATTYPE_TYPE_SEQUENCES = "G:\\st_6libs\\";
 	
 	public static String fop2ndProjectLocation = "G:\\gitHighQualitySpec\\";
 	 public static String fop2ndListLibraryLocation =

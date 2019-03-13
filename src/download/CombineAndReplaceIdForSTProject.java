@@ -23,7 +23,7 @@ public class CombineAndReplaceIdForSTProject {
 			if(arrTokenInSource.length<=PathConstanct.NUM_CHARACTER_MAXIMUM && percentageResolve.equals("100%")){
 				listNumbers.add(i);
 				listFilterLocations.add(listLocations.get(i));
-				listFilterSources.add(listFilterSources.get(i));
+				listFilterSources.add(listSources.get(i));
 			}
 		}
 	}

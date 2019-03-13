@@ -70,6 +70,7 @@ public class CombineAndReplaceIdForSTProject {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		System.exit(0);
 		String fopSequence=PathConstanct.PATH_OUTPUT_IDENTIFER_PROJECT;
 		String fopProjectTTTLibrary=PathConstanct.PATH_PROJECT_TRAIN_TEST_NAME+"5LibSequence"+File.separator;
 		String fopOutput=PathConstanct.PATH_PROJECT_TTT_DATA;

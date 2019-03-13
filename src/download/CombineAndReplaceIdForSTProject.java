@@ -64,7 +64,7 @@ public class CombineAndReplaceIdForSTProject {
 		
 		
 		for(int i=0;i<arr5LibPrefix.length;i++){
-			if(i<=1) {
+			if(i<=2) {
 				continue;
 			}
 			String[] arrProjLibName=FileIO.readStringFromFile(fopProjectTTTLibrary+arr5LibPrefix[i]+".txt").split("\n");
@@ -75,6 +75,7 @@ public class CombineAndReplaceIdForSTProject {
 			FileIO.writeStringToFile("", fopOutput+arr5LibPrefix[i]+".training.t-s.A3");
 			
 			for(int j=0;j<arrProjLibName.length;j++){
+				
 				String fopProjSeq=fopSequence+arrProjLibName[j]+File.separator;
 				String fpLocation=fopProjSeq
 						+ File.separator+"locations.txt";

@@ -60,6 +60,7 @@ public class GenerateStatMethodIdenTenFolds {
 	public static void main(String[] args) {
 		// TODO Auto-generated method 
 		String fop_output=PathConstanct.PATH_PROJECT_TTT_DATA;
+		System.exit(0);
 		System.out.println("Start created 10 fold");
 	//	System.out.println("Start created 10 fold");
 		

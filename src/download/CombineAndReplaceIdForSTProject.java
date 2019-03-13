@@ -4,15 +4,58 @@ import invocations.CombineSequenceFromProjects;
 import invocations.CreateTrainingData;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import utils.FileIO;
+import utils.FileUtil;
 import consts.PathConstanct;
 
 public class CombineAndReplaceIdForSTProject {
 
 	public static String[] arr5LibPrefix={"android","com.google.gwt","com.thoughtworks.xstream","org.hibernate","org.joda.time"};
 
+	public static void extractGoodPercentage(ArrayList<Integer> listNumbers,ArrayList<String> listLocations,ArrayList<String> listSources,ArrayList<String> listFilterLocations,ArrayList<String> listFilterSources){
+		for(int i=0;i<listSources.size();i++){
+			String[] arrLocationInfo=listLocations.get(i).trim().split("\\s+");
+			String[] arrTokenInSource=listSources.get(i).trim().split("\\s+");
+			String percentageResolve=arrLocationInfo[arrLocationInfo.length-1];
+			if(arrTokenInSource.length<=PathConstanct.NUM_CHARACTER_MAXIMUM && percentageResolve.equals("100%")){
+				listNumbers.add(i);
+				listFilterLocations.add(listLocations.get(i));
+				listFilterSources.add(listFilterSources.get(i));
+			}
+		}
+	}
+	
+	public static String convertFromArrayListToString(ArrayList<String> list){
+		StringBuilder sb=new StringBuilder();
+		for(int i=0;i<list.size();i++){
+			sb.append(list.get(i)+"\n");
+		}
+		return sb.toString();
+	}
+	
+	public static String getFilterSourceTarget(ArrayList<Integer> lstNumber,String input){
+		StringBuilder sb=new StringBuilder();
+		String[] arrInput=input.split("\n");
+		for(int i=0;i<lstNumber.size();i++){
+			sb.append(arrInput[lstNumber.get(i)]+"\n");
+		}
+		return sb.toString();
+	}
+	
+	public static String getFilterAlignment(ArrayList<Integer> lstNumber,String input){
+		StringBuilder sb=new StringBuilder();
+		String[] arrInput=input.split("\n");
+		for(int i=0;i<lstNumber.size();i++){
+			sb.append(arrInput[lstNumber.get(i)*3]+"\n");
+			sb.append(arrInput[lstNumber.get(i)*3+1]+"\n");
+			sb.append(arrInput[lstNumber.get(i)*3+2]+"\n");
+		}
+		return sb.toString();
+	}
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String fopSequence=PathConstanct.PATH_OUTPUT_IDENTIFER_PROJECT;
@@ -49,27 +92,44 @@ public class CombineAndReplaceIdForSTProject {
 					String fpMapReplaceId = fopProjSeq
 							+ File.separator + "hash" + File.separator
 							+ "mapReplaceId.txt";
+					
+					String strSource=FileIO.readStringFromFile(fpSource);					
+					String strLocation=FileIO.readStringFromFile(fpLocation);
+					ArrayList<String> listSource=FileUtil.getFileStringArray(fpSource);
+					ArrayList<String> listLocation=FileUtil.getFileStringArray(fpLocation);
+					
+					ArrayList<Integer> listNumbers=new ArrayList<Integer>();
+					ArrayList<String> listFilterLocations=new ArrayList<>();
+					ArrayList<String> listFilterSources=new ArrayList<>();
+					extractGoodPercentage(listNumbers,listLocation,listSource,listFilterLocations,listFilterSources);
+					String strFilterSource=convertFromArrayListToString(listFilterSources);
+					String strFilterLocation=convertFromArrayListToString(listFilterLocations);
+					
+					FileIO.appendStringToFile(strFilterSource, fopOutput+arr5LibPrefix[i]+".source.txt");
+					FileIO.appendStringToFile(strFilterLocation, fopOutput+arr5LibPrefix[i]+".locations.txt");
+					
 					HashMap<String,String> mapReplaceId=CombineSequenceFromProjects.getMapFromFileStringString(fpMapReplaceId);				
 					String strTarget=FileIO.readStringFromFile(fpTarget);
 					String strNewTarget=CreateTrainingData.replaceTargetWithTotalId(strTarget, mapReplaceId);
 					FileIO.writeStringToFile(strNewTarget, fopProjSeq+"totalIdTarget.txt");
-					FileIO.appendStringToFile(strNewTarget, fopOutput+arr5LibPrefix[i]+".target.txt");
+					
+					String strFilterForNewTarget=getFilterSourceTarget(listNumbers,strNewTarget);
+					FileIO.appendStringToFile(strFilterForNewTarget, fopOutput+arr5LibPrefix[i]+".target.txt");
 					
 					String strTrainSoTa=FileIO.readStringFromFile(fpTrainingSoTa);
 					String strNewTrainSoTa=CreateTrainingData.replaceTargetWithTotalId(strTrainSoTa, mapReplaceId);
+					String strFilterTrainSoTa=getFilterSourceTarget(listNumbers,strNewTrainSoTa);
 					FileIO.writeStringToFile(strNewTrainSoTa, fopProjSeq+"total.training.s-t.txt");
-					FileIO.appendStringToFile(strNewTrainSoTa, fopOutput+arr5LibPrefix[i]+".training.s-t.A3");
+					FileIO.appendStringToFile(strFilterTrainSoTa, fopOutput+arr5LibPrefix[i]+".training.s-t.A3");
 
 					String strTrainReverse=FileIO.readStringFromFile(fpTrainingReverse);
 					String strNewTrainReverse=CreateTrainingData.replaceTargetWithTotalId(strTrainReverse, mapReplaceId);
+					String strFilterTrainReverse=getFilterSourceTarget(listNumbers,strNewTrainReverse);
 					FileIO.writeStringToFile(strNewTrainReverse, fopProjSeq+"total.training.t-s.txt");
-					FileIO.appendStringToFile(strNewTrainReverse, fopOutput+arr5LibPrefix[i]+".training.t-s.A3");
+					FileIO.appendStringToFile(strFilterTrainReverse, fopOutput+arr5LibPrefix[i]+".training.t-s.A3");
 					
 					
-					String strSource=FileIO.readStringFromFile(fpSource);
-					FileIO.appendStringToFile(strSource, fopOutput+arr5LibPrefix[i]+".source.txt");
-					String strLocation=FileIO.readStringFromFile(fpLocation);
-					FileIO.appendStringToFile(strLocation, fopOutput+arr5LibPrefix[i]+".locations.txt");
+					
 					
 				}
 				System.out.println(i + " finish " + arrProjLibName[i]

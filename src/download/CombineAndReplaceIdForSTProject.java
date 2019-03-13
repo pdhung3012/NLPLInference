@@ -42,7 +42,7 @@ public class CombineAndReplaceIdForSTProject {
 		FileIO.writeStringToFile("", fpTempWrite);
 		for(int i=0;i<lstNumber.size();i++){
 			sb.append(arrInput[lstNumber.get(i)]+"\n");
-			if(i+1%100000==0||i+1==lstNumber.size()){
+			if((i+1)%100000==0||i+1==lstNumber.size()){
 				FileIO.appendStringToFile(sb.toString(), fpTempWrite);
 				sb=new StringBuilder();
 			}
@@ -59,7 +59,7 @@ public class CombineAndReplaceIdForSTProject {
 			sb.append(arrInput[lstNumber.get(i)*3]+"\n");
 			sb.append(arrInput[lstNumber.get(i)*3+1]+"\n");
 			sb.append(arrInput[lstNumber.get(i)*3+2]+"\n");
-			if(i+1%50000==0||i+1==lstNumber.size()){
+			if((i+1)%50000==0||i+1==lstNumber.size()){
 				FileIO.appendStringToFile(sb.toString(), fpTempWrite);
 				sb=new StringBuilder();
 			}
@@ -89,7 +89,9 @@ public class CombineAndReplaceIdForSTProject {
 			FileIO.writeStringToFile("", fopOutput+arr5LibPrefix[i]+".training.t-s.A3");
 			
 			for(int j=0;j<arrProjLibName.length;j++){
-				
+				if(j<=45) {
+					continue;
+				}
 				String fopProjSeq=fopSequence+arrProjLibName[j]+File.separator;
 				String fpLocation=fopProjSeq
 						+ File.separator+"locations.txt";

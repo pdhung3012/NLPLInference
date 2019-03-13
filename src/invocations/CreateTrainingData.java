@@ -54,9 +54,10 @@ public class CreateTrainingData {
 				} else{
 					line.append(arrItem[j]+" ");
 				}
-			}			
+			}
+			//System.out.println(line);
 			strResult.append(line.toString().trim()+"\n");
-			if(i+1%10000==0||i+1==arrOldTarget.length){
+			if((i+1)%100000==0||i+1==arrOldTarget.length){
 				FileIO.appendStringToFile(strResult.toString(), fpTempWrite);
 				strResult=new StringBuilder();
 			}

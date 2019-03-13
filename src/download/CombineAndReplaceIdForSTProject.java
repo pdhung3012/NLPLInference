@@ -132,7 +132,7 @@ public class CombineAndReplaceIdForSTProject {
 					
 					
 				}
-				System.out.println(i + " finish " + arrProjLibName[i]
+				System.out.println(j + " finish " + arrProjLibName[j]
 						+ " size " );
 			}
 			

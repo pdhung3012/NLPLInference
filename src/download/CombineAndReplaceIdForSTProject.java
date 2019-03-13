@@ -36,24 +36,36 @@ public class CombineAndReplaceIdForSTProject {
 		return sb.toString();
 	}
 	
-	public static String getFilterSourceTarget(ArrayList<Integer> lstNumber,String input){
+	public static String getFilterSourceTarget(ArrayList<Integer> lstNumber,String input,String fpTempWrite){
 		StringBuilder sb=new StringBuilder();
 		String[] arrInput=input.split("\n");
+		FileIO.writeStringToFile("", fpTempWrite);
 		for(int i=0;i<lstNumber.size();i++){
 			sb.append(arrInput[lstNumber.get(i)]+"\n");
+			if(i+1%100000==0||i+1==lstNumber.size()){
+				FileIO.appendStringToFile(sb.toString(), fpTempWrite);
+				sb=new StringBuilder();
+			}
 		}
-		return sb.toString();
+		String str=FileIO.readStringFromFile(fpTempWrite);
+		return str;
 	}
 	
-	public static String getFilterAlignment(ArrayList<Integer> lstNumber,String input){
+	public static String getFilterAlignment(ArrayList<Integer> lstNumber,String input,String fpTempWrite){
 		StringBuilder sb=new StringBuilder();
 		String[] arrInput=input.split("\n");
+		FileIO.writeStringToFile("", fpTempWrite);
 		for(int i=0;i<lstNumber.size();i++){
 			sb.append(arrInput[lstNumber.get(i)*3]+"\n");
 			sb.append(arrInput[lstNumber.get(i)*3+1]+"\n");
 			sb.append(arrInput[lstNumber.get(i)*3+2]+"\n");
+			if(i+1%50000==0||i+1==lstNumber.size()){
+				FileIO.appendStringToFile(sb.toString(), fpTempWrite);
+				sb=new StringBuilder();
+			}
 		}
-		return sb.toString();
+		String str=FileIO.readStringFromFile(fpTempWrite);
+		return str;
 	}
 	
 	public static void main(String[] args) {
@@ -61,6 +73,8 @@ public class CombineAndReplaceIdForSTProject {
 		String fopSequence=PathConstanct.PATH_OUTPUT_IDENTIFER_PROJECT;
 		String fopProjectTTTLibrary=PathConstanct.PATH_PROJECT_TRAIN_TEST_NAME+"5LibSequence"+File.separator;
 		String fopOutput=PathConstanct.PATH_PROJECT_TTT_DATA;
+		
+		String fpTempForWrite=PathConstanct.PATH_PROJECT_TTT_DATA+"tempForWrite.txt";
 		
 		
 		for(int i=0;i<arr5LibPrefix.length;i++){
@@ -117,18 +131,18 @@ public class CombineAndReplaceIdForSTProject {
 					String strNewTarget=CreateTrainingData.replaceTargetWithTotalId(strTarget, mapReplaceId);
 					FileIO.writeStringToFile(strNewTarget, fopProjSeq+"totalIdTarget.txt");
 					
-					String strFilterForNewTarget=getFilterSourceTarget(listNumbers,strNewTarget);
+					String strFilterForNewTarget=getFilterSourceTarget(listNumbers,strNewTarget,fpTempForWrite);
 					FileIO.appendStringToFile(strFilterForNewTarget, fopOutput+arr5LibPrefix[i]+".target.txt");
 					
 					String strTrainSoTa=FileIO.readStringFromFile(fpTrainingSoTa);
-					String strNewTrainSoTa=CreateTrainingData.replaceTargetWithTotalId(strTrainSoTa, mapReplaceId);
-					String strFilterTrainSoTa=getFilterAlignment(listNumbers,strNewTrainSoTa);
+					String strNewTrainSoTa=CreateTrainingData.replaceTargetWithTotalId(strTrainSoTa, mapReplaceId,fpTempForWrite);
+					String strFilterTrainSoTa=getFilterAlignment(listNumbers,strNewTrainSoTa,fpTempForWrite);
 					FileIO.writeStringToFile(strNewTrainSoTa, fopProjSeq+"total.training.s-t.txt");
 					FileIO.appendStringToFile(strFilterTrainSoTa, fopOutput+arr5LibPrefix[i]+".training.s-t.A3");
 
 					String strTrainReverse=FileIO.readStringFromFile(fpTrainingReverse);
-					String strNewTrainReverse=CreateTrainingData.replaceTargetWithTotalId(strTrainReverse, mapReplaceId);
-					String strFilterTrainReverse=getFilterAlignment(listNumbers,strNewTrainReverse);
+					String strNewTrainReverse=CreateTrainingData.replaceTargetWithTotalId(strTrainReverse, mapReplaceId,fpTempForWrite);
+					String strFilterTrainReverse=getFilterAlignment(listNumbers,strNewTrainReverse,fpTempForWrite);
 					FileIO.writeStringToFile(strNewTrainReverse, fopProjSeq+"total.training.t-s.txt");
 					FileIO.appendStringToFile(strFilterTrainReverse, fopOutput+arr5LibPrefix[i]+".training.t-s.A3");
 					

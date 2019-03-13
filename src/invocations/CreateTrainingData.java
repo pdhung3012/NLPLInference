@@ -28,11 +28,43 @@ public class CreateTrainingData {
 				} else{
 					line.append(arrItem[j]+" ");
 				}
-			}
+			}			
 			strResult.append(line.toString().trim()+"\n");
 		}
 		return strResult.toString();
 	}
+	
+	public static String replaceTargetWithTotalId(String target,HashMap<String,String> mapReplaceId,String fpTempWrite){
+		StringBuilder strResult=new StringBuilder();
+		String[] arrOldTarget=target.split("\n");
+		FileIO.writeStringToFile("", fpTempWrite);
+		for(int i=0;i<arrOldTarget.length;i++){
+			String[] arrItem=arrOldTarget[i].trim().split("\\s+");
+			StringBuilder line=new StringBuilder();
+			for(int j=0;j<arrItem.length;j++){
+				if(arrItem[j].startsWith("E-") ){
+					String totalId=mapReplaceId.get(arrItem[j]);
+					if(totalId!=null){
+						line.append(totalId+" ");
+					} else{
+						line.append(arrItem[j]+" ");
+					}
+//					line.append(arrItem[j]+" ");
+					
+				} else{
+					line.append(arrItem[j]+" ");
+				}
+			}			
+			strResult.append(line.toString().trim()+"\n");
+			if(i+1%10000==0||i+1==arrOldTarget.length){
+				FileIO.appendStringToFile(strResult.toString(), fpTempWrite);
+				strResult=new StringBuilder();
+			}
+		}
+		String str=FileIO.readStringFromFile(fpTempWrite);
+		return str;
+	}
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String inputFolder = PathConstanct.PATH_OUTPUT_IDENTIFER_PROJECT;

@@ -72,7 +72,7 @@ public class CombineAndReplaceIdForSTProject {
 					FileIO.appendStringToFile(strLocation, fopOutput+arr5LibPrefix[i]+".locations.txt");
 					
 				}
-				System.out.println(i + " finish " + arrProjLibName[i]
+				System.out.println(i + " finish " + arrProjLibName[j]
 						+ " size " );
 			}
 			

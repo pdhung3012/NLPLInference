@@ -78,7 +78,7 @@ public class CombineAndReplaceIdForSTProject {
 		
 		
 		for(int i=0;i<arr5LibPrefix.length;i++){
-			if(i<=2) {
+			if(i<=3) {
 				continue;
 			}
 			String[] arrProjLibName=FileIO.readStringFromFile(fopProjectTTTLibrary+arr5LibPrefix[i]+".txt").split("\n");
@@ -90,6 +90,9 @@ public class CombineAndReplaceIdForSTProject {
 			
 			for(int j=0;j<arrProjLibName.length;j++){
 			
+				if(j<=40){
+					continue;
+				}
 				String fopProjSeq=fopSequence+arrProjLibName[j]+File.separator;
 				String fpLocation=fopProjSeq
 						+ File.separator+"locations.txt";
@@ -134,13 +137,13 @@ public class CombineAndReplaceIdForSTProject {
 					String strFilterForNewTarget=getFilterSourceTarget(listNumbers,strNewTarget,fpTempForWrite);
 					FileIO.appendStringToFile(strFilterForNewTarget, fopOutput+arr5LibPrefix[i]+".target.txt");
 					
-					String strTrainSoTa=FileIO.readStringFromFile(fpTrainingSoTa);
+					String strTrainSoTa=FileIO.readFromLargeFile(fpTrainingSoTa);
 					String strNewTrainSoTa=CreateTrainingData.replaceTargetWithTotalId(strTrainSoTa, mapReplaceId,fpTempForWrite);
 					String strFilterTrainSoTa=getFilterAlignment(listNumbers,strNewTrainSoTa,fpTempForWrite);
 					FileIO.writeStringToFile(strNewTrainSoTa, fopProjSeq+"total.training.s-t.txt");
 					FileIO.appendStringToFile(strFilterTrainSoTa, fopOutput+arr5LibPrefix[i]+".training.s-t.A3");
 
-					String strTrainReverse=FileIO.readStringFromFile(fpTrainingReverse);
+					String strTrainReverse=FileIO.readFromLargeFile(fpTrainingReverse);
 					String strNewTrainReverse=CreateTrainingData.replaceTargetWithTotalId(strTrainReverse, mapReplaceId,fpTempForWrite);
 					String strFilterTrainReverse=getFilterAlignment(listNumbers,strNewTrainReverse,fpTempForWrite);
 					FileIO.writeStringToFile(strNewTrainReverse, fopProjSeq+"total.training.t-s.txt");

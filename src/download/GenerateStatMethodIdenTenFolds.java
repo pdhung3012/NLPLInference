@@ -59,25 +59,14 @@ public class GenerateStatMethodIdenTenFolds {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method 
-		String fop_output=PathConstanct.PATH_PROJECT_STATTYPE_DATA;
-		int indexLstFile=0;
-		
-		PrintStream stSource=null,stTarget=null,stLocation=null,stTrainSt=null,stTrainTs=null;
-		
-		
-		
-		HashSet<String> setMethodInfo=new HashSet<String>();
-		int numberOfMethodsTotal=0;
-		HashMap<String,Integer> mapPercentagePerLibrary=new HashMap<String, Integer>();
-		
-		System.out.println("Finish combine corpus! "+numberOfMethodsTotal+" in corpus");
+		String fop_output=PathConstanct.PATH_PROJECT_TTT_DATA;
 		System.out.println("Start created 10 fold");
 	//	System.out.println("Start created 10 fold");
 		
 		//create folder to store 10 fold
 		for(int i=1;i<=10;i++){
 			String fn_fold="fold-"+i;
-			File fFold=new File(fop_output+"\\"+fn_fold+"\\");
+			File fFold=new File(fop_output+File.separator+fn_fold+File.separator);
 			if(!fFold.isDirectory()){
 				fFold.mkdir();
 			}

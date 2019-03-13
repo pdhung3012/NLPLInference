@@ -89,9 +89,7 @@ public class CombineAndReplaceIdForSTProject {
 			FileIO.writeStringToFile("", fopOutput+arr5LibPrefix[i]+".training.t-s.A3");
 			
 			for(int j=0;j<arrProjLibName.length;j++){
-				if(j<=45) {
-					continue;
-				}
+			
 				String fopProjSeq=fopSequence+arrProjLibName[j]+File.separator;
 				String fpLocation=fopProjSeq
 						+ File.separator+"locations.txt";

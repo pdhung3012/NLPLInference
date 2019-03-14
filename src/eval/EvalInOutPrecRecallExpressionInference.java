@@ -74,7 +74,7 @@ public class EvalInOutPrecRecallExpressionInference {
 //		ArrayList<String> arrEvaluatedTypes=FileUtil.getFileStringArray(fop_input+"evaluatedResults.txt");
 //		ArrayList<String> arrVocabFromTraining=FileUtil.getFileStringArray(fop_input+fn_vocabulary);
 		
-		
+//		
 		HashSet<String> setVocabTrainSource=new HashSet<String>();
 		HashSet<String> setVocabTrainTarget=new HashSet<String>();
 		HashSet<String> setVocabTrainMapping=new HashSet<String>();

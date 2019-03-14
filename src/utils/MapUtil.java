@@ -19,13 +19,13 @@ public class MapUtil {
 		return line;
 	}
 	
-	public HashMap<String,String> getHashMapFromFile(String fp){
+	public static HashMap<String,String> getHashMapFromFile(String fp){
 		HashMap<String,String> map=new LinkedHashMap<String, String>();
 		try (BufferedReader br = Files.newBufferedReader(Paths.get(fp), StandardCharsets.US_ASCII)) {
 		    for (String line = null; (line = tryGetLine(br)) != null;) {
 		    	String[] arrItems=line.split("\t");
 		    	if(arrItems.length>=2){
-		    		map.put(arrItems[0], arrItems[1].trim());
+		    		map.put(arrItems[0].trim(), arrItems[1].trim());
 		    	}
 		    	
 		    }

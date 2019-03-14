@@ -9,6 +9,7 @@ import java.util.HashSet;
 
 import consts.PathConstanct;
 import utils.FileUtil;
+import utils.MapUtil;
 
 public class EvalInOutPrecRecallExpressionInference {
 
@@ -60,6 +61,7 @@ public class EvalInOutPrecRecallExpressionInference {
 		String fn_testSource="test.s";
 		String fn_testTarget="test.t";
 		String fn_testTranslation="test.tune.baseline.trans";
+//		String fn_OrderTranslation="ordered.baseline.trans";
 		String fn_result="result_all.txt";
 		String fn_log_incorrect="log_incorrect.txt";
 		String fn_log_outVocab="log_outVocab.txt";
@@ -67,6 +69,9 @@ public class EvalInOutPrecRecallExpressionInference {
 		String fn_statisticCorrectMapping="correct_mapping.csv";
 		String fn_statisticIncorrectMapping="incorrect_mapping.csv";
 //		String fn_vocabulary="vocabulary.txt";
+		
+		HashMap<String,String> mapTotalId=MapUtil.getHashMapFromFile(fop_mapTotalId+"a_mapTotalIdAndContent.txt");
+		System.out.println("Map total ID loaded!");
 		
 		ArrayList<String> arrTrainSource=FileUtil.getFileStringArray(fop_input+fn_trainSource);
 		ArrayList<String> arrTestSource=FileUtil.getFileStringArray(fop_input+fn_testSource);

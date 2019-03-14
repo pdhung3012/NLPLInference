@@ -10,6 +10,7 @@ import java.util.HashSet;
 import consts.PathConstanct;
 import utils.FileUtil;
 import utils.MapUtil;
+import utils.ReorderingTokens;
 
 public class EvalInOutPrecRecallExpressionInference {
 
@@ -72,11 +73,13 @@ public class EvalInOutPrecRecallExpressionInference {
 		
 		HashMap<String,String> mapTotalId=MapUtil.getHashMapFromFile(fop_mapTotalId+"a_mapTotalIdAndContent.txt");
 		System.out.println("Map total ID loaded!");
+		ReorderingTokens.reorderingTokens(fop_output+fn_testSource,fop_output+fn_testTarget, fop_output+fn_testTranslation, fop_output+fn_correctOrderTranslated, mapTotalId);
+		System.out.println("Finish reorder!");
 		
 		ArrayList<String> arrTrainSource=FileUtil.getFileStringArray(fop_input+fn_trainSource);
 		ArrayList<String> arrTestSource=FileUtil.getFileStringArray(fop_input+fn_testSource);
 		ArrayList<String> arrTestTarget=FileUtil.getFileStringArray(fop_input+fn_testTarget);
-		ArrayList<String> arrTestTranslation=FileUtil.getFileStringArray(fop_input+fn_testTranslation);
+		ArrayList<String> arrTestTranslation=FileUtil.getFileStringArray(fop_input+fn_correctOrderTranslated);
 //		ArrayList<String> arrEvaluatedTypes=FileUtil.getFileStringArray(fop_input+"evaluatedResults.txt");
 //		ArrayList<String> arrVocabFromTraining=FileUtil.getFileStringArray(fop_input+fn_vocabulary);
 		

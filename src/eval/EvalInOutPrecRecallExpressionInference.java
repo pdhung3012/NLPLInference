@@ -72,7 +72,7 @@ public class EvalInOutPrecRecallExpressionInference {
 //		String fn_vocabulary="vocabulary.txt";
 		
 		HashMap<String,String> mapTotalId=MapUtil.getHashMapFromFile(fop_mapTotalId+"a_mapTotalIdAndContent.txt");
-		System.out.println("Map total ID loaded!");
+		System.out.println(mapTotalId.size()+" Map total ID loaded!");
 		ReorderingTokens.reorderingTokens(fop_input+fn_testSource,fop_input+fn_testTarget, fop_input+fn_testTranslation, fop_input+fn_correctOrderTranslated, mapTotalId);
 		System.out.println("Finish reorder!");
 		
@@ -198,11 +198,11 @@ public class EvalInOutPrecRecallExpressionInference {
 		FileUtil.writeToFile(fop_output+fn_result, "Correct"+"\t"+"Incorrect"+"\t"+"Out_of_source"+"\t"+"Out_of_target"+"\t"+"Out_of_vocab"+"\n");
 		FileUtil.writeToFile(fop_output+fn_log_incorrect, "");
 		
-		PrintStream ptResult=null,ptIncorrect=null,ptOutVocab=null,ptCorrectTranslated=null,ptCorrect_map=null,ptIncorrect_map=null,ptCorrectLibs[]=null,ptIncorrectLibs[]=null;
+		PrintStream ptResult=null,ptIncorrect=null,ptOutVocab=null,ptCorrect_map=null,ptIncorrect_map=null,ptCorrectLibs[]=null,ptIncorrectLibs[]=null;
 		try{
 			ptResult=new PrintStream(new FileOutputStream(fop_output+fn_result));
 			ptIncorrect=new PrintStream(new FileOutputStream(fop_output+fn_log_incorrect));
-			ptCorrectTranslated=new PrintStream(new FileOutputStream(fop_output+fn_correctOrderTranslated));
+			// ptCorrectTranslated=new PrintStream(new FileOutputStream(fop_output+fn_correctOrderTranslated));
 			ptOutVocab=new PrintStream(new FileOutputStream(fop_output+fn_log_outVocab));
 			ptCorrect_map=new PrintStream(new FileOutputStream(fop_output+fn_statisticCorrectMapping));
 			ptIncorrect_map=new PrintStream(new FileOutputStream(fop_output+fn_statisticIncorrectMapping));
@@ -222,7 +222,7 @@ public class EvalInOutPrecRecallExpressionInference {
 			String[] itemTarget=arrTestTarget.get(i).trim().split("\\s+");
 			String[] itemTrans=arrTestTranslation.get(i).trim().split("\\s+");
 			String strIncorrectLog="",strOutSource="",strOutTarget="";
-			
+			/*
 			//String[] itemCorrectOrderTrans=itemTrans;
 			int indexAbNormalSource=0,indexAbNormalTranslation=0;
 			String strCorrectSequence="";
@@ -249,9 +249,9 @@ public class EvalInOutPrecRecallExpressionInference {
 					}
 				}
 				strCorrectSequence+=itemTrans[j]+" ";
-			}
+			}*/
 			
-			ptCorrectTranslated.print(strCorrectSequence+"\n");
+			// ptCorrectTranslated.print(strCorrectSequence+"\n");
 			
 			
 			int numCSourceLine=0,numCTargetLine=0,numIncorrect=0,numCorrect=0;
@@ -327,7 +327,7 @@ public class EvalInOutPrecRecallExpressionInference {
 		try{
 			ptResult.close();
 			ptIncorrect.close();
-			ptCorrectTranslated.close();
+		//	ptCorrectTranslated.close();
 			ptOutVocab.close();
 			ptCorrect_map.close();
 			ptIncorrect_map.close();

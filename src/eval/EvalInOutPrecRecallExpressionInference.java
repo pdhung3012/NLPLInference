@@ -52,6 +52,7 @@ public class EvalInOutPrecRecallExpressionInference {
 		// TODO Auto-generated method stub
 		String fop_input=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+File.separator;
 		String fop_output=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+File.separator+"eval"+File.separator;
+		String fop_mapTotalId=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+File.separator+"eval"+File.separator;
 		new File(fop_output).mkdir();
 		
 		String fn_trainSource="train.s";
@@ -80,14 +81,14 @@ public class EvalInOutPrecRecallExpressionInference {
 		HashSet<String> setVocabTrainMapping=new HashSet<String>();
 		HashMap<String,Integer> mapVocabTraining=new HashMap<String, Integer>();
 		
-//		HashSet<String> set5Libraries=new HashSet<String>();
-//		set5Libraries.add("android.");
-//		set5Libraries.add("com.google.gwt.");
-//		set5Libraries.add("com.thoughtworks.xstream.");
-//		set5Libraries.add("org.hibernate.");
-//		set5Libraries.add("org.joda.time.");		
-//				//set5Libraries.add("org.apache.commons.");
-//		set5Libraries.add("java.");
+		HashSet<String> set5Libraries=new HashSet<String>();
+		set5Libraries.add("android.");
+		set5Libraries.add("com.google.gwt.");
+		set5Libraries.add("com.thoughtworks.xstream.");
+		set5Libraries.add("org.hibernate.");
+		set5Libraries.add("org.joda.time.");		
+				//set5Libraries.add("org.apache.commons.");
+		set5Libraries.add("java.");
 //		
 //		HashMap<String,PrintStream> mapCorrectPrintScreen=new HashMap<String, PrintStream>();
 //		HashMap<String,PrintStream> mapIncorrectPrintScreen=new HashMap<String, PrintStream>();

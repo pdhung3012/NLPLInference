@@ -70,18 +70,19 @@ public class CombineAndReplaceIdForSTProject {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		System.exit(0);
+//		System.exit(0);
 		String fopSequence=PathConstanct.PATH_OUTPUT_IDENTIFER_PROJECT;
 		String fopProjectTTTLibrary=PathConstanct.PATH_PROJECT_TRAIN_TEST_NAME+"5LibSequence"+File.separator;
 		String fopOutput=PathConstanct.PATH_PROJECT_TTT_DATA;
 		
 		String fpTempForWrite=PathConstanct.PATH_PROJECT_TTT_DATA+"tempForWrite.txt";
 		
-		
+		int maximumLine=100000;
+		int numLine=0;
 		for(int i=0;i<arr5LibPrefix.length;i++){
-			if(i<=3) {
-				continue;
-			}
+//			if(i<=3) {
+//				continue;
+//			}
 			String[] arrProjLibName=FileIO.readStringFromFile(fopProjectTTTLibrary+arr5LibPrefix[i]+".txt").split("\n");
 			FileIO.writeStringToFile("", fopOutput+arr5LibPrefix[i]+".locations.txt");
 			FileIO.writeStringToFile("", fopOutput+arr5LibPrefix[i]+".source.txt");
@@ -117,6 +118,7 @@ public class CombineAndReplaceIdForSTProject {
 //					String strLocation=FileIO.readStringFromFile(fpLocation);
 					ArrayList<String> listSource=FileUtil.getFileStringArray(fpSource);
 					ArrayList<String> listLocation=FileUtil.getFileStringArray(fpLocation);
+					numLine+=listLocation.size();
 					
 					ArrayList<Integer> listNumbers=new ArrayList<Integer>();
 					ArrayList<String> listFilterLocations=new ArrayList<>();
@@ -148,7 +150,7 @@ public class CombineAndReplaceIdForSTProject {
 					FileIO.writeStringToFile(strNewTrainReverse, fopProjSeq+"total.training.t-s.txt");
 					FileIO.appendStringToFile(strFilterTrainReverse, fopOutput+arr5LibPrefix[i]+".training.t-s.A3");
 					
-					
+					if(numLine>maximumLine) break;
 					//
 					
 				}

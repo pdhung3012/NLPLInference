@@ -14,7 +14,6 @@ public class CombineStatTypeTenfoldProjects {
 		String fpSupplyProject=PathConstanct.PATH_PROJECT_TRAIN_TEST_NAME+"supplyProjects.txt";
 		String fpRequiredProject=PathConstanct.PATH_PROJECT_TRAIN_TEST_NAME+"requiredProjects.txt";
 		String fpStillMissProject=PathConstanct.PATH_PROJECT_TRAIN_TEST_NAME+"stillMissProjects.txt";
-		
 		String[] arrTotalSTProject=FileIO.readStringFromFile(fpTotalSTProject).split("\n");
 		String[] arrSupplyProject=FileIO.readStringFromFile(fpSupplyProject).split("\n");
 		HashSet<String> setSupplyProject=new LinkedHashSet<String>();

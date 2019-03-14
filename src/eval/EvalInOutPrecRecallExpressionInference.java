@@ -73,7 +73,7 @@ public class EvalInOutPrecRecallExpressionInference {
 		
 		HashMap<String,String> mapTotalId=MapUtil.getHashMapFromFile(fop_mapTotalId+"a_mapTotalIdAndContent.txt");
 		System.out.println("Map total ID loaded!");
-		ReorderingTokens.reorderingTokens(fop_output+fn_testSource,fop_output+fn_testTarget, fop_output+fn_testTranslation, fop_output+fn_correctOrderTranslated, mapTotalId);
+		ReorderingTokens.reorderingTokens(fop_input+fn_testSource,fop_input+fn_testTarget, fop_input+fn_testTranslation, fop_input+fn_correctOrderTranslated, mapTotalId);
 		System.out.println("Finish reorder!");
 		
 		ArrayList<String> arrTrainSource=FileUtil.getFileStringArray(fop_input+fn_trainSource);

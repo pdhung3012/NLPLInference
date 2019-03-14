@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import consts.PathConstanct;
+import entities.InvocationObject;
 import utils.FileIO;
 
 public class CombineSequenceFromProjects {
@@ -43,6 +44,7 @@ public class CombineSequenceFromProjects {
 		File[] arrIn=fInFolder.listFiles();
 		HashMap<String,Integer> mapTotalIdenAndAppear=new LinkedHashMap<String, Integer>();
 		HashMap<String,String> mapTotalIdenAndId=new LinkedHashMap<String, String>();
+		HashMap<String,String> mapTotalIdAndAllContent=new LinkedHashMap<String, String>();
 		
 		for(int i=0;i<arrIn.length;i++){
 			if(arrIn[i].isDirectory()){
@@ -60,14 +62,17 @@ public class CombineSequenceFromProjects {
 					StringBuilder sbIdAndTotalId=new StringBuilder();
 					for(String iden:mapIdenAndId.keySet()){
 						String id=mapIdenAndId.get(iden);
+						String idenAllContent=InvocationObject.getAllInfoInFile(arrIn[i].getAbsolutePath()+File.separator+"hash"+File.separator+id+".txt");
 						if(mapIdAndIden.containsKey(id)){
 							String totalId=mapTotalIdenAndId.get(iden);
+							
 							if(totalId==null){
 								totalId="E-Total-"+String.format("%09d" , mapTotalIdenAndAppear.size()+1);
 								int numAppear=mapIdAppear.get(id);
 								mapTotalIdenAndAppear.put(iden,numAppear);
 								mapTotalIdenAndId.put(iden, totalId);
 								mapIdAndTotalId.put(id, totalId);
+								mapTotalIdAndAllContent.put(totalId, idenAllContent);
 //								FileIO.copyFileUsingChannel(new File(fopHash+id+".txt"), new File(totalSignatureFolder+totalId+".txt"));
 							} else{
 								int numAppear=mapIdAppear.get(id);
@@ -101,6 +106,17 @@ public class CombineSequenceFromProjects {
 			
 		}
 		
+		StringBuilder sbTotalIdAndAllContent=new StringBuilder();
+		FileIO.writeStringToFile("", inputFolder+"a_mapTotalIdAndContent.txt");
+		for(String id:mapTotalIdAndAllContent.keySet()){
+			indexCount++;
+			sbTotalIdAndAllContent.append(id+"\t"+mapTotalIdAndAllContent.get(id)+"\n");
+			if(indexCount%100000==0 || indexCount==mapTotalIdenAndAppear.size()){
+				FileIO.appendStringToFile(sbTotalIdAndAllContent.toString(), inputFolder+"a_mapTotalIdAndContent.txt");
+				sbTotalIdAndAllContent=new StringBuilder();			
+			}
+			
+		}
 		
 		
 		

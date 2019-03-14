@@ -91,6 +91,20 @@ public class InvocationObject {
 		strIDRepresent=sbContent.toString().trim();
 		return strIDRepresent;
 	}
+	
+	public static String getAllInfoInFile(String file){
+		
+		String[] arrContent=FileIO.readStringFromFile(file).split("\n");
+		StringBuilder sb=new StringBuilder();
+		if(arrContent.length>=5){
+			sb.append(arrContent[0]+"$%$");
+			sb.append(arrContent[1]+"$%$");
+			sb.append(arrContent[2]+"$%$");
+			sb.append(arrContent[3]+"$%$");
+			sb.append(arrContent[4]+"$%$");
+		}
+		return sb.toString();
+	}
 	public void saveToFile(String file){
 		StringBuilder sbContent=new StringBuilder();
 		sbContent.append(strCodeRepresent.replaceAll("\n", "")+"\n");

@@ -108,6 +108,7 @@ public class CombineSequenceFromProjects {
 		
 		StringBuilder sbTotalIdAndAllContent=new StringBuilder();
 		FileIO.writeStringToFile("", inputFolder+"a_mapTotalIdAndContent.txt");
+		indexCount=0;
 		for(String id:mapTotalIdAndAllContent.keySet()){
 			indexCount++;
 			sbTotalIdAndAllContent.append(id+"\t"+mapTotalIdAndAllContent.get(id)+"\n");

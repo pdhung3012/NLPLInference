@@ -78,7 +78,7 @@ public class CombineAndReplaceIdForSTProject {
 		String fpTempForWrite=PathConstanct.PATH_PROJECT_TTT_DATA+"tempForWrite.txt";
 		
 		int maximumLine=100000;
-		int numLine=0;
+		
 		for(int i=0;i<arr5LibPrefix.length;i++){
 //			if(i<=3) {
 //				continue;
@@ -89,7 +89,7 @@ public class CombineAndReplaceIdForSTProject {
 			FileIO.writeStringToFile("", fopOutput+arr5LibPrefix[i]+".target.txt");
 			FileIO.writeStringToFile("", fopOutput+arr5LibPrefix[i]+".training.s-t.A3");
 			FileIO.writeStringToFile("", fopOutput+arr5LibPrefix[i]+".training.t-s.A3");
-			
+			int numLine=0;
 			for(int j=0;j<arrProjLibName.length;j++){
 			
 				

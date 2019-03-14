@@ -191,12 +191,12 @@ public class EvalInOutPrecRecallExpressionInference {
 		
 		PrintStream ptResult=null,ptIncorrect=null,ptOutVocab=null,ptCorrectTranslated=null,ptCorrect_map=null,ptIncorrect_map=null,ptCorrectLibs[]=null,ptIncorrectLibs[]=null;
 		try{
-			ptResult=new PrintStream(new FileOutputStream(fop_input+fn_result));
-			ptIncorrect=new PrintStream(new FileOutputStream(fop_input+fn_log_incorrect));
-			ptCorrectTranslated=new PrintStream(new FileOutputStream(fop_input+fn_correctOrderTranslated));
-			ptOutVocab=new PrintStream(new FileOutputStream(fop_input+fn_log_outVocab));
-			ptCorrect_map=new PrintStream(new FileOutputStream(fop_input+fn_statisticCorrectMapping));
-			ptIncorrect_map=new PrintStream(new FileOutputStream(fop_input+fn_statisticIncorrectMapping));
+			ptResult=new PrintStream(new FileOutputStream(fop_output+fn_result));
+			ptIncorrect=new PrintStream(new FileOutputStream(fop_output+fn_log_incorrect));
+			ptCorrectTranslated=new PrintStream(new FileOutputStream(fop_output+fn_correctOrderTranslated));
+			ptOutVocab=new PrintStream(new FileOutputStream(fop_output+fn_log_outVocab));
+			ptCorrect_map=new PrintStream(new FileOutputStream(fop_output+fn_statisticCorrectMapping));
+			ptIncorrect_map=new PrintStream(new FileOutputStream(fop_output+fn_statisticIncorrectMapping));
 			
 		}catch(Exception ex){
 			ex.printStackTrace();

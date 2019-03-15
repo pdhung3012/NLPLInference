@@ -6,6 +6,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 
 import consts.PathConstanct;
 import utils.FileUtil;
@@ -16,6 +17,8 @@ public class EvalInOutPrecRecallExpressionInference {
 
 	
 //	/sensitivity_5fold_ressult\\
+	
+	public static String SplitInvocationCharacter="$%$";
 	
 	public static boolean checkAPIsInLibrary(HashSet<String> setLib,String token){
 		boolean check=false;
@@ -28,6 +31,32 @@ public class EvalInOutPrecRecallExpressionInference {
 		}
 		return check;
 	}
+	
+	public static String getInvocationReceiverInLibrary(String info){
+		String result="";
+		String[] arrLine=info.split(SplitInvocationCharacter);
+		if(arrLine.length>2){
+			String sigInfo=arrLine[arrLine.length-3];
+			String[] arrSigs=sigInfo.split("#");
+			if(arrSigs.length>=2){
+				result=arrSigs[1];
+			}
+		}
+		
+		return result;
+	}
+	
+	public static HashMap<String,String> getLibraryInfo(HashMap<String,String> mapTotalId){
+		HashMap<String,String> map=new LinkedHashMap<String, String>();
+		for(String key:mapTotalId.keySet()){
+			String val=mapTotalId.get(key);
+			String fqn=getInvocationReceiverInLibrary(val);
+			map.put(key, fqn);
+		}
+		return map;
+	}
+	
+	
 	
 	public static boolean checkIdentifierInfo(String tokenSource){
 		boolean check=false;
@@ -72,6 +101,7 @@ public class EvalInOutPrecRecallExpressionInference {
 //		String fn_vocabulary="vocabulary.txt";
 		
 		HashMap<String,String> mapTotalId=MapUtil.getHashMapFromFile(fop_mapTotalId+"a_mapTotalIdAndContent.txt");
+		HashMap<String,String> mapIdLibrary=getLibraryInfo(mapTotalId);
 		System.out.println(mapTotalId.size()+" Map total ID loaded!");
 		ReorderingTokens.reorderingTokens(fop_input+fn_testSource,fop_input+fn_testTarget, fop_input+fn_testTranslation, fop_input+fn_correctOrderTranslated, mapTotalId);
 		System.out.println("Finish reorder!");
@@ -90,13 +120,13 @@ public class EvalInOutPrecRecallExpressionInference {
 		HashMap<String,Integer> mapVocabTraining=new HashMap<String, Integer>();
 		
 		HashSet<String> set5Libraries=new HashSet<String>();
-		set5Libraries.add("android.");
-		set5Libraries.add("com.google.gwt.");
-		set5Libraries.add("com.thoughtworks.xstream.");
-		set5Libraries.add("org.hibernate.");
-		set5Libraries.add("org.joda.time.");		
+		set5Libraries.add("android");
+		set5Libraries.add("com.google.gwt");
+		set5Libraries.add("com.thoughtworks.xstream");
+		set5Libraries.add("org.hibernate");
+		set5Libraries.add("org.joda.time");		
 				//set5Libraries.add("org.apache.commons.");
-		set5Libraries.add("java.");
+		set5Libraries.add("java");
 //		
 //		HashMap<String,PrintStream> mapCorrectPrintScreen=new HashMap<String, PrintStream>();
 //		HashMap<String,PrintStream> mapIncorrectPrintScreen=new HashMap<String, PrintStream>();
@@ -114,16 +144,16 @@ public class EvalInOutPrecRecallExpressionInference {
 //		}
 		
 		
-//		HashMap<String,HashMap<String,Integer>> mapCountPerLibrary=new HashMap<String, HashMap<String,Integer>>();
+		HashMap<String,HashMap<String,Integer>> mapCountPerLibrary=new HashMap<String, HashMap<String,Integer>>();
 		
-//		for(String strItem:set5Libraries){
-//			HashMap<String,Integer> mapElement=new HashMap<String, Integer>();
-//			mapElement.put("Correct", 0);
-//			mapElement.put("Incorrect", 0);
-//			mapElement.put("OOT", 0);
-//			mapElement.put("OOS", 0);
-//			mapCountPerLibrary.put(strItem, mapElement);
-//		}
+		for(String strItem:set5Libraries){
+			HashMap<String,Integer> mapElement=new HashMap<String, Integer>();
+			mapElement.put("Correct", 0);
+			mapElement.put("Incorrect", 0);
+			mapElement.put("OOT", 0);
+			mapElement.put("OOS", 0);
+			mapCountPerLibrary.put(strItem, mapElement);
+		}
 		
 		
 //		set5Libraries.add("org.apache.");
@@ -261,11 +291,11 @@ public class EvalInOutPrecRecallExpressionInference {
 				//if(itemTarget[j].contains(".")){
 				//&&(!itemTrans[j].startsWith("."))
 				if(checkIdentifierInfo( itemSource[j])){
-//				String strPackageName=getPackageAPIsInLibrary(set5Libraries, itemTarget[j]);
+				String strPackageName=getPackageAPIsInLibrary(set5Libraries, mapIdLibrary.get(itemTarget[j]));
 				if(!setVocabTrainSource.contains(itemSource[j])){
 						numCSourceLine++;
-//						int currentNumber=mapCountPerLibrary.get(strPackageName).get("OOS");
-//						mapCountPerLibrary.get(strPackageName).put("OOS",currentNumber+1);						
+						int currentNumber=mapCountPerLibrary.get(strPackageName).get("OOS");
+						mapCountPerLibrary.get(strPackageName).put("OOS",currentNumber+1);						
 						if(!setOutSource.contains(itemSource[j])){
 							strOutSource+=itemSource[j]+" ";
 							setOutSource.add(itemSource[j]);
@@ -278,8 +308,8 @@ public class EvalInOutPrecRecallExpressionInference {
 					//else if(!setVocabTrainTarget.contains(itemTarget[j])){
 						numCTargetLine++;
 						
-//						int currentNumber=mapCountPerLibrary.get(strPackageName).get("OOT");
-//						mapCountPerLibrary.get(strPackageName).put("OOT",currentNumber+1);
+						int currentNumber=mapCountPerLibrary.get(strPackageName).get("OOT");
+						mapCountPerLibrary.get(strPackageName).put("OOT",currentNumber+1);
 						
 						
 						if(!setOutTarget.contains(itemTarget[j])){
@@ -288,14 +318,14 @@ public class EvalInOutPrecRecallExpressionInference {
 						}
 					}else if(itemTarget[j].equals(itemTrans[j])){
 						numCorrect++;
-//						int currentNumber=mapCountPerLibrary.get(strPackageName).get("Correct");
-//						mapCountPerLibrary.get(strPackageName).put("Correct",currentNumber+1);
+						int currentNumber=mapCountPerLibrary.get(strPackageName).get("Correct");
+						mapCountPerLibrary.get(strPackageName).put("Correct",currentNumber+1);
 						ptCorrect_map.print(itemSource[j]+","+mapVocabTraining.get(itemSource[j])+"\n");
 //						mapCorrectPrintScreen.get(strPackageName).print(itemSource[j]+","+mapVocabTraining.get(itemSource[j])+"\n");
 					} else{
 						numIncorrect++;
-//						int currentNumber=mapCountPerLibrary.get(strPackageName).get("Incorrect");
-//						mapCountPerLibrary.get(strPackageName).put("Incorrect",currentNumber+1);
+						int currentNumber=mapCountPerLibrary.get(strPackageName).get("Incorrect");
+						mapCountPerLibrary.get(strPackageName).put("Incorrect",currentNumber+1);
 					//	if(!setIncorrect.contains(itemTrans[j]+"(Correct: "+itemTarget[j]+") ")){
 							strIncorrectLog+=itemTrans[j]+"(Correct: "+itemTarget[j]+") ";
 							setIncorrect.add(itemTrans[j]+"(Correct: "+itemTarget[j]+") ");
@@ -340,10 +370,10 @@ public class EvalInOutPrecRecallExpressionInference {
 		FileUtil.appendToFile(fop_output+fn_result, "Precision in-vocab: "+countCorrect*1.0/(countCorrect+countIncorrect)+"\n");
 		FileUtil.appendToFile(fop_output+fn_result, "Recall out-vocab: "+countCorrect*1.0/(countCorrect+countIncorrect+countAllOutOfVocab)+"\n");
 		
-//		for(String strItem:mapCountPerLibrary.keySet()){
-//			HashMap<String,Integer> mapTemp=mapCountPerLibrary.get(strItem);
-//			FileUtil.appendToFile(fop_input+fn_result, strItem+": "+mapTemp.get("Correct")+"\t"+mapTemp.get("Incorrect")+"\t"+mapTemp.get("OOS")+"\t"+mapTemp.get("OOT")+"\t"+(mapTemp.get("OOS")+mapTemp.get("OOT"))+"\n");
-//		}
+		for(String strItem:mapCountPerLibrary.keySet()){
+			HashMap<String,Integer> mapTemp=mapCountPerLibrary.get(strItem);
+			FileUtil.appendToFile(fop_output+fn_result, strItem+": "+mapTemp.get("Correct")+"\t"+mapTemp.get("Incorrect")+"\t"+mapTemp.get("OOS")+"\t"+mapTemp.get("OOT")+"\t"+(mapTemp.get("OOS")+mapTemp.get("OOT"))+"\n");
+		}
 		
 		
 	}

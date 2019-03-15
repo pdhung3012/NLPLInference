@@ -21,6 +21,14 @@ public class MapUtil {
 	
 	public static HashMap<String,String> getHashMapFromFile(String fp){
 		HashMap<String,String> map=new LinkedHashMap<String, String>();
+		String[] arr=FileIO.readStringFromFile(fp).split("\n");
+		for(int i=0;i<arr.length;i++) {
+			String[] arrItems=arr[i].split("\t");
+	    	if(arrItems.length>=2){
+	    		map.put(arrItems[0].trim(), arrItems[1].trim());
+	    	}
+		}
+		/*
 		try (BufferedReader br = Files.newBufferedReader(Paths.get(fp), StandardCharsets.US_ASCII)) {
 		    for (String line = null; (line = tryGetLine(br)) != null;) {
 		    	String[] arrItems=line.split("\t");
@@ -32,6 +40,7 @@ public class MapUtil {
 		} catch(Exception ex){
 			ex.printStackTrace();
 		}
+		*/
 		return map;
 	}
 	public static void main(String[] args) {

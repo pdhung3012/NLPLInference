@@ -10,7 +10,7 @@ public class ReorderingTokens {
 		boolean check=false;
 		if(sourceItem.endsWith("#identifier")){	
 			if(transItem.startsWith("E-Total")){
-				String transAPI=mapTotalId.get(sourceItem);
+				String transAPI=mapTotalId.get(transItem);
 				System.out.println("check "+mapTotalId.size()+" "+sourceItem);
 				System.out.println("check "+transAPI.substring(0,transAPI.length()-3));
 				check= transAPI!=null ? transAPI.substring(0,transAPI.length()-3).endsWith(sourceItem):false;

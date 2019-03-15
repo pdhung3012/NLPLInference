@@ -11,7 +11,7 @@ public class ReorderingTokens {
 		if(sourceItem.endsWith("#identifier")){	
 			if(transItem.startsWith("E-Total")){
 				String transAPI=mapTotalId.get(sourceItem);
-				check= transAPI!=null ? transAPI.endsWith(sourceItem):false;
+				check= transAPI!=null ? transAPI.substring(0,transAPI.length()-3).endsWith(sourceItem):false;
 			} else{
 				check=false;
 			}

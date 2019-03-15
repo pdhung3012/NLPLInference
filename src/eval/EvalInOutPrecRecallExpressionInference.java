@@ -288,7 +288,6 @@ public class EvalInOutPrecRecallExpressionInference {
 			System.out.println("Line "+i);
 			for(int j=0;j<itemSource.length;j++){
 				
-				//if(itemTarget[j].contains(".")){
 				//&&(!itemTrans[j].startsWith("."))
 				if(checkIdentifierInfo( itemSource[j])){
 				String strPackageName=getPackageAPIsInLibrary(set5Libraries, mapIdLibrary.get(itemTarget[j]));

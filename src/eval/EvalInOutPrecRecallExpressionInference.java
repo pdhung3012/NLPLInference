@@ -18,7 +18,7 @@ public class EvalInOutPrecRecallExpressionInference {
 	
 //	/sensitivity_5fold_ressult\\
 	
-	public static String SplitInvocationCharacter="$%$";
+	public static String SplitInvocationCharacter="\\$\\%\\$";
 	
 	public static boolean checkAPIsInLibrary(HashSet<String> setLib,String token){
 		boolean check=false;
@@ -35,8 +35,10 @@ public class EvalInOutPrecRecallExpressionInference {
 	public static String getInvocationReceiverInLibrary(String info){
 		String result="";
 		String[] arrLine=info.split(SplitInvocationCharacter);
+		//System.out.println(arrLine[0]);
 		if(arrLine.length>2){
-			String sigInfo=arrLine[arrLine.length-3];
+			String sigInfo=arrLine[arrLine.length-2];
+			
 			String[] arrSigs=sigInfo.split("#");
 			if(arrSigs.length>=2){
 				result=arrSigs[1];
@@ -289,7 +291,11 @@ public class EvalInOutPrecRecallExpressionInference {
 			for(int j=0;j<itemSource.length;j++){
 				
 				//&&(!itemTrans[j].startsWith("."))
-				if(checkIdentifierInfo( itemSource[j])){
+				if(checkIdentifierInfo( itemSource[j]) && checkAPIsInLibrary(set5Libraries, mapIdLibrary.get(itemTarget[j]))){
+					/*System.out.println("target info "+mapIdLibrary.get(itemTarget[j]));
+					System.out.println("source info "+itemSource[j]);
+					System.out.println("all info "+mapTotalId.get(itemTarget[j]));
+					*/
 				String strPackageName=getPackageAPIsInLibrary(set5Libraries, mapIdLibrary.get(itemTarget[j]));
 				if(!setVocabTrainSource.contains(itemSource[j])){
 						numCSourceLine++;
@@ -317,6 +323,7 @@ public class EvalInOutPrecRecallExpressionInference {
 						}
 					}else if(itemTarget[j].equals(itemTrans[j])){
 						numCorrect++;
+						
 						int currentNumber=mapCountPerLibrary.get(strPackageName).get("Correct");
 						mapCountPerLibrary.get(strPackageName).put("Correct",currentNumber+1);
 						ptCorrect_map.print(itemSource[j]+","+mapVocabTraining.get(itemSource[j])+"\n");

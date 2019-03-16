@@ -1354,7 +1354,7 @@ if (levelOfTraverMD == 1) {
 	@Override
 	public boolean visit(StringLiteral node) {
 		this.fullTokens.append(" java.lang.String ");
-		this.partialTokens.append(" java.lang.String ");
+		this.partialTokens.append(" String ");
 		return false;
 	}
 

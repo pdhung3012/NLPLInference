@@ -496,9 +496,20 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		if(bindM!=null){
 			currentMethodDeclaration=bindM.getKey();
 			ITypeBinding bindT=bindM.getDeclaringClass();
+			
 			if(bindT!=null){
 				currentClassDeclaration=bindT.getQualifiedName();
-			}
+				if(currentClassDeclaration.isEmpty()){
+					IBinding bindMethod=bindT.getDeclaringMember();
+					if(bindMethod instanceof IMethodBinding){
+						IMethodBinding bind2M=(IMethodBinding) bindMethod;
+						currentClassDeclaration=bind2M.getDeclaringClass()!=null?bind2M.getDeclaringClass().getQualifiedName():"";
+					}
+					
+				}
+//				System.out.println("null class "+currentClassDeclaration);
+			} 
+//			System.out.println("current class "+currentClassDeclaration+" and "+currentMethodDeclaration);
 		}
 		if(iaVisitor==null){
 			iaVisitor=new InvocationAbstractorVisitor();

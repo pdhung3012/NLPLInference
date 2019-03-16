@@ -8,6 +8,8 @@ public class RunTestOnSmallProject {
 		// TODO Auto-generated method stub
 		String inPath="/Users/hungphan/Documents/workspace/SampleMethodInvocationProject/";
 		String outPath="/Users/hungphan/git/NLPLTranslation/sequences/SampleMethodInvocationProject/";
+//		String inPath="/Users/hungphan/git/pig/";
+//		String outPath="/Users/hungphan/git/NLPLTranslation/sequences/pig/";
 		MethodContextSequenceGenerator mcsg=new MethodContextSequenceGenerator(inPath,arrLibraryPrefix);
 		mcsg.generateSequences(outPath);
 		mcsg.generateAlignment(true);

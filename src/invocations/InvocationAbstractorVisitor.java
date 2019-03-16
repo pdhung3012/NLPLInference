@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Scanner;
 
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.internal.compiler.parser.ScannerHelper;
@@ -1540,6 +1541,7 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 		if(var.getDeclaringClass()!=null){
 			classKey=var.getDeclaringClass().getQualifiedName();
 		}
+//		System.out.println("content "+classKey+" frfrf "+currentClassDeclaration);
 		if(currentClassDeclaration.equals(classKey)){
 			return true;
 		}
@@ -1560,6 +1562,13 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 	@Override
 	public boolean visit(SimpleName node) {
 //		this.sbAbstractInformation.append(node.getIdentifier());
+//		if(node.getIdentifier().equals("executor")){
+//			System.out.println(node.resolveBinding().getClass());
+//			System.out.println(checkVarInLocalField(((IVariableBinding) node.resolveBinding())));
+//			System.out.println(checkVarInLocalMethod(((IVariableBinding) node.resolveBinding())));
+//			Scanner sc=new Scanner(System.in);
+//			sc.next();
+//		}
 		if (node.resolveBinding() instanceof IVariableBinding && (checkVarInLocalField(((IVariableBinding) node.resolveBinding()))|| checkVarInLocalMethod(((IVariableBinding) node.resolveBinding())))){
 			ITypeBinding iType=node.resolveTypeBinding();
 			currentStrParentType=iType!=null?iType.getQualifiedName():"Unknown";

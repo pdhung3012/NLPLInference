@@ -26,7 +26,6 @@ public class PathConstanct {
 	 public static String fopProjectLocation = "G:\\gitStatType4\\";
 	 public static String fopExtractedLocation = "G:\\gitExtractedST2\\";
 	 public static String fopListLibraryLocation = "G:\\5Repositories\\";
-
 	
 
 	/*

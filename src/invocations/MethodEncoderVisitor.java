@@ -33,13 +33,12 @@ public class MethodEncoderVisitor extends ASTVisitor {
 			partialTokens = new StringBuilder();
 	private String fullSequence = null, partialSequence = null;
 	private String[] fullSequenceTokens, partialSequenceTokens;
-	private LinkedHashMap<String,String> mapIdenAndID,mapIDAndIden;
-	private LinkedHashMap<String,Integer> mapIDAppear;
+	private LinkedHashMap<String, String> mapIdenAndID, mapIDAndIden;
+	private LinkedHashMap<String, Integer> mapIDAppear;
 	private InvocationAbstractorVisitor iaVisitor;
 	private String[] arrLibrariesPrefix;
 	private static final boolean USE_SIMPLE_METHOD_NAME = false;
-	
-	
+
 	public LinkedHashMap<String, Integer> getMapIDAppear() {
 		return mapIDAppear;
 	}
@@ -84,7 +83,8 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	private HashMap<String, String> setSequencesOfMethods, setOfUnResolvedType;
 	private LinkedHashSet<LocalEntity> setFields, setArguments,
 			setLocalVariables;
-//	private LinkedHashSet<String> setRequiredAPIsForMI = new LinkedHashSet<String>();;
+	// private LinkedHashSet<String> setRequiredAPIsForMI = new
+	// LinkedHashSet<String>();;
 	private String strSplitCharacter = " ";
 
 	private int indent = 0;
@@ -100,18 +100,16 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	HashMap<String, CompilationUnit> mapCU;
 	LinkedHashMap<String, LocalForMethod> mapLocalcontextForMethod = new LinkedHashMap<String, LocalForMethod>();
 	private boolean isAbstractMethod = false;
-//	private StringBuilder sbAbstractInformation = new StringBuilder();
-//	private ArrayList<String> listAbstractTypeQuestionMark = new ArrayList<String>();
+	// private StringBuilder sbAbstractInformation = new StringBuilder();
+	// private ArrayList<String> listAbstractTypeQuestionMark = new
+	// ArrayList<String>();
 	private StringBuilder sbTotalBuilder = new StringBuilder();
 	private LocalForMethod currentLocalMethod = null;
 	private MethodDeclaration currentMethodDecl = null;
 	private int levelOfTraverMD = 0;
 	private String fopInvocationObject;
 	private String hashIdenPath;
-	
-	
-	
-	
+
 	public String[] getArrLibrariesPrefix() {
 		return arrLibrariesPrefix;
 	}
@@ -152,8 +150,6 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		return node.thrownExceptions();
 	}
 
-	
-	
 	public LinkedHashMap<String, String> getMapIdenAndID() {
 		return mapIdenAndID;
 	}
@@ -299,8 +295,6 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 		return sb;
 	}
-	
-	
 
 	public String getFopInvocationObject() {
 		return fopInvocationObject;
@@ -436,10 +430,10 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		return false;
 	}
 
-//	public boolean visit(FieldDeclaration node) {
-//		// node.fragments();
-//		return false;
-//	}
+	// public boolean visit(FieldDeclaration node) {
+	// // node.fragments();
+	// return false;
+	// }
 
 	// @Override
 	// public boolean visit(MethodDeclaration node) {
@@ -448,14 +442,15 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	// return false;
 	// }
 
-	private String currentMethodDeclaration="";
-	private String currentClassDeclaration="";
+	private String currentMethodDeclaration = "";
+	private String currentClassDeclaration = "";
+
 	public boolean visit(MethodDeclaration node) {
-		if(setArguments==null){
-			setArguments=new LinkedHashSet<LocalEntity>();
+		if (setArguments == null) {
+			setArguments = new LinkedHashSet<LocalEntity>();
 		}
-		if(setLocalVariables==null){
-			setLocalVariables=new LinkedHashSet<LocalEntity>();
+		if (setLocalVariables == null) {
+			setLocalVariables = new LinkedHashSet<LocalEntity>();
 		}
 		setArguments.clear();
 		setLocalVariables.clear();
@@ -477,7 +472,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		}
 		String strSignature = JavaASTUtil.buildAllSigIngo(node);
 		String strInformation = viewAllLocalInformation().toString();
-//		System.out.println(strSignature + "\n" + strInformation);
+		// System.out.println(strSignature + "\n" + strInformation);
 		LocalForMethod lfm = new LocalForMethod();
 		lfm.setMethod(node);
 		lfm.setSetArguments((LinkedHashSet<LocalEntity>) setArguments.clone());
@@ -492,38 +487,39 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		levelOfTraverMD = 0;
 		currentLocalMethod = mapLocalcontextForMethod.get(strSignature);
 		isVisitInsideMethodDeclaration = true;
-		IMethodBinding bindM=node.resolveBinding();
-		if(bindM!=null){
-			currentMethodDeclaration=bindM.getKey();
-			ITypeBinding bindT=bindM.getDeclaringClass();
-			
-			if(bindT!=null){
-				currentClassDeclaration=bindT.getQualifiedName();
-				if(currentClassDeclaration.isEmpty()){
-					IBinding bindMethod=bindT.getDeclaringMember();
-					if(bindMethod instanceof IMethodBinding){
-						IMethodBinding bind2M=(IMethodBinding) bindMethod;
-						currentClassDeclaration=bind2M.getDeclaringClass()!=null?bind2M.getDeclaringClass().getQualifiedName():"";
+		IMethodBinding bindM = node.resolveBinding();
+		if (bindM != null) {
+			currentMethodDeclaration = bindM.getKey();
+			ITypeBinding bindT = bindM.getDeclaringClass();
+
+			if (bindT != null) {
+				currentClassDeclaration = bindT.getQualifiedName();
+				if (currentClassDeclaration.isEmpty()) {
+					IBinding bindMethod = bindT.getDeclaringMember();
+					if (bindMethod instanceof IMethodBinding) {
+						IMethodBinding bind2M = (IMethodBinding) bindMethod;
+						currentClassDeclaration = bind2M.getDeclaringClass() != null ? bind2M
+								.getDeclaringClass().getQualifiedName() : "";
 					}
-					
+
 				}
-//				System.out.println("null class "+currentClassDeclaration);
-			} 
-//			System.out.println("current class "+currentClassDeclaration+" and "+currentMethodDeclaration);
+				// System.out.println("null class "+currentClassDeclaration);
+			}
+			// System.out.println("current class "+currentClassDeclaration+" and "+currentMethodDeclaration);
 		}
-		if(iaVisitor==null){
-			iaVisitor=new InvocationAbstractorVisitor();
+		if (iaVisitor == null) {
+			iaVisitor = new InvocationAbstractorVisitor();
 		}
 		iaVisitor.setCurrentClassDeclaration(currentClassDeclaration);
 		iaVisitor.setCurrentMethodDeclaration(currentMethodDeclaration);
-		
+
 		if (node.getBody() != null) {
 			node.getBody().accept(this);
 		}
-//		System.out.println(this.partialTokens.toString());
-//		System.out.println(this.fullTokens.toString());
-//		String methodSig = JavaASTUtil.buildAllSigIngo(node);
-//		System.out.println("Method " + methodSig);
+		// System.out.println(this.partialTokens.toString());
+		// System.out.println(this.fullTokens.toString());
+		// String methodSig = JavaASTUtil.buildAllSigIngo(node);
+		// System.out.println("Method " + methodSig);
 		// System.out.println("Content " + this.buffer.toString());
 		// setSequencesOfMethods.put(methodSig, this.buffer.toString());
 
@@ -544,28 +540,29 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	// return false;
 	// }
 
-//	public boolean visit(VariableDeclarationStatement node) {
-//		if (isVisitMethod) {
-//			List<VariableDeclarationFragment> listFrags = (List<VariableDeclarationFragment>) node
-//					.fragments();
-//			for (int i = 0; i < listFrags.size(); i++) {
-//				VariableDeclarationFragment item = listFrags.get(i);
-//				IVariableBinding varBind = item.resolveBinding();
-//				SimpleName varName = item.getName();
-//				if (varBind != null && varName != null) {
-//					ITypeBinding typeBind = varBind.getType();
-//					if (typeBind != null) {
-//						LocalEntity le = new LocalEntity();
-//						le.setStrCodeReprensent(varName.getIdentifier());
-//						le.setStrTypeOfEntity(typeBind.getQualifiedName());
-//						setLocalVariables.add(le);
-//					}
-//
-//				}
-//			}
-//		}
-//		return false;
-//	}
+	// public boolean visit(VariableDeclarationStatement node) {
+	// if (isVisitMethod) {
+	// List<VariableDeclarationFragment> listFrags =
+	// (List<VariableDeclarationFragment>) node
+	// .fragments();
+	// for (int i = 0; i < listFrags.size(); i++) {
+	// VariableDeclarationFragment item = listFrags.get(i);
+	// IVariableBinding varBind = item.resolveBinding();
+	// SimpleName varName = item.getName();
+	// if (varBind != null && varName != null) {
+	// ITypeBinding typeBind = varBind.getType();
+	// if (typeBind != null) {
+	// LocalEntity le = new LocalEntity();
+	// le.setStrCodeReprensent(varName.getIdentifier());
+	// le.setStrTypeOfEntity(typeBind.getQualifiedName());
+	// setLocalVariables.add(le);
+	// }
+	//
+	// }
+	// }
+	// }
+	// return false;
+	// }
 
 	public String viewSelectedTypeReceiver(IMethodBinding iMethod) {
 
@@ -574,14 +571,14 @@ public class MethodEncoderVisitor extends ASTVisitor {
 				: ":";
 		return strType;
 	}
-	
+
 	public String viewReceiverOfExpression(Expression node) {
 
 		String strType = "";
-		try{
-			strType=node.resolveTypeBinding().getQualifiedName();
-		}catch(Exception ex){
-			
+		try {
+			strType = node.resolveTypeBinding().getQualifiedName();
+		} catch (Exception ex) {
+
 		}
 		return strType;
 	}
@@ -594,7 +591,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		if (arrBindArgs == null) {
 			return "";
 		}
-		if(arrBindArgs.length<i+1){
+		if (arrBindArgs.length < i + 1) {
 			return "";
 		}
 		String strType = arrBindArgs[i] != null ? arrBindArgs[i]
@@ -744,30 +741,30 @@ public class MethodEncoderVisitor extends ASTVisitor {
 
 		return null;
 	}
-	
-	public boolean checkPrefix(String type,String[] arrPrex){
-		boolean result=false;
-		
-		for(int i=0;i<arrPrex.length;i++){
-			if(type.startsWith(arrPrex[i])){
-				result=true;
+
+	public boolean checkPrefix(String type, String[] arrPrex) {
+		boolean result = false;
+
+		for (int i = 0; i < arrPrex.length; i++) {
+			if (type.startsWith(arrPrex[i])) {
+				result = true;
 				break;
 			}
 		}
-		
-		if(type.contains("<")){
-			result=false;
-			String[] arrTypeInside=type.split("<");
-			if(arrTypeInside.length>=2){
-				for(int i=0;i<arrPrex.length;i++){
-					if(arrTypeInside[1].startsWith(arrPrex[i])){
-						result=true;
+
+		if (type.contains("<")) {
+			result = false;
+			String[] arrTypeInside = type.split("<");
+			if (arrTypeInside.length >= 2) {
+				for (int i = 0; i < arrPrex.length; i++) {
+					if (arrTypeInside[1].startsWith(arrPrex[i])) {
+						result = true;
 						break;
 					}
 				}
 			}
 		}
-		
+
 		return result;
 	}
 
@@ -802,13 +799,74 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		}
 	}
 
-//	@Override
-//	public boolean visit(MethodInvocation node) {
-//		if (node.getExpression() != null && node.getExpression() instanceof TypeLiteral) {
+	// @Override
+	// public boolean visit(MethodInvocation node) {
+	// if (node.getExpression() != null && node.getExpression() instanceof
+	// TypeLiteral) {
+	// TypeLiteral lit = (TypeLiteral) node.getExpression();
+	// String utype = getUnresolvedType(lit.getType()), rtype =
+	// getResolvedType(lit.getType());
+	// this.fullTokens.append(" " + rtype + ".class." +
+	// node.getName().getIdentifier() + "() ");
+	// this.partialTokens.append(" " + utype + ".class." +
+	// node.getName().getIdentifier() + "() ");
+	// } else {
+	// IMethodBinding b = node.resolveMethodBinding();
+	// ITypeBinding tb = null;
+	// if (b != null) {
+	// tb = b.getDeclaringClass();
+	// if (tb != null) {
+	// tb = tb.getTypeDeclaration();
+	// if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+	// return false;
+	// }
+	// }
+	// this.fullTokens.append(" ");
+	// this.partialTokens.append(" ");
+	// if (node.getExpression() != null) {
+	// node.getExpression().accept(this);
+	// } else {
+	// if (tb != null) {
+	// this.partialTokens.append(" " + getName(tb) + " ");
+	// this.fullTokens.append(" " + getQualifiedName(tb) + " ");
+	// } else {
+	// this.partialTokens.append(" this ");
+	// this.fullTokens.append(" this ");
+	// }
+	// }
+	// String name = "."+ node.getName().getIdentifier() + "()";
+	// this.partialTokens.append(" " + name + " ");
+	// if (!USE_SIMPLE_METHOD_NAME && tb != null
+	// // && !name.equals(".toString()")
+	// // && !name.equals(".equals()")
+	// // && !name.equals(".clone()")
+	// // && !name.equals(".getClass()")
+	// // && !name.equals(".hashCode()")
+	// // && !name.equals(".valueOf()")
+	// )
+	// name = getQualifiedName(tb) + name;
+	// this.fullTokens.append(" " + name + " ");
+	// }
+	// for (int i = 0; i < node.arguments().size(); i++)
+	// ((ASTNode) node.arguments().get(i)).accept(this);
+	// return false;
+	// }
+
+	public boolean visit(MethodInvocation node) {
+		levelOfTraverMD++;
+		if (levelOfTraverMD == 1) {
+			iaVisitor.refreshInformation();
+		}
+
+//		if (node.getExpression() != null
+//				&& node.getExpression() instanceof TypeLiteral) {
 //			TypeLiteral lit = (TypeLiteral) node.getExpression();
-//			String utype = getUnresolvedType(lit.getType()), rtype = getResolvedType(lit.getType());
-//			this.fullTokens.append(" " + rtype + ".class." + node.getName().getIdentifier() + "() ");
-//			this.partialTokens.append(" " + utype + ".class." + node.getName().getIdentifier() + "() ");
+//			String utype = getUnresolvedType(lit.getType()), rtype = getResolvedType(lit
+//					.getType());
+//			this.fullTokens.append(" " + rtype + ".class."
+//					+ node.getName().getIdentifier() + "() ");
+//			this.partialTokens.append(" " + utype + ".class."
+//					+ node.getName().getIdentifier() + "() ");
 //		} else {
 //			IMethodBinding b = node.resolveMethodBinding();
 //			ITypeBinding tb = null;
@@ -833,124 +891,74 @@ public class MethodEncoderVisitor extends ASTVisitor {
 //					this.fullTokens.append(" this ");
 //				}
 //			}
-//			String name = "."+ node.getName().getIdentifier() + "()";
+//			String name = "." + node.getName().getIdentifier() + "()";
 //			this.partialTokens.append(" " + name + " ");
-//			if (!USE_SIMPLE_METHOD_NAME && tb != null 
-////					&& !name.equals(".toString()") 
-////					&& !name.equals(".equals()") 
-////					&& !name.equals(".clone()") 
-////					&& !name.equals(".getClass()")
-////					&& !name.equals(".hashCode()")
-////					&& !name.equals(".valueOf()")
-//					)
+//			if (!USE_SIMPLE_METHOD_NAME && tb != null
+//			// && !name.equals(".toString()")
+//			// && !name.equals(".equals()")
+//			// && !name.equals(".clone()")
+//			// && !name.equals(".getClass()")
+//			// && !name.equals(".hashCode()")
+//			// && !name.equals(".valueOf()")
+//			)
 //				name = getQualifiedName(tb) + name;
 //			this.fullTokens.append(" " + name + " ");
 //		}
 //		for (int i = 0; i < node.arguments().size(); i++)
 //			((ASTNode) node.arguments().get(i)).accept(this);
-//		return false;
-//	}
-
-	public boolean visit(MethodInvocation node) {
-		levelOfTraverMD++;
+		
+		//get abstract information
 		if (levelOfTraverMD == 1) {
-			iaVisitor.refreshInformation();
-		}
 
-		if (node.getExpression() != null && node.getExpression() instanceof TypeLiteral) {
-			TypeLiteral lit = (TypeLiteral) node.getExpression();
-			String utype = getUnresolvedType(lit.getType()), rtype = getResolvedType(lit.getType());
-			this.fullTokens.append(" " + rtype + ".class." + node.getName().getIdentifier() + "() ");
-			this.partialTokens.append(" " + utype + ".class." + node.getName().getIdentifier() + "() ");
-		} else {
-			IMethodBinding b = node.resolveMethodBinding();
-			ITypeBinding tb = null;
-			if (b != null) {
-				tb = b.getDeclaringClass();
-				if (tb != null) {
-					tb = tb.getTypeDeclaration();
-					if (tb.isLocal() || tb.getQualifiedName().isEmpty())
-						return false;
-				}
-			}
-			this.fullTokens.append(" ");
-			this.partialTokens.append(" ");
-			if (node.getExpression() != null) {
-				node.getExpression().accept(this);
-			} else {
-				if (tb != null) {
-					this.partialTokens.append(" " + getName(tb) + " ");
-					this.fullTokens.append(" " + getQualifiedName(tb) + " ");
-				} else {
-					this.partialTokens.append(" this ");
-					this.fullTokens.append(" this ");
-				}
-			}
-			String name = "."+ node.getName().getIdentifier() + "()";
-			this.partialTokens.append(" " + name + " ");
-			if (!USE_SIMPLE_METHOD_NAME && tb != null 
-//					&& !name.equals(".toString()") 
-//					&& !name.equals(".equals()") 
-//					&& !name.equals(".clone()") 
-//					&& !name.equals(".getClass()")
-//					&& !name.equals(".hashCode()")
-//					&& !name.equals(".valueOf()")
-					)
-				name = getQualifiedName(tb) + name;
-			this.fullTokens.append(" " + name + " ");
-		}
-		for (int i = 0; i < node.arguments().size(); i++)
-			((ASTNode) node.arguments().get(i)).accept(this);
-if (levelOfTraverMD == 1) {
-			
-			
-			
-			String receiverType=viewReceiverOfExpression(node.getExpression());
-			if(!receiverType.isEmpty() && checkPrefix(receiverType, arrLibrariesPrefix)){
+			String receiverType = viewReceiverOfExpression(node.getExpression());
+			if (!receiverType.isEmpty()
+					&& checkPrefix(receiverType, arrLibrariesPrefix)) {
 				InvocationObject io = new InvocationObject();
 				String methodInfo = JavaASTUtil.buildAllSigIngo(node);
 				io.setStrMethodInfo(methodInfo);
-				if(iaVisitor!=null){
-					node.accept(iaVisitor);				
+				if (iaVisitor != null) {
+					node.accept(iaVisitor);
 				}
-				if(!iaVisitor.getSbAbstractInformation().toString().equals("#")){
-					String strIdentifier=node.getName().getIdentifier()+"#identifier";
+				if (!iaVisitor.getSbAbstractInformation().toString()
+						.equals("#")) {
+					String strIdentifier = node.getName().getIdentifier()
+							+ "#identifier";
 					iaVisitor.sortRequiredAPI();
-					io.setStrCodeRepresent(iaVisitor.getSbAbstractInformation().toString());
-					io.setListQuestionMarkTypes(iaVisitor.getListAbstractTypeQuestionMark());
+					io.setStrCodeRepresent(iaVisitor.getSbAbstractInformation()
+							.toString());
+					io.setListQuestionMarkTypes(iaVisitor
+							.getListAbstractTypeQuestionMark());
 					io.setSetImportedAPIs(iaVisitor.getSetRequiredAPIsForMI());
 					io.setStrIdentifier(strIdentifier);
 					String idenInfo = io.setIDRepresent();
-					String id="";
-					if(!mapIdenAndID.containsKey(idenInfo)){
-						id="E-"+String.format("%09d" , mapIDAndIden.size()+1);
-//						
+					String id = "";
+					if (!mapIdenAndID.containsKey(idenInfo)) {
+						id = "E-"
+								+ String.format("%09d", mapIDAndIden.size() + 1);
+						//
 						mapIdenAndID.put(idenInfo, id);
-						mapIDAndIden.put(id,idenInfo);
+						mapIDAndIden.put(id, idenInfo);
 						mapIDAppear.put(id, 1);
-						io.saveToFile(hashIdenPath+"/"+id+".txt");
-					}else{
-						String existId=mapIdenAndID.get(idenInfo);
-						id=existId;
-						mapIDAppear.put(existId,mapIDAppear.get(existId)+1);
+						io.saveToFile(hashIdenPath + "/" + id + ".txt");
+					} else {
+						String existId = mapIdenAndID.get(idenInfo);
+						id = existId;
+						mapIDAppear.put(existId, mapIDAppear.get(existId) + 1);
 					}
-					
+
 					this.partialTokens.append(strIdentifier + " ");
 					this.fullTokens.append(id + " ");
 
 				}
-				
+
 				iaVisitor.refreshInformation();
-				
-			}				
+
+			}
 		}
 		levelOfTraverMD--;
-				
-		
+
 		return false;
 	}
-
-	
 
 	@Override
 	public boolean visit(ArrayAccess node) {
@@ -959,7 +967,8 @@ if (levelOfTraverMD == 1) {
 
 	@Override
 	public boolean visit(ArrayCreation node) {
-		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node.getType());
+		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
+				.getType());
 		this.partialTokens.append(" new " + utype + " ");
 		this.fullTokens.append(" new " + rtype + " ");
 		if (node.getInitializer() != null)
@@ -1010,7 +1019,8 @@ if (levelOfTraverMD == 1) {
 
 	@Override
 	public boolean visit(CastExpression node) {
-		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node.getType());
+		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
+				.getType());
 		this.fullTokens.append(" " + rtype + " <cast> ");
 		this.partialTokens.append(" " + utype + " <cast> ");
 		node.getExpression().accept(this);
@@ -1034,10 +1044,11 @@ if (levelOfTraverMD == 1) {
 		ITypeBinding tb = node.getType().resolveBinding();
 		if (tb != null && tb.getTypeDeclaration().isLocal())
 			return false;
-		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node.getType());
+		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
+				.getType());
 		this.fullTokens.append(" new " + rtype + "() ");
 		this.partialTokens.append(" new " + utype + "() ");
-		for (Iterator it = node.arguments().iterator(); it.hasNext(); ) {
+		for (Iterator it = node.arguments().iterator(); it.hasNext();) {
 			Expression e = (Expression) it.next();
 			e.accept(this);
 		}
@@ -1141,8 +1152,9 @@ if (levelOfTraverMD == 1) {
 		if (b != null) {
 			if (tb != null)
 				name = getQualifiedName(tb.getTypeDeclaration()) + name;
-			/*else
-				name = "Array" + name;*/
+			/*
+			 * else name = "Array" + name;
+			 */
 		}
 		this.fullTokens.append(" " + name + " ");
 		return false;
@@ -1185,7 +1197,8 @@ if (levelOfTraverMD == 1) {
 		node.getLeftOperand().accept(this);
 		this.fullTokens.append(" <instanceof> ");
 		this.partialTokens.append(" <instanceof> ");
-		String rtype = getResolvedType(node.getRightOperand()), utype = getUnresolvedType(node.getRightOperand());
+		String rtype = getResolvedType(node.getRightOperand()), utype = getUnresolvedType(node
+				.getRightOperand());
 		this.fullTokens.append(rtype + " ");
 		this.partialTokens.append(utype + " ");
 		return false;
@@ -1201,14 +1214,12 @@ if (levelOfTraverMD == 1) {
 		return false;
 	}
 
-//	@Override
-//	public boolean visit(MethodDeclaration node) {
-//		if (node.getBody() != null && !node.getBody().statements().isEmpty())
-//			node.getBody().accept(this);
-//		return false;
-//	}
-
-	
+	// @Override
+	// public boolean visit(MethodDeclaration node) {
+	// if (node.getBody() != null && !node.getBody().statements().isEmpty())
+	// node.getBody().accept(this);
+	// return false;
+	// }
 
 	@Override
 	public boolean visit(Modifier node) {
@@ -1272,7 +1283,8 @@ if (levelOfTraverMD == 1) {
 				tb = ((ITypeBinding) b).getTypeDeclaration();
 				if (tb.isLocal() || tb.getQualifiedName().isEmpty())
 					return false;
-				this.partialTokens.append(" " + node.getFullyQualifiedName() + " ");
+				this.partialTokens.append(" " + node.getFullyQualifiedName()
+						+ " ");
 				this.fullTokens.append(" " + getQualifiedName(tb) + " ");
 				return false;
 			}
@@ -1288,8 +1300,9 @@ if (levelOfTraverMD == 1) {
 			if (b instanceof IVariableBinding) {
 				if (tb != null)
 					name = getQualifiedName(tb.getTypeDeclaration()) + name;
-				/*else
-					name = "Array" + name;*/
+				/*
+				 * else name = "Array" + name;
+				 */
 			}
 		}
 		this.fullTokens.append(" " + name + " ");
@@ -1312,8 +1325,8 @@ if (levelOfTraverMD == 1) {
 					tb = tb.getTypeDeclaration();
 					if (tb.isLocal() || tb.getQualifiedName().isEmpty())
 						return false;
-					this.fullTokens.append(" " + getQualifiedName(tb) + " ");
-					this.partialTokens.append(" " + getName(tb) + " ");
+					this.fullTokens.append(" " + getQualifiedName(tb) + "#var ");
+					this.partialTokens.append(" " + getName(tb) + "#var ");
 				}
 			} else if (b instanceof ITypeBinding) {
 				ITypeBinding tb = (ITypeBinding) b;
@@ -1340,7 +1353,8 @@ if (levelOfTraverMD == 1) {
 		ITypeBinding tb = node.getType().resolveBinding();
 		if (tb != null && tb.getTypeDeclaration().isLocal())
 			return false;
-		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node.getType());
+		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
+				.getType());
 		this.partialTokens.append(" " + utype + " ");
 		this.fullTokens.append(" " + rtype + " ");
 		if (node.getInitializer() != null) {
@@ -1417,14 +1431,14 @@ if (levelOfTraverMD == 1) {
 		}
 		String name = "." + node.getName().getIdentifier() + "()";
 		this.partialTokens.append(" " + name + " ");
-		if (!USE_SIMPLE_METHOD_NAME && tb != null 
-//				&& !name.equals(".toString()") 
-//				&& !name.equals(".equals()") 
-//				&& !name.equals(".clone()") 
-//				&& !name.equals(".getClass()")
-//				&& !name.equals(".hashCode()")
-//				&& !name.equals(".valueOf()")
-				)
+		if (!USE_SIMPLE_METHOD_NAME && tb != null
+		// && !name.equals(".toString()")
+		// && !name.equals(".equals()")
+		// && !name.equals(".clone()")
+		// && !name.equals(".getClass()")
+		// && !name.equals(".hashCode()")
+		// && !name.equals(".valueOf()")
+		)
 			name = getQualifiedName(tb) + name;
 		this.fullTokens.append(" " + name + " ");
 		for (int i = 0; i < node.arguments().size(); i++)
@@ -1478,10 +1492,10 @@ if (levelOfTraverMD == 1) {
 		return super.visit(node);
 	}
 
-//	@Override
-//	public boolean visit(TypeDeclaration node) {
-//		return false;
-//	}
+	// @Override
+	// public boolean visit(TypeDeclaration node) {
+	// return false;
+	// }
 
 	@Override
 	public boolean visit(TypeDeclarationStatement node) {
@@ -1490,7 +1504,8 @@ if (levelOfTraverMD == 1) {
 
 	@Override
 	public boolean visit(TypeLiteral node) {
-		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node.getType());
+		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
+				.getType());
 		this.fullTokens.append(" " + rtype + ".class ");
 		this.partialTokens.append(" " + utype + ".class ");
 		return false;
@@ -1505,13 +1520,14 @@ if (levelOfTraverMD == 1) {
 	public boolean visit(TypeParameter node) {
 		return super.visit(node);
 	}
-	
+
 	@Override
 	public boolean visit(VariableDeclarationExpression node) {
 		ITypeBinding tb = node.getType().resolveBinding();
 		if (tb != null && tb.getTypeDeclaration().isLocal())
 			return false;
-		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node.getType());
+		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
+				.getType());
 		this.partialTokens.append(" " + utype + " ");
 		this.fullTokens.append(" " + rtype + " ");
 		for (int i = 0; i < node.fragments().size(); i++)
@@ -1524,7 +1540,8 @@ if (levelOfTraverMD == 1) {
 		ITypeBinding tb = node.getType().resolveBinding();
 		if (tb != null && tb.getTypeDeclaration().isLocal())
 			return false;
-		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node.getType());
+		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
+				.getType());
 		this.partialTokens.append(" " + utype + " ");
 		this.fullTokens.append(" " + rtype + " ");
 		for (int i = 0; i < node.fragments().size(); i++)
@@ -1550,47 +1567,47 @@ if (levelOfTraverMD == 1) {
 	public boolean visit(WhileStatement node) {
 		return super.visit(node);
 	}
-	
+
 	@Override
 	public boolean visit(ArrayType node) {
 		return false;
 	}
-	
+
 	@Override
 	public boolean visit(IntersectionType node) {
 		return false;
 	}
-	
+
 	@Override
 	public boolean visit(ParameterizedType node) {
 		return false;
 	}
-	
+
 	@Override
 	public boolean visit(UnionType node) {
 		return false;
 	}
-	
+
 	@Override
 	public boolean visit(NameQualifiedType node) {
 		return false;
 	}
-	
+
 	@Override
 	public boolean visit(PrimitiveType node) {
 		return false;
 	}
-	
+
 	@Override
 	public boolean visit(QualifiedType node) {
 		return false;
 	}
-	
+
 	@Override
 	public boolean visit(SimpleType node) {
 		return false;
 	}
-	
+
 	@Override
 	public boolean visit(WildcardType node) {
 		return false;
@@ -1598,16 +1615,17 @@ if (levelOfTraverMD == 1) {
 
 	private String getQualifiedName(ITypeBinding tb) {
 		if (tb.isArray())
-			return getQualifiedName(tb.getComponentType().getTypeDeclaration()) + getDimensions(tb.getDimensions());
+			return getQualifiedName(tb.getComponentType().getTypeDeclaration())
+					+ getDimensions(tb.getDimensions());
 		return tb.getQualifiedName();
 	}
 
 	private String getName(ITypeBinding tb) {
 		if (tb.isArray())
-			return getName(tb.getComponentType().getTypeDeclaration()) + getDimensions(tb.getDimensions());
+			return getName(tb.getComponentType().getTypeDeclaration())
+					+ getDimensions(tb.getDimensions());
 		return tb.getName();
 	}
-
 
 	public static void main(String[] args) {
 		String projectLocation = "/Users/hungphan/Documents/workspace/SampleMethodInvocationProject/";

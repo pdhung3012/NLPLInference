@@ -1405,7 +1405,26 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 	@Override
 	public boolean visit(NumberLiteral node) {
 		sbAbstractInformation.append("#");
-		currentStrParentType="Numeric";
+		String strValue=node.getToken();
+		if(strValue.endsWith("f")){
+			currentStrParentType="float";
+		} else if(strValue.contains(".")){
+			currentStrParentType="double";
+		} else{
+			long val=0;
+			try{
+				val=Long.parseLong(strValue);
+				
+			} catch(Exception ex){
+				
+			}
+			if(val<=2147483647 &&val>=-2147483648 ){
+				currentStrParentType="int";
+			}else{
+				currentStrParentType="long";
+			}
+		}
+		
 		listAbstractTypeQuestionMark.add(currentStrParentType);
 //		this.sbAbstractInformation.append(node.getToken());
 		return false;

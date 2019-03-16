@@ -1396,7 +1396,7 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 	@Override
 	public boolean visit(NullLiteral node) {
 		sbAbstractInformation.append("#");
-		currentStrParentType="Nullable";
+		currentStrParentType="java.lang.Object";
 		listAbstractTypeQuestionMark.add(currentStrParentType);
 //		this.sbAbstractInformation.append("null");//$NON-NLS-1$
 		return false;

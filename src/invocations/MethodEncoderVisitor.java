@@ -946,6 +946,8 @@ public class MethodEncoderVisitor extends ASTVisitor {
 						mapIDAppear.put(existId, mapIDAppear.get(existId) + 1);
 					}
 
+					this.partialTokens.append(iaVisitor.getPartialParamSequence()+ " ");
+					this.fullTokens.append(iaVisitor.getFQNParamSequence()+" ");
 					this.partialTokens.append(strIdentifier + " ");
 					this.fullTokens.append(id + " ");
 

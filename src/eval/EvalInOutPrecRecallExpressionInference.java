@@ -343,6 +343,7 @@ public class EvalInOutPrecRecallExpressionInference {
 //								sc.next();
 //							}
 							String strTransCode=mapIdLibrary.get(itemTrans[j]);
+							//
 							ptIncorrect_map.print((j+1)+","+itemSource[j]+","+itemTrans[j]+","+itemTarget[j]+","+strTransCode+","+strTargetCode+"\n");
 //							mapIncorrectPrintScreen.get(strPackageName).print(itemSource[j]+","+mapVocabTraining.get(itemSource[j])+","+itemTarget[j]+"\n");
 					}

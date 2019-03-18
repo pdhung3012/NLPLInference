@@ -296,7 +296,8 @@ public class EvalInOutPrecRecallExpressionInference {
 					System.out.println("source info "+itemSource[j]);
 					System.out.println("all info "+mapTotalId.get(itemTarget[j]));
 					*/
-				String strPackageName=getPackageAPIsInLibrary(set5Libraries, mapIdLibrary.get(itemTarget[j]));
+				String strTargetCode=mapIdLibrary.get(itemTarget[j]);
+				String strPackageName=getPackageAPIsInLibrary(set5Libraries, strTargetCode);
 				if(!setVocabTrainSource.contains(itemSource[j])){
 						numCSourceLine++;
 						int currentNumber=mapCountPerLibrary.get(strPackageName).get("OOS");
@@ -326,7 +327,7 @@ public class EvalInOutPrecRecallExpressionInference {
 						
 						int currentNumber=mapCountPerLibrary.get(strPackageName).get("Correct");
 						mapCountPerLibrary.get(strPackageName).put("Correct",currentNumber+1);
-						ptCorrect_map.print(itemSource[j]+","+mapVocabTraining.get(itemSource[j])+"\n");
+						ptCorrect_map.print((j+1)+","+itemSource[j]+","+itemTarget[j]+","+strTargetCode+"\n");
 //						mapCorrectPrintScreen.get(strPackageName).print(itemSource[j]+","+mapVocabTraining.get(itemSource[j])+"\n");
 					} else{
 						numIncorrect++;
@@ -341,7 +342,8 @@ public class EvalInOutPrecRecallExpressionInference {
 //								Scanner sc=new Scanner(System.in);
 //								sc.next();
 //							}
-							ptIncorrect_map.print(itemSource[j]+","+mapVocabTraining.get(itemSource[j])+"\n");
+							String strTransCode=mapIdLibrary.get(itemTrans[j]);
+							ptIncorrect_map.print((j+1)+","+itemSource[j]+","+itemTrans[j]+","+itemTarget[j]+","+strTransCode+","+strTargetCode+"\n");
 //							mapIncorrectPrintScreen.get(strPackageName).print(itemSource[j]+","+mapVocabTraining.get(itemSource[j])+","+itemTarget[j]+"\n");
 					}
 				}

@@ -15,6 +15,7 @@ public class CombineAndReplaceIdForSTProject {
 
 	public static String[] arr5LibPrefix={"android","com.google.gwt","com.thoughtworks.xstream","org.hibernate","org.joda.time"};
 
+	
 	public static void extractGoodPercentage(ArrayList<Integer> listNumbers,ArrayList<String> listLocations,ArrayList<String> listSources,ArrayList<String> listFilterLocations,ArrayList<String> listFilterSources){
 		for(int i=0;i<listSources.size();i++){
 			String[] arrLocationInfo=listLocations.get(i).trim().split("\\s+");
@@ -80,9 +81,9 @@ public class CombineAndReplaceIdForSTProject {
 		int maximumLine=100000;
 		
 		for(int i=0;i<arr5LibPrefix.length;i++){
-//			if(i<=3) {
-//				continue;
-//			}
+			/*if(i!=3) {
+				continue;
+			}*/
 			String[] arrProjLibName=FileIO.readStringFromFile(fopProjectTTTLibrary+arr5LibPrefix[i]+".txt").split("\n");
 			FileIO.writeStringToFile("", fopOutput+arr5LibPrefix[i]+".locations.txt");
 			FileIO.writeStringToFile("", fopOutput+arr5LibPrefix[i]+".source.txt");

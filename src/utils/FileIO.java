@@ -20,7 +20,15 @@ public class FileIO {
 		// TODO Auto-generated method stub
 
 	}
-	
+	public static String tryGetLine(BufferedReader br) {
+		String line=null;
+		try {
+			line = br.readLine();
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		return line;
+	}
 	public static void copyFileUsingChannel(File source, File dest) {
 	    FileChannel sourceChannel = null;
 	    FileChannel destChannel = null;
@@ -88,9 +96,9 @@ public class FileIO {
 	public static String readFromLargeFile(String inputFile){
 		StringBuilder sbResult=new StringBuilder();
 		
-		try (BufferedReader br = Files.newBufferedReader(Paths.get(inputFile), StandardCharsets.UTF_8)) {
+		try (BufferedReader br = Files.newBufferedReader(Paths.get(inputFile), StandardCharsets.ISO_8859_1)) {
 		    
-			for (String line = null; (line = br.readLine()) != null;) {
+			for (String line = null; (line = tryGetLine(br)) != null;) {
 		    	sbResult.append(line+"\n");
 //				prevLine=line;
 		    }

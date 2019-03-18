@@ -98,8 +98,8 @@ public class EvalInOutPrecRecallExpressionInference {
 		String fn_log_incorrect="log_incorrect.txt";
 		String fn_log_outVocab="log_outVocab.txt";
 		String fn_correctOrderTranslated="correctOrderTranslatedResult.txt";
-		String fn_statisticCorrectMapping="correct_mapping.csv";
-		String fn_statisticIncorrectMapping="incorrect_mapping.csv";
+		String fn_statisticCorrectMapping="correct_mapping.txt";
+		String fn_statisticIncorrectMapping="incorrect_mappxting.txt";
 //		String fn_vocabulary="vocabulary.txt";
 		
 		HashMap<String,String> mapTotalId=MapUtil.getHashMapFromFile(fop_mapTotalId+"a_mapTotalIdAndContent.txt");
@@ -329,7 +329,7 @@ public class EvalInOutPrecRecallExpressionInference {
 						
 						int currentNumber=mapCountPerLibrary.get(strPackageName).get("Correct");
 						mapCountPerLibrary.get(strPackageName).put("Correct",currentNumber+1);
-						ptCorrect_map.print((i+1)+","+itemSource[j]+","+itemTarget[j]+","+strTargetAPIInfo+"\n");
+						ptCorrect_map.print((i+1)+"\t"+itemSource[j]+"\t"+itemTarget[j]+"\t"+strTargetAPIInfo+"\n");
 //						mapCorrectPrintScreen.get(strPackageName).print(itemSource[j]+","+mapVocabTraining.get(itemSource[j])+"\n");
 					} else{
 						numIncorrect++;
@@ -345,7 +345,7 @@ public class EvalInOutPrecRecallExpressionInference {
 //								sc.next();
 //							}
 							//
-							ptIncorrect_map.print((i+1)+","+itemSource[j]+","+itemTrans[j]+","+itemTarget[j]+","+strTransAPIInfo+","+strTargetAPIInfo+"\n");
+							ptIncorrect_map.print((i+1)+"\t"+itemSource[j]+"\t"+itemTrans[j]+"\t"+itemTarget[j]+"\t"+strTransAPIInfo+"\t"+strTargetAPIInfo+"\n");
 //							mapIncorrectPrintScreen.get(strPackageName).print(itemSource[j]+","+mapVocabTraining.get(itemSource[j])+","+itemTarget[j]+"\n");
 					}
 				}

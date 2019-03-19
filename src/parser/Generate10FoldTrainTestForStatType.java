@@ -109,12 +109,12 @@ public class Generate10FoldTrainTestForStatType {
 			}
 		}
 		
-		ArrayList<String> arrFold1TestLoc = FileUtil.getFileStringArray(fop_output+"\\fold-1\\test_old\\"+"test.locations.txt");
+//		ArrayList<String> arrFold1TestLoc = FileUtil.getFileStringArray(fop_output+"\\fold-1\\test_old\\"+"test.locations.txt");
 		//create hash set to store all possible test line after each fold;
 		HashSet<String> setTestOld=new HashSet<String>();
-		for(int j=0;j<arrFold1TestLoc.size();j++){
-			setTestOld.add(arrFold1TestLoc.get(j));
-		}
+//		for(int j=0;j<arrFold1TestLoc.size();j++){
+//			setTestOld.add(arrFold1TestLoc.get(j));
+//		}
 		
 		for(int i=0;i<arrLstFiles.length;i++){
 //			if(arrLstFiles[i].getName().equals("org.apache.commons")){

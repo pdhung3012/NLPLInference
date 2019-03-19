@@ -227,7 +227,7 @@ public class GenerateStatMethodIdenTenFolds {
 					}
 				}
 				System.out.println("fold "+indexFold);
-				break;
+				//break;
 			}
 			
 			

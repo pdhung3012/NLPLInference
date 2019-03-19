@@ -6,6 +6,9 @@ import invocations.CreateTrainingData;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 
 import utils.FileIO;
 import utils.FileUtil;
@@ -18,6 +21,30 @@ public class CombineAndReplaceIdForSTProject {
 	
 	public static void extractGoodPercentage(ArrayList<Integer> listNumbers,ArrayList<String> listLocations,ArrayList<String> listSources,ArrayList<String> listFilterLocations,ArrayList<String> listFilterSources){
 		for(int i=0;i<listSources.size();i++){
+			String[] arrLocationInfo=listLocations.get(i).trim().split("\\s+");
+			String[] arrTokenInSource=listSources.get(i).trim().split("\\s+");
+			String percentageResolve=arrLocationInfo[arrLocationInfo.length-1];
+			if(arrTokenInSource.length<=PathConstanct.NUM_CHARACTER_MAXIMUM && percentageResolve.equals("100%")){
+				listNumbers.add(i);
+				listFilterLocations.add(listLocations.get(i));
+				listFilterSources.add(listSources.get(i));
+			}
+		}
+	}
+	
+	public static void extractGoodPercentageAndTarget(ArrayList<Integer> listNumbers,ArrayList<String> listLocations,ArrayList<String> listSources,ArrayList<String> listTarget,ArrayList<String> listFilterLocations,ArrayList<String> listFilterSources){
+		HashSet<Integer> setHaveMethods=new LinkedHashSet<>();
+		for(int i=0;i<listTarget.size();i++){
+			String strItem=listTarget.get(i);
+			if(strItem.contains("E-Total")){
+				setHaveMethods.add(i);
+			}
+		}
+		
+		for(int i=0;i<listSources.size();i++){
+			if(!setHaveMethods.contains(i)){
+				continue;
+			}
 			String[] arrLocationInfo=listLocations.get(i).trim().split("\\s+");
 			String[] arrTokenInSource=listSources.get(i).trim().split("\\s+");
 			String percentageResolve=arrLocationInfo[arrLocationInfo.length-1];

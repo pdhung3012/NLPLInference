@@ -100,6 +100,7 @@ public class CreateTrainingData {
 					
 					String strTarget=FileIO.readStringFromFile(fpTarget);
 					String strNewTarget=replaceTargetWithTotalId(strTarget, mapReplaceId);
+					
 //					String strNewTarget=strTarget;
 					FileIO.appendStringToFile(strNewTarget, outputFolder+"target.txt");
 					String strSource=FileIO.readStringFromFile(fpSource);

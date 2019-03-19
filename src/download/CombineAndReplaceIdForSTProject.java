@@ -36,7 +36,7 @@ public class CombineAndReplaceIdForSTProject {
 		HashSet<Integer> setHaveMethods=new LinkedHashSet<>();
 		for(int i=0;i<listTarget.size();i++){
 			String strItem=listTarget.get(i);
-			if(strItem.contains("E-Total")){
+			if(strItem.contains("E-")){
 				setHaveMethods.add(i);
 			}
 		}

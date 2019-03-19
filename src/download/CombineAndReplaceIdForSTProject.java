@@ -145,13 +145,14 @@ public class CombineAndReplaceIdForSTProject {
 //					String strSource=FileIO.readStringFromFile(fpSource);					
 //					String strLocation=FileIO.readStringFromFile(fpLocation);
 					ArrayList<String> listSource=FileUtil.getFileStringArray(fpSource);
+					ArrayList<String> listTarget=FileUtil.getFileStringArray(fpTarget);
 					ArrayList<String> listLocation=FileUtil.getFileStringArray(fpLocation);
 					numLine+=listLocation.size();
 					
 					ArrayList<Integer> listNumbers=new ArrayList<Integer>();
 					ArrayList<String> listFilterLocations=new ArrayList<>();
 					ArrayList<String> listFilterSources=new ArrayList<>();
-					extractGoodPercentage(listNumbers,listLocation,listSource,listFilterLocations,listFilterSources);
+					extractGoodPercentageAndTarget(listNumbers,listLocation,listSource,listTarget,listFilterLocations,listFilterSources);
 					String strFilterSource=convertFromArrayListToString(listFilterSources);
 					String strFilterLocation=convertFromArrayListToString(listFilterLocations);
 					
@@ -178,7 +179,7 @@ public class CombineAndReplaceIdForSTProject {
 					FileIO.writeStringToFile(strNewTrainReverse, fopProjSeq+"total.training.t-s.txt");
 					FileIO.appendStringToFile(strFilterTrainReverse, fopOutput+arr5LibPrefix[i]+".training.t-s.A3");
 					
-					if(numLine>maximumLine) break;
+//					if(numLine>maximumLine) break;
 					//
 					
 				}

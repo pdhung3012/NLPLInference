@@ -316,7 +316,7 @@ public class GenerateStatMethodIdenTenFolds {
 
 					}
 				}
-				System.out.println("fold " + indexFold);
+				System.out.println(" align 1 fold " + indexFold);
 				// break;
 
 			}
@@ -326,8 +326,12 @@ public class GenerateStatMethodIdenTenFolds {
 					.getFileStringArray(fop_output + arr5LibPrefix[i]
 							+ ".training.t-s.A3");
 			for (int indexFold = 1; indexFold <= 10; indexFold++) {
+				
 				HashSet<Integer> setTest = mapTestOver10Fold.get(indexFold);
 
+				if(indexFold==10){
+					
+				}
 				// source & target & location
 				for (int j = 0; j < lengthOfPairs; j++) {
 
@@ -343,7 +347,7 @@ public class GenerateStatMethodIdenTenFolds {
 
 					}
 				}
-				System.out.println("fold " + indexFold);
+				System.out.println("align 2fold " + indexFold);
 				// break;
 
 			}

@@ -151,6 +151,7 @@ public class GenerateStatMethodIdenTenFolds {
 					listPossibleTestPerEachFold.add(j);					
 				}				
 			}
+			System.out.println(arrFold1TestLoc.size()+" possible size "+listPossibleTestPerEachFold.size());
 			
 //			System.out.println(setTestForFold1.size()+" tests is from previous");
 			

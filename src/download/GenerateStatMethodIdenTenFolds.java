@@ -214,7 +214,7 @@ public class GenerateStatMethodIdenTenFolds {
 					}
 
 				}
-				if (indexFold < 10) {
+				else if (indexFold < 10) {
 					while (indexForTest <= numberForTestInLib) {
 						indexForTest++;
 						int randomIndexForTest = randInt(0,

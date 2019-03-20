@@ -112,12 +112,13 @@ public class GenerateStatMethodIdenTenFolds {
 			}
 		}
 		
-		ArrayList<String> arrFold1TestLoc = FileUtil.getFileStringArray(fop_output+"\\StatNLPLInfer_v3_allfolds\\v4_ExpressionInference\\"+"test.locations.txt");
+		ArrayList<String> arrFold1TestLoc = FileUtil.getFileStringArray(fop_output+"\\StatNLPLInfer_v3_allfolds\\b1_v4_ExpressionInference\\"+"test.locations.txt");
 		//create hash set to store all possible test line after each fold;
 		HashSet<String> setTestOld=new HashSet<String>();
 		for(int j=0;j<arrFold1TestLoc.size();j++){
 			setTestOld.add(arrFold1TestLoc.get(j));
 		}
+		System.out.println(arrFold1TestLoc.size()+" fold1 size "+setTestOld.size());
 		
 		for(int i=0;i<arr5LibPrefix.length;i++){
 //			if(arrLstFiles[i].getName().equals("org.apache.commons")){

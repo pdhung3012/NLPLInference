@@ -1,5 +1,7 @@
 package invocations;
 
+import utils.StanfordLemmatizer;
+
 public class RunMethodGenerator {
 
 	public static String[] arrLibraryPrefix={"android","com.google.gwt","com.thoughtworks.xstream","org.hibernate","org.joda.time","java"};
@@ -9,7 +11,8 @@ public class RunMethodGenerator {
 //		https://github.com/apache/pig/
 		String inPath="/Users/hungphan/git/pig/";
 		String outPath="/Users/hungphan/git/NLPLTranslation/sequences/pig/";
-		MethodContextSequenceGenerator mcsg=new MethodContextSequenceGenerator(inPath,arrLibraryPrefix);
+		StanfordLemmatizer lemm=new StanfordLemmatizer();
+		MethodContextSequenceGenerator mcsg=new MethodContextSequenceGenerator(inPath,arrLibraryPrefix,lemm);
 		mcsg.generateSequences(outPath);
 		mcsg.generateAlignment(true);
 		

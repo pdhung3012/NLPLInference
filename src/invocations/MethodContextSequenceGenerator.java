@@ -28,6 +28,7 @@ import parser.ClassPathUtil;
 import parser.ClassPathUtil.PomFile;
 import utils.FileIO;
 import utils.FileUtil;
+import utils.StanfordLemmatizer;
 
 public class MethodContextSequenceGenerator {
 
@@ -43,15 +44,18 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 	private LinkedHashMap<String,Integer> mapIDAppear;
 	private LinkedHashMap<String,String> mapIdenAndID;
 	private String[] arrPrefix;
+	private StanfordLemmatizer lemm;
 	
-	public MethodContextSequenceGenerator(String inPath,String[] arrPrefix) {
+	public MethodContextSequenceGenerator(String inPath,String[] arrPrefix,StanfordLemmatizer lemm) {
 		this.inPath = inPath;
 		this.arrPrefix=arrPrefix;
+		this.lemm=lemm;
 	}
 	
-	public MethodContextSequenceGenerator(String inPath,String[] arrPrefix, boolean testing) {
-		this(inPath,arrPrefix);
+	public MethodContextSequenceGenerator(String inPath,String[] arrPrefix, boolean testing,StanfordLemmatizer lemm) {
+		this(inPath,arrPrefix,lemm);
 		this.testing = testing;
+		
 	}
 	
 	public int  generateSequences(String outPath) {
@@ -110,7 +114,7 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 			parser.setResolveBindings(true);
 			parser.setBindingsRecovery(false);
 			
-			InvocationInformationASTRequestor r = new InvocationInformationASTRequestor(keepUnresolvables, lib,hashIdenPath);
+			InvocationInformationASTRequestor r = new InvocationInformationASTRequestor(keepUnresolvables, lib,hashIdenPath,lemm);
 			mapIDAndIden=new LinkedHashMap<String, String>();
 			mapIdenAndID=new LinkedHashMap<String, String>();
 			mapIDAppear=new LinkedHashMap<String, Integer>();
@@ -160,6 +164,8 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 		private LinkedHashMap<String,String> mapIdenAndID;
 		private LinkedHashMap<String,Integer> mapIDAppear;
 		private String[] arrLibNames;
+		private StanfordLemmatizer lemm;
+		
 		
 		
 		
@@ -197,10 +203,11 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 			this.mapIdenAndID = mapIdenAndID;
 		}
 
-		public InvocationInformationASTRequestor(boolean keepUnresolvables, String lib,String idenPath) {
+		public InvocationInformationASTRequestor(boolean keepUnresolvables, String lib,String idenPath, StanfordLemmatizer lemm) {
 			this.keepUnresolvables = keepUnresolvables;
 			this.lib = lib;
 			this.idenPath=idenPath;
+			this.lemm=lemm;
 		}
 
 		@Override
@@ -317,6 +324,7 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 			sg.setMapIDAndIden(mapIDAndIden);
 			sg.setMapIdenAndID(mapIdenAndID);
 			sg.setMapIDAppear(mapIDAppear);
+			sg.setLemm(lemm);
 //			System.out.println("here "+method.toString());
 			method.accept(sg);
 			int numofExpressions = sg.getNumOfExpressions(), numOfResolvedExpressions = sg.getNumOfResolvedExpressions();

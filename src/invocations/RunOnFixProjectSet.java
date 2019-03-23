@@ -6,6 +6,7 @@ import java.util.concurrent.Executors;
 
 import utils.FileIO;
 import utils.FileUtil;
+import utils.StanfordLemmatizer;
 import consts.PathConstanct;
 
 public class RunOnFixProjectSet {
@@ -21,7 +22,7 @@ public class RunOnFixProjectSet {
 		String outputProjectPath = PathConstanct.PATH_OUTPUT_IDENTIFER_PROJECT;
 		String fpOutputLog=outputProjectPath+File.separator+"alog.txt";
 		ExecutorService executor = Executors.newFixedThreadPool(MYTHREADS);
-		
+		StanfordLemmatizer lemm=new StanfordLemmatizer();
 		File fInput = new File(inputProjectPath);
 		File fOutput = new File(outputProjectPath);
 		
@@ -44,7 +45,7 @@ public class RunOnFixProjectSet {
 				String itemOutputPath = outputProjectPath + File.separator
 						+ arrProjectName[i] + File.separator;
 				ExtractSequenceForProjectRunnable thread = new ExtractSequenceForProjectRunnable(itemInputPath,
-						itemOutputPath, arrLibraryPrefix,i,fpOutputLog);
+						itemOutputPath, arrLibraryPrefix,i,fpOutputLog,lemm);
 //				thread.run();
 				executor.execute(thread);
 			}

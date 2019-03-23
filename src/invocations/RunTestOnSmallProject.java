@@ -1,5 +1,7 @@
 package invocations;
 
+import utils.StanfordLemmatizer;
+
 public class RunTestOnSmallProject {
 
 	public static String[] arrLibraryPrefix={"android","com.google.gwt","com.thoughtworks.xstream","org.hibernate","org.joda.time","java"};
@@ -10,7 +12,8 @@ public class RunTestOnSmallProject {
 //		String outPath="/Users/hungphan/git/NLPLTranslation/sequences/SampleMethodInvocationProject/";
 		String inPath="/Users/hungphan/git/pig/";
 		String outPath="/Users/hungphan/git/NLPLTranslation/sequences/pig/";
-		MethodContextSequenceGenerator mcsg=new MethodContextSequenceGenerator(inPath,arrLibraryPrefix);
+		StanfordLemmatizer lemm=new StanfordLemmatizer();
+		MethodContextSequenceGenerator mcsg=new MethodContextSequenceGenerator(inPath,arrLibraryPrefix,lemm);
 		mcsg.generateSequences(outPath);
 		mcsg.generateAlignment(true);
 	}

@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 
 import utils.FileIO;
 import utils.FileUtil;
+import utils.StanfordLemmatizer;
 import consts.PathConstanct;
 
 public class RunOnFixProjectSetPerLibrary {
@@ -22,7 +23,7 @@ public class RunOnFixProjectSetPerLibrary {
 		String fopProjectName=PathConstanct.PATH_PROJECT_TRAIN_TEST_NAME;
 		String fopOutput=PathConstanct.PATH_OUTPUT_IDENTIFER_PROJECT;
 		String inputProjectPath = PathConstanct.PATH_INPUT_IDENTIFER_PROJECT;
-		
+		StanfordLemmatizer lemm=new StanfordLemmatizer();
 		String fpOutputLog=fopOutput+File.separator+"alog.txt";
 		if(!new File(fpOutputLog).isFile()){
 			FileUtil.writeToFile(fpOutputLog, "");
@@ -58,7 +59,7 @@ public class RunOnFixProjectSetPerLibrary {
 			String itemInputPath=inputProjectPath+folderName+File.separator;
 			String itemOutputPath=fopOutput+folderName+File.separator;
 			ExtractSequenceForProjectRunnable thread = new ExtractSequenceForProjectRunnable(itemInputPath,
-					itemOutputPath, arrLibraryPrefix,i,fpOutputLog);
+					itemOutputPath, arrLibraryPrefix,i,fpOutputLog,lemm);
 //			thread.run();
 			executor.execute(thread);
 		}

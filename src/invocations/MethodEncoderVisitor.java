@@ -18,6 +18,7 @@ import consts.PathConstanct;
 import parser.AnnotationType;
 import utils.DateUtil;
 import utils.JavaASTUtil;
+import utils.StanfordLemmatizer;
 import utils.StringUtil;
 import entities.InvocationObject;
 import entities.LocalEntity;
@@ -111,6 +112,17 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	private int levelOfTraverMD = 0;
 	private String fopInvocationObject;
 	private String hashIdenPath;
+	private StanfordLemmatizer lemm;
+	
+	
+
+	public StanfordLemmatizer getLemm() {
+		return lemm;
+	}
+
+	public void setLemm(StanfordLemmatizer lemm) {
+		this.lemm = lemm;
+	}
 
 	public String[] getArrLibrariesPrefix() {
 		return arrLibrariesPrefix;
@@ -514,6 +526,7 @@ public class MethodEncoderVisitor extends ASTVisitor {
 		}
 		iaVisitor.setCurrentClassDeclaration(currentClassDeclaration);
 		iaVisitor.setCurrentMethodDeclaration(currentMethodDeclaration);
+		iaVisitor.setLemm(lemm);
 
 		if (node.getBody() != null) {
 			node.getBody().accept(this);

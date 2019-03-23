@@ -6,6 +6,7 @@ import java.util.concurrent.Executors;
 
 import utils.FileIO;
 import utils.FileUtil;
+import utils.StanfordLemmatizer;
 import consts.PathConstanct;
 
 public class RunOnLargeScaleData {
@@ -20,7 +21,7 @@ public class RunOnLargeScaleData {
 		String outputProjectPath = PathConstanct.PATH_OUTPUT_IDENTIFER_PROJECT;
 		String fpOutputLog=outputProjectPath+File.separator+"alog.txt";
 		ExecutorService executor = Executors.newFixedThreadPool(MYTHREADS);
-		
+		StanfordLemmatizer lemm=new StanfordLemmatizer();
 		if(!new File(fpOutputLog).isFile()){
 			FileUtil.writeToFile(fpOutputLog, "");
 		}
@@ -37,7 +38,7 @@ public class RunOnLargeScaleData {
 				String itemOutputPath = outputProjectPath + File.separator
 						+ arrFilesInput[i].getName() + File.separator;
 				ExtractSequenceForProjectRunnable thread = new ExtractSequenceForProjectRunnable(itemInputPath,
-						itemOutputPath, arrLibraryPrefix,i,fpOutputLog);
+						itemOutputPath, arrLibraryPrefix,i,fpOutputLog,lemm);
 //				thread.run();
 				executor.execute(thread);
 			}
@@ -51,13 +52,15 @@ class ExtractSequenceForProjectRunnable implements Runnable {
 	private int index = 0;
 	private String logPath="";
 	private String[] arrLibNames;
+	private StanfordLemmatizer lemm;
 
-	ExtractSequenceForProjectRunnable(String inputPath, String outputPath, String[] arrLibName, int index,String logPath) {
+	ExtractSequenceForProjectRunnable(String inputPath, String outputPath, String[] arrLibName, int index,String logPath,StanfordLemmatizer lemm) {
 		this.inputPath = inputPath;
 		this.outputPath = outputPath;
 		this.arrLibNames=arrLibName;
 		this.index = index;
 		this.logPath=logPath;
+		this.lemm=lemm;
 	}
 
 	@Override
@@ -72,7 +75,7 @@ class ExtractSequenceForProjectRunnable implements Runnable {
 				FileIO.appendStringToFile(index+"\t"+fIn.getName()+"\tDownloaded\n", logPath);
 			} else{
 				MethodContextSequenceGenerator mcsg = new MethodContextSequenceGenerator(
-						inputPath,arrLibNames);
+						inputPath,arrLibNames,lemm);
 				mcsg.generateSequences(outputPath);
 				mcsg.generateAlignment(true);
 				System.out.println(index+"\tFinish success for " + outputPath);

@@ -27,6 +27,7 @@ import javax.swing.text.html.StyleSheet.ListPainter;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.internal.compiler.parser.ScannerHelper;
 
+import utils.StanfordLemmatizer;
 import consts.PathConstanct;
 import entities.LocalEntity;
 import entities.LocalForMethod;
@@ -141,6 +142,17 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 	private ArrayList<String> listOfRelatedWordsTarget=new ArrayList<String>();
 	private ArrayList<String> listOfRelatedWordsSource=new ArrayList<String>();
 	public static String CamelCaseRegex="([^_A-Z])([A-Z])";
+	private StanfordLemmatizer lemm;
+	
+	
+
+	public StanfordLemmatizer getLemm() {
+		return lemm;
+	}
+
+	public void setLemm(StanfordLemmatizer lemm) {
+		this.lemm = lemm;
+	}
 
 	public void sortRequiredAPI() {
 		ArrayList<String> lst = new ArrayList<String>();
@@ -245,7 +257,8 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 
 	void processAndAddWordToRelatedWords(String strItem){
 		try{
-			String[] arr=strItem.replaceAll("([^_A-Z])([A-Z])", "$1 $2").split("\\s+");
+			String strProcess=lemm.lemmatizeToString(strItem.replaceAll("([^_A-Z])([A-Z])", "$1 $2"));
+			String[] arr=strProcess.trim().split("\\s+");
 			for(int i=0;i<arr.length;i++){
 				String strLowerItemSource=arr[i].toLowerCase().trim()+"#term";
 				String strLowerItemTarget=arr[i].toLowerCase().trim()+"#"+strItem+"#ele";

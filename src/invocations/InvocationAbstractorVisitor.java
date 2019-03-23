@@ -1076,8 +1076,10 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 		node.getLeftOperand().accept(this);
 		this.sbAbstractInformation.append(' '); // for cases like x= i - -1; or
 												// x= i++ + ++i;
-		this.sbAbstractInformation.append(node.getOperator().toString());
+		String strOperator=node.getOperator().toString();
+		this.sbAbstractInformation.append(strOperator);
 		this.sbAbstractInformation.append(' ');
+		processAndAddWordToRelatedWords(strOperator);
 		addRequiredAPIForImport(node.getRightOperand());
 		node.getRightOperand().accept(this);
 		final List extendedOperands = node.extendedOperands();
@@ -1606,13 +1608,17 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 	public boolean visit(PostfixExpression node) {
 		addRequiredAPIForImport(node.getOperand());
 		node.getOperand().accept(this);
-		this.sbAbstractInformation.append(node.getOperator().toString());
+		String strOperator=node.getOperator().toString();
+		this.sbAbstractInformation.append(strOperator);
+		processAndAddWordToRelatedWords(strOperator);
 		return false;
 	}
 
 	@Override
 	public boolean visit(PrefixExpression node) {
-		this.sbAbstractInformation.append(node.getOperator().toString());
+		String strOperator=node.getOperator().toString();
+		processAndAddWordToRelatedWords(strOperator);
+		this.sbAbstractInformation.append(strOperator);
 		addRequiredAPIForImport(node.getOperand());
 		node.getOperand().accept(this);
 		return false;

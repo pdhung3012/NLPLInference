@@ -143,6 +143,7 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 	private ArrayList<String> listOfRelatedWordsSource=new ArrayList<String>();
 	public static String CamelCaseRegex="([^_A-Z])([A-Z])";
 	private StanfordLemmatizer lemm;
+	private boolean isVisitInvocationName=false;
 	
 	
 
@@ -257,6 +258,9 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 
 	void processAndAddWordToRelatedWords(String strItem){
 		try{
+			if(isVisitInvocationName){
+				return;
+			}
 			String strProcess=lemm.lemmatizeToString(strItem.replaceAll("([^_A-Z])([A-Z])", "$1 $2"));
 			String[] arr=strProcess.trim().split("\\s+");
 			for(int i=0;i<arr.length;i++){
@@ -282,6 +286,7 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 		listFQNTypeRequiredParam=new ArrayList<String>();
 		listOfRelatedWordsSource=new ArrayList<String>();
 		listOfRelatedWordsTarget=new ArrayList<String>();
+		levelOfTraverMD=0;
 	}
 
 	
@@ -1340,6 +1345,7 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(MethodInvocation node) {
+		levelOfTraverMD++;
 		IMethodBinding iMethod = node.resolveMethodBinding();
 		if (node.getExpression() == null) {
 			this.sbAbstractInformation.append("#");
@@ -1385,7 +1391,11 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 				this.sbAbstractInformation.append(">");//$NON-NLS-1$
 			}
 		}
+		if(levelOfTraverMD==1){
+			isVisitInvocationName=true;			
+		}
 		node.getName().accept(this);
+		isVisitInvocationName=false;
 		this.sbAbstractInformation.append("(");//$NON-NLS-1$
 		int indexParam = -1;
 		for (Iterator it = node.arguments().iterator(); it.hasNext();) {
@@ -1403,6 +1413,7 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 			}
 		}
 		this.sbAbstractInformation.append(")");//$NON-NLS-1$
+		levelOfTraverMD--;
 		return false;
 	}
 

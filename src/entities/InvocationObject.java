@@ -16,10 +16,26 @@ public class InvocationObject {
 	private ArrayList<String> listQuestionMarkTypes;
 	private String strIDRepresent;
 	private String strIdentifier;
+	private ArrayList<String> listOfRelatedWordsTarget=new ArrayList<String>();
+	private ArrayList<String> listOfRelatedWordsSource=new ArrayList<String>();
 	
 	
 	
 	
+	public ArrayList<String> getListOfRelatedWordsTarget() {
+		return listOfRelatedWordsTarget;
+	}
+	public void setListOfRelatedWordsTarget(
+			ArrayList<String> listOfRelatedWordsTarget) {
+		this.listOfRelatedWordsTarget = listOfRelatedWordsTarget;
+	}
+	public ArrayList<String> getListOfRelatedWordsSource() {
+		return listOfRelatedWordsSource;
+	}
+	public void setListOfRelatedWordsSource(
+			ArrayList<String> listOfRelatedWordsSource) {
+		this.listOfRelatedWordsSource = listOfRelatedWordsSource;
+	}
 	public String getStrIdentifier() {
 		return strIdentifier;
 	}
@@ -105,6 +121,15 @@ public class InvocationObject {
 		}
 		return sb.toString();
 	}
+	
+	public String getStrFromList(ArrayList<String> lst){
+		StringBuilder sb=new StringBuilder();
+		for(int i=0;i<lst.size();i++){
+			sb.append(lst.get(i)+" ");
+		}
+		return sb.toString().trim();
+	}
+	
 	public void saveToFile(String file){
 		StringBuilder sbContent=new StringBuilder();
 		sbContent.append(strCodeRepresent.replaceAll("\n", "")+"\n");
@@ -122,9 +147,12 @@ public class InvocationObject {
 			contentImportType+=strAPI+"#";
 		}
 		sbContent.append(contentImportType.replaceAll("\n", "")+"\n");
-		
+		String strListSource=getStrFromList(listOfRelatedWordsSource);
+		String strListTarget=getStrFromList(listOfRelatedWordsTarget);
 		sbContent.append(strMethodInfo.replaceAll("\n", "")+"\n");
 		sbContent.append(strIdentifier.replaceAll("\n", "")+"\n");
+		sbContent.append(strListSource.replaceAll("\n", "")+"\n");
+		sbContent.append(strListTarget.replaceAll("\n", "")+"\n");
 		FileIO.writeStringToFile(sbContent.toString(), file);
 		
 	}

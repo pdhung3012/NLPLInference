@@ -31,6 +31,8 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	private int numOfExpressions = 0, numOfResolvedExpressions = 0;
 	private StringBuilder fullTokens = new StringBuilder(),
 			partialTokens = new StringBuilder();
+	private StringBuilder fullAddNLTokens = new StringBuilder(),
+			partialAddNLTokens = new StringBuilder();
 	private String fullSequence = null, partialSequence = null;
 	private String[] fullSequenceTokens, partialSequenceTokens;
 	private LinkedHashMap<String, String> mapIdenAndID, mapIDAndIden;
@@ -930,6 +932,8 @@ public class MethodEncoderVisitor extends ASTVisitor {
 							.getListAbstractTypeQuestionMark());
 					io.setSetImportedAPIs(iaVisitor.getSetRequiredAPIsForMI());
 					io.setStrIdentifier(strIdentifier);
+					io.setListOfRelatedWordsSource(iaVisitor.getListOfRelatedWordsSource());
+					io.setListOfRelatedWordsTarget(iaVisitor.getListOfRelatedWordsTarget());
 					String idenInfo = io.setIDRepresent();
 					String id = "";
 					if (!mapIdenAndID.containsKey(idenInfo)) {

@@ -138,6 +138,9 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 	private String currentStrParentType = "";
 	private String currentMethodDeclaration = "";
 	private String currentClassDeclaration = "";
+	private ArrayList<String> listOfRelatedWordsTarget=new ArrayList<String>();
+	private ArrayList<String> listOfRelatedWordsSource=new ArrayList<String>();
+	public static String CamelCaseRegex="([^_A-Z])([A-Z])";
 
 	public void sortRequiredAPI() {
 		ArrayList<String> lst = new ArrayList<String>();
@@ -240,6 +243,19 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 		return node.thrownExceptions();
 	}
 
+	void processAndAddWordToRelatedWords(String strItem){
+		try{
+			String[] arr=strItem.replaceAll("([^_A-Z])([A-Z])", "$1 $2").split("\\s+");
+			for(int i=0;i<arr.length;i++){
+				String strLowerItemSource=arr[i].toLowerCase().trim()+"#term";
+				String strLowerItemTarget=arr[i].toLowerCase().trim()+"#"+strItem+"#ele";
+				listOfRelatedWordsTarget.add(strLowerItemTarget);
+				listOfRelatedWordsSource.add(strLowerItemSource);
+			}
+		}catch(Exception ex){
+			
+		}
+	}
 	void printIndent() {
 		for (int i = 0; i < this.indent; i++)
 			this.sbAbstractInformation.append("  "); //$NON-NLS-1$
@@ -251,6 +267,28 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 		setRequiredAPIsForMI = new LinkedHashSet<String>();
 		listPatialTypeRequiredParam=new ArrayList<String>();
 		listFQNTypeRequiredParam=new ArrayList<String>();
+		listOfRelatedWordsSource=new ArrayList<String>();
+		listOfRelatedWordsTarget=new ArrayList<String>();
+	}
+
+	
+	
+	public ArrayList<String> getListOfRelatedWordsTarget() {
+		return listOfRelatedWordsTarget;
+	}
+
+	public void setListOfRelatedWordsTarget(
+			ArrayList<String> listOfRelatedWordsTarget) {
+		this.listOfRelatedWordsTarget = listOfRelatedWordsTarget;
+	}
+
+	public ArrayList<String> getListOfRelatedWordsSource() {
+		return listOfRelatedWordsSource;
+	}
+
+	public void setListOfRelatedWordsSource(
+			ArrayList<String> listOfRelatedWordsSource) {
+		this.listOfRelatedWordsSource = listOfRelatedWordsSource;
 	}
 
 	public ArrayList<String> getListAbstractTypeQuestionMark() {
@@ -1664,6 +1702,7 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 		// Scanner sc=new Scanner(System.in);
 		// sc.next();
 		// }
+		
 		if (node.resolveBinding() instanceof IVariableBinding
 				&& (checkVarInLocalField(((IVariableBinding) node
 						.resolveBinding())) || checkVarInLocalMethod(((IVariableBinding) node
@@ -1686,6 +1725,7 @@ public class InvocationAbstractorVisitor extends ASTVisitor {
 				setRequiredAPIsForMI.add(strTypeImport);
 			}
 			sbAbstractInformation.append(node.getIdentifier());
+			processAndAddWordToRelatedWords(node.getIdentifier());
 		}
 		return false;
 	}

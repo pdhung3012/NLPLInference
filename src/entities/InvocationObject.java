@@ -112,7 +112,15 @@ public class InvocationObject {
 		
 		String[] arrContent=FileIO.readStringFromFile(file).split("\n");
 		StringBuilder sb=new StringBuilder();
-		if(arrContent.length>=5){
+		if(arrContent.length>=7){
+			sb.append(arrContent[0]+"$%$");
+			sb.append(arrContent[1]+"$%$");
+			sb.append(arrContent[2]+"$%$");
+			sb.append(arrContent[3]+"$%$");
+			sb.append(arrContent[4]+"$%$");
+			sb.append(arrContent[5]+"$%$");
+			sb.append(arrContent[6]+"$%$");
+		} else if(arrContent.length>=5){
 			sb.append(arrContent[0]+"$%$");
 			sb.append(arrContent[1]+"$%$");
 			sb.append(arrContent[2]+"$%$");
@@ -150,9 +158,9 @@ public class InvocationObject {
 		String strListSource=getStrFromList(listOfRelatedWordsSource);
 		String strListTarget=getStrFromList(listOfRelatedWordsTarget);
 		sbContent.append(strMethodInfo.replaceAll("\n", "")+"\n");
-		sbContent.append(strIdentifier.replaceAll("\n", "")+"\n");
 		sbContent.append(strListSource.replaceAll("\n", "")+"\n");
 		sbContent.append(strListTarget.replaceAll("\n", "")+"\n");
+		sbContent.append(strIdentifier.replaceAll("\n", "")+"\n");
 		FileIO.writeStringToFile(sbContent.toString(), file);
 		
 	}

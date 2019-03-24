@@ -118,6 +118,7 @@ public class ReGenerateAlignment {
 			generateTotalAlignment(fopOutput, fopOutput+arr5LibPrefix[i]+".source.txt", fopOutput+arr5LibPrefix[i]+".target.txt", fopOutput + arr5LibPrefix[i]
 					+ ".training.s-t.A3", fopOutput + arr5LibPrefix[i]
 					+ ".training.t-s.A3", false);
+			System.out.println(arr5LibPrefix[i]);
 			
 		}
 	}

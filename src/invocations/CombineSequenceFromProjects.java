@@ -37,7 +37,7 @@ public class CombineSequenceFromProjects {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String inputFolder=PathConstanct.PATH_OUTPUT_IDENTIFER_PROJECT;
-		String totalSignatureFolder=PathConstanct.PATH_COMBINE_SIG_PROJECT;
+//		String totalSignatureFolder=PathConstanct.PATH_COMBINE_SIG_PROJECT;
 		
 		File fInFolder=new File(inputFolder);
 		

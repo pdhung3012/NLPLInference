@@ -119,13 +119,11 @@ public class CombineReplaceIdAndAddTermData {
 		for(String key:mapIn.keySet()){
 			String info=mapIn.get(key);
 			String[] arrLine=info.split(SplitInvocationCharacter);
-			for(int i=0;i<arrLine.length;i++){
-				if(arrLine.length>=4){
-					String strSource=arrLine[arrLine.length-4];
-					String strTarget=arrLine[arrLine.length-4];
-					mapSource.put(key, strSource);
-					mapTarget.put(key, strTarget);
-				}
+			if(arrLine.length>=4){
+				String strSource=arrLine[arrLine.length-3];
+				String strTarget=arrLine[arrLine.length-2];
+				mapSource.put(key, strSource);
+				mapTarget.put(key, strTarget);
 			}
 		}
 	}
@@ -165,16 +163,18 @@ public class CombineReplaceIdAndAddTermData {
 					}
 					
 				}
-				sbTotalSource.append(sbNewSource.toString().trim()+"\n");
-				sbTotalTarget.append(sbNewTarget.toString().trim()+"\n");
+				
 			}
-			String strTS=sbTotalSource.toString();
-			String strTT=sbTotalTarget.toString();
-			FileIO.writeStringToFile(strTS, fpTermSource);
-			FileIO.writeStringToFile(strTT, fpTermTarget);
-			FileIO.appendStringToFile(strTS, fpAppendSource);
-			FileIO.appendStringToFile(strTT, fpAppendTarget);
+			sbTotalSource.append(sbNewSource.toString().trim()+"\n");
+			sbTotalTarget.append(sbNewTarget.toString().trim()+"\n");
+			
 		}
+		String strTS=sbTotalSource.toString();
+		String strTT=sbTotalTarget.toString();
+		FileIO.writeStringToFile(strTS, fpTermSource);
+		FileIO.writeStringToFile(strTT, fpTermTarget);
+		FileIO.appendStringToFile(strTS, fpAppendSource);
+		FileIO.appendStringToFile(strTT, fpAppendTarget);
 	}
 	
 	/**

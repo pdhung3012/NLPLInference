@@ -169,8 +169,8 @@ public class CombineReplaceIdAndAddTermData {
 			sbTotalTarget.append(sbNewTarget.toString().trim()+"\n");
 			
 		}
-		String strTS=sbTotalSource.toString();
-		String strTT=sbTotalTarget.toString();
+		String strTS=sbTotalSource.toString()+"\n";
+		String strTT=sbTotalTarget.toString()+"\n";
 		FileIO.writeStringToFile(strTS, fpTermSource);
 		FileIO.writeStringToFile(strTT, fpTermTarget);
 		FileIO.appendStringToFile(strTS, fpAppendSource);

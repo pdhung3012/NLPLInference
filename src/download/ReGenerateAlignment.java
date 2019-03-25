@@ -105,12 +105,8 @@ public class ReGenerateAlignment {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String fopProjectTTTLibrary = PathConstanct.PATH_PROJECT_TRAIN_TEST_NAME
-				+ "5LibSequence" + File.separator;
 		String fopOutput = PathConstanct.PATH_PROJECT_TTT_ADDTERMS_DATA;
 
-		String fpTempForWrite = PathConstanct.PATH_PROJECT_TTT_ADDTERMS_DATA
-				+ "tempForWrite.txt";
 		for(int i=0;i<arr5LibPrefix.length;i++){
 			
 			FileIO.writeStringToFile("", fopOutput+arr5LibPrefix[i]+".training.s-t.A3");
@@ -118,6 +114,7 @@ public class ReGenerateAlignment {
 			generateTotalAlignment(fopOutput, fopOutput+arr5LibPrefix[i]+".source.txt", fopOutput+arr5LibPrefix[i]+".target.txt", fopOutput + arr5LibPrefix[i]
 					+ ".training.s-t.A3", fopOutput + arr5LibPrefix[i]
 					+ ".training.t-s.A3", false);
+			System.out.println(arr5LibPrefix[i]);
 			
 		}
 	}

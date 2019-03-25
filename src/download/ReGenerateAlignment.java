@@ -37,8 +37,8 @@ public class ReGenerateAlignment {
 			dir.mkdirs();
 		PrintStream psS2T = null, psT2S = null;
 		try {
-			psS2T = new PrintStream(new FileOutputStream(fpAlignST,true));
-			psT2S = new PrintStream(new FileOutputStream(fpAlignTS,true));
+			psS2T = new PrintStream(new FileOutputStream(fpAlignST));
+			psT2S = new PrintStream(new FileOutputStream(fpAlignTS));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			if (psS2T != null)
@@ -51,23 +51,23 @@ public class ReGenerateAlignment {
 		for (int i = 0; i < sourceSequences.size(); i++) {
 			String source = sourceSequences.get(i), target = targetSequences.get(i);
 			String[] sTokens = source.trim().split(" "), tTokens = target.trim().split(" ");
-			if (doVerify) {
-				if (sTokens.length != tTokens.length) {
-					numbers[1]++;
-//					throw new AssertionError("Lengths of source and target sequences are not the same!!!");
-				}
-				boolean aligned = true;
-				for (int j = 0; j < sTokens.length; j++) {
-					String s = sTokens[j], t = tTokens[j];
-					if ((t.contains(".") && !t.substring(t.lastIndexOf('.')+1).equals(s.substring(s.lastIndexOf('.')+1))) || (!t.contains(".") && !t.equals(s))) {
-						numbers[3]++;
-						aligned = false;
-//						throw new AssertionError("Source and target are not aligned!!!");
-					}
-				}
-				if (!aligned)
-					numbers[2]++;
-			}
+//			if (doVerify) {
+//				if (sTokens.length != tTokens.length) {
+//					numbers[1]++;
+////					throw new AssertionError("Lengths of source and target sequences are not the same!!!");
+//				}
+//				boolean aligned = true;
+//				for (int j = 0; j < sTokens.length; j++) {
+//					String s = sTokens[j], t = tTokens[j];
+//					if ((t.contains(".") && !t.substring(t.lastIndexOf('.')+1).equals(s.substring(s.lastIndexOf('.')+1))) || (!t.contains(".") && !t.equals(s))) {
+//						numbers[3]++;
+//						aligned = false;
+////						throw new AssertionError("Source and target are not aligned!!!");
+//					}
+//				}
+//				if (!aligned)
+//					numbers[2]++;
+//			}
 			String headerS2T = generateHeader(sTokens, tTokens, i), headerT2S = generateHeader(tTokens, sTokens, i);
 			psS2T.println(headerS2T);
 			psT2S.println(headerT2S);

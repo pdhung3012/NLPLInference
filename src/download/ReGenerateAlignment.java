@@ -117,7 +117,42 @@ public class ReGenerateAlignment {
 //			
 //		}
 		
-		String fopOutput=PathConstanct.PATH_PROJECT_TTT_ADDTERMS_DATA+"v5_allFolds"+File.separator+"b11_fold-2"+File.separator;
+		String fopOutput=PathConstanct.PATH_PROJECT_TTT_ADDTERMS_DATA+"v5_allFolds"+File.separator+"b11_fold-3"+File.separator;
+		generateTotalAlignment(fopOutput, fopOutput+"train.s", fopOutput+"train.t", fopOutput 
+		+ "training.s-t.A3", fopOutput 
+		+ "training.t-s.A3", false);
+		
+		fopOutput=PathConstanct.PATH_PROJECT_TTT_ADDTERMS_DATA+"v5_allFolds"+File.separator+"b11_fold-4"+File.separator;
+		generateTotalAlignment(fopOutput, fopOutput+"train.s", fopOutput+"train.t", fopOutput 
+		+ "training.s-t.A3", fopOutput 
+		+ "training.t-s.A3", false);
+		
+		fopOutput=PathConstanct.PATH_PROJECT_TTT_ADDTERMS_DATA+"v5_allFolds"+File.separator+"b11_fold-5"+File.separator;
+		generateTotalAlignment(fopOutput, fopOutput+"train.s", fopOutput+"train.t", fopOutput 
+		+ "training.s-t.A3", fopOutput 
+		+ "training.t-s.A3", false);
+		
+		fopOutput=PathConstanct.PATH_PROJECT_TTT_ADDTERMS_DATA+"v5_allFolds"+File.separator+"fold-6"+File.separator;
+		generateTotalAlignment(fopOutput, fopOutput+"train.s", fopOutput+"train.t", fopOutput 
+		+ "training.s-t.A3", fopOutput 
+		+ "training.t-s.A3", false);
+		
+		fopOutput=PathConstanct.PATH_PROJECT_TTT_ADDTERMS_DATA+"v5_allFolds"+File.separator+"fold-7"+File.separator;
+		generateTotalAlignment(fopOutput, fopOutput+"train.s", fopOutput+"train.t", fopOutput 
+		+ "training.s-t.A3", fopOutput 
+		+ "training.t-s.A3", false);
+		
+		fopOutput=PathConstanct.PATH_PROJECT_TTT_ADDTERMS_DATA+"v5_allFolds"+File.separator+"fold-8"+File.separator;
+		generateTotalAlignment(fopOutput, fopOutput+"train.s", fopOutput+"train.t", fopOutput 
+		+ "training.s-t.A3", fopOutput 
+		+ "training.t-s.A3", false);
+		
+		fopOutput=PathConstanct.PATH_PROJECT_TTT_ADDTERMS_DATA+"v5_allFolds"+File.separator+"fold-9"+File.separator;
+		generateTotalAlignment(fopOutput, fopOutput+"train.s", fopOutput+"train.t", fopOutput 
+		+ "training.s-t.A3", fopOutput 
+		+ "training.t-s.A3", false);
+		
+		fopOutput=PathConstanct.PATH_PROJECT_TTT_ADDTERMS_DATA+"v5_allFolds"+File.separator+"fold-10"+File.separator;
 		generateTotalAlignment(fopOutput, fopOutput+"train.s", fopOutput+"train.t", fopOutput 
 		+ "training.s-t.A3", fopOutput 
 		+ "training.t-s.A3", false);

@@ -105,18 +105,24 @@ public class ReGenerateAlignment {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String fopOutput = PathConstanct.PATH_PROJECT_TTT_ADDTERMS_DATA;
-
-		for(int i=0;i<arr5LibPrefix.length;i++){
-			
-			FileIO.writeStringToFile("", fopOutput+arr5LibPrefix[i]+".training.s-t.A3");
-			FileIO.writeStringToFile("", fopOutput+arr5LibPrefix[i]+".training.t-s.A3");
-			generateTotalAlignment(fopOutput, fopOutput+arr5LibPrefix[i]+".source.txt", fopOutput+arr5LibPrefix[i]+".target.txt", fopOutput + arr5LibPrefix[i]
-					+ ".training.s-t.A3", fopOutput + arr5LibPrefix[i]
-					+ ".training.t-s.A3", false);
-			System.out.println(arr5LibPrefix[i]);
-			
-		}
+//		String fopOutput = PathConstanct.PATH_PROJECT_TTT_ADDTERMS_DATA;
+//		for(int i=0;i<arr5LibPrefix.length;i++){
+//			
+//			FileIO.writeStringToFile("", fopOutput+arr5LibPrefix[i]+".training.s-t.A3");
+//			FileIO.writeStringToFile("", fopOutput+arr5LibPrefix[i]+".training.t-s.A3");
+//			generateTotalAlignment(fopOutput, fopOutput+arr5LibPrefix[i]+".source.txt", fopOutput+arr5LibPrefix[i]+".target.txt", fopOutput + arr5LibPrefix[i]
+//					+ ".training.s-t.A3", fopOutput + arr5LibPrefix[i]
+//					+ ".training.t-s.A3", false);
+//			System.out.println(arr5LibPrefix[i]);
+//			
+//		}
+		
+		String fopOutput=PathConstanct.PATH_PROJECT_TTT_ADDTERMS_DATA+"v5_allFolds"+File.separator+"b11_fold-1"+File.separator;
+		generateTotalAlignment(fopOutput, fopOutput+".source.txt", fopOutput+".target.txt", fopOutput 
+		+ ".training.s-t.A3", fopOutput 
+		+ ".training.t-s.A3", false);
+		
+		
 	}
 
 }

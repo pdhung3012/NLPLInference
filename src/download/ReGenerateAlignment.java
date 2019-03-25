@@ -50,7 +50,7 @@ public class ReGenerateAlignment {
 		}
 		for (int i = 0; i < sourceSequences.size(); i++) {
 			String source = sourceSequences.get(i), target = targetSequences.get(i);
-			String[] sTokens = source.trim().split(" "), tTokens = target.trim().split(" ");
+			String[] sTokens = source.trim().split("\\s+"), tTokens = target.trim().split("\\s+");
 //			if (doVerify) {
 //				if (sTokens.length != tTokens.length) {
 //					numbers[1]++;
@@ -117,10 +117,10 @@ public class ReGenerateAlignment {
 //			
 //		}
 		
-		String fopOutput=PathConstanct.PATH_PROJECT_TTT_ADDTERMS_DATA+"v5_allFolds"+File.separator+"b11_fold-1"+File.separator;
-		generateTotalAlignment(fopOutput, fopOutput+".source.txt", fopOutput+".target.txt", fopOutput 
-		+ ".training.s-t.A3", fopOutput 
-		+ ".training.t-s.A3", false);
+		String fopOutput=PathConstanct.PATH_PROJECT_TTT_ADDTERMS_DATA+"v5_allFolds"+File.separator+"b11_fold-2"+File.separator;
+		generateTotalAlignment(fopOutput, fopOutput+"train.s", fopOutput+"train.t", fopOutput 
+		+ "training.s-t.A3", fopOutput 
+		+ "training.t-s.A3", false);
 		
 		
 	}

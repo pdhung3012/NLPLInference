@@ -26,7 +26,7 @@ public class AnalyzeTranslatedResultCorrectMapping {
 		String fpTestSource=fopInput+"test.s";
 		String fpTestTarget=fopInput+"test.t";
 		String fpTestTranslatedResult=fopInput+"correctOrderTranslatedResult.txt";
-		String fpIdAndAllContent=fopMap+"a_mapIdAndContent.txt";
+		String fpIdAndAllContent=fopMap+"a_mapTotalIdAndContent.txt";
 		
 		ArrayList<String> lstLocations=FileUtil.getFileStringArray(fpTestLocation);
 		ArrayList<String> lstSourceSequences=FileUtil.getFileStringArray(fpTestSource);
@@ -55,6 +55,7 @@ public class AnalyzeTranslatedResultCorrectMapping {
 		HashMap<String,HashSet<String>> mapICSetTarget=new LinkedHashMap<String,HashSet<String>>();
 		HashMap<String,HashSet<String>> mapICReceiver=new LinkedHashMap<String,HashSet<String>>();
 		HashMap<String,HashSet<Integer>> mapICLine=new LinkedHashMap<String,HashSet<Integer>>();
+		System.out.println(lstLocations.size());
 		for(int i=0;i<lstLocations.size();i++){
 			String[] arrItemSource=lstSourceSequences.get(i).split("\\s+");
 			String[] arrItemTarget=lstTargetSequences.get(i).split("\\s+");
@@ -63,10 +64,11 @@ public class AnalyzeTranslatedResultCorrectMapping {
 			for(int j=0;j<arrItemSource.length;j++){
 				if(arrItemTarget[j].startsWith("E-Total")){
 					if( arrItemTarget[j].equals(arrItemTrans[j])){
+						//System.out.println(j+" "+arrItemSource[j]+" "+arrItemTarget[j]);
 						if(!mapICAppear.containsKey(arrItemSource[j])){
 							mapICAppear.put(arrItemSource[j], 1);
 						} else{
-							mapICAppear.put(arrItemSource[j], mapICAppear.get(arrItemSource[j]+1));
+							mapICAppear.put(arrItemSource[j], mapICAppear.get(arrItemSource[j])+1);
 						}
 						
 						if(!mapICSetTarget.containsKey(arrItemSource[j])){

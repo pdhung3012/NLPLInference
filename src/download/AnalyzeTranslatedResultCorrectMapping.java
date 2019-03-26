@@ -135,8 +135,8 @@ public class AnalyzeTranslatedResultCorrectMapping {
 			HashMap<String,Integer> mSourceTarget=mapICSourceTarget.get(strKey);
 			mSourceTarget=SortUtil.sortHashMapStringIntByValueDesc(mSourceTarget);
 			for(String it:mSourceTarget.keySet()){
-				sb2CSV.append(strKey+","+it+","+mapICSourceTarget.get(it)+"\n");
-				sb2TXT.append(strKey+"\t"+mapIdAndTotalContent.get(it)+"\t"+mapICSourceTarget.get(it)+"\n");
+				sb2CSV.append(strKey+","+it+","+mSourceTarget.get(it)+"\n");
+				sb2TXT.append(strKey+"\t"+mapIdAndTotalContent.get(it)+"\t"+mSourceTarget.get(it)+"\n");
 			}
 		}
 		FileIO.writeStringToFile(sbCSV.toString()+"\n", fpStatIdenByNumCSV);

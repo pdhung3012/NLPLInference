@@ -40,6 +40,8 @@ public class AnalyzeTranslatedResultCorrectMapping {
 		String fpStatIdenBySetTXT=fopEval+"statCorrectSetTarget.txt";		
 		String fpStatLineTXT=fopEval+"statCorrectLine.txt";
 		String fpStatReceiverTXT=fopEval+"statCorrectReceiver.txt";
+		String fpStatSourceTargetCSV=fopEval+"statST.csv";
+		String fpStatSourceTargetTXT=fopEval+"statST.txt";
 		
 		HashMap<String, String> mapIdAndTotalContent = MapUtil
 				.getHashMapFromFile(fpIdAndAllContent);
@@ -55,6 +57,7 @@ public class AnalyzeTranslatedResultCorrectMapping {
 		HashMap<String,HashSet<String>> mapICSetTarget=new LinkedHashMap<String,HashSet<String>>();
 		HashMap<String,HashSet<String>> mapICReceiver=new LinkedHashMap<String,HashSet<String>>();
 		HashMap<String,HashSet<Integer>> mapICLine=new LinkedHashMap<String,HashSet<Integer>>();
+		HashMap<String,HashMap<String,Integer>> mapICSourceTarget=new LinkedHashMap<String,HashMap<String,Integer>>();
 		System.out.println(lstLocations.size());
 		for(int i=0;i<lstLocations.size();i++){
 			String[] arrItemSource=lstSourceSequences.get(i).split("\\s+");
@@ -67,8 +70,19 @@ public class AnalyzeTranslatedResultCorrectMapping {
 						//System.out.println(j+" "+arrItemSource[j]+" "+arrItemTarget[j]);
 						if(!mapICAppear.containsKey(arrItemSource[j])){
 							mapICAppear.put(arrItemSource[j], 1);
+							HashMap<String,Integer> mapIt=new LinkedHashMap<String, Integer>();
+							mapIt.put(arrItemTarget[j],1);
+							mapICSourceTarget.put(arrItemSource[j], mapIt);
 						} else{
 							mapICAppear.put(arrItemSource[j], mapICAppear.get(arrItemSource[j])+1);
+							HashMap<String,Integer> mapIt=mapICSourceTarget.get(arrItemSource[j]);
+							if(!mapIt.containsKey(arrItemTarget[j])){
+								mapIt.put(arrItemTarget[j],1);
+							} else{
+								mapIt.put(arrItemTarget[j], mapIt.get(arrItemTarget[j])+1);
+							}
+							
+							
 						}
 						
 						if(!mapICSetTarget.containsKey(arrItemSource[j])){
@@ -113,11 +127,21 @@ public class AnalyzeTranslatedResultCorrectMapping {
 		StringBuilder sbTXT=new StringBuilder();
 		
 		sbCSV=new StringBuilder();
+		StringBuilder sb2CSV=new StringBuilder();
+		StringBuilder sb2TXT=new StringBuilder();
 		sbCSV.append("Identifier,Num Correct\n");
 		for(String strKey:mapICAppear.keySet()){
 			sbCSV.append(strKey+","+mapICAppear.get(strKey)+"\n");
+			HashMap<String,Integer> mSourceTarget=mapICSourceTarget.get(strKey);
+			mSourceTarget=SortUtil.sortHashMapStringIntByValueDesc(mSourceTarget);
+			for(String it:mSourceTarget.keySet()){
+				sb2CSV.append(strKey+","+it+","+mapICSourceTarget.get(it)+"\n");
+				sb2TXT.append(strKey+"\t"+mapIdAndTotalContent.get(it)+"\t"+mapICSourceTarget.get(it)+"\n");
+			}
 		}
 		FileIO.writeStringToFile(sbCSV.toString()+"\n", fpStatIdenByNumCSV);
+		FileIO.writeStringToFile(sb2CSV.toString()+"\n", fpStatSourceTargetCSV);
+		FileIO.writeStringToFile(sb2TXT.toString()+"\n", fpStatSourceTargetTXT);
 		
 		sbCSV=new StringBuilder();
 		sbTXT=new StringBuilder();

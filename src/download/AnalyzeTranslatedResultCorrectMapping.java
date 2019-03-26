@@ -159,7 +159,7 @@ public class AnalyzeTranslatedResultCorrectMapping {
 		FileIO.writeStringToFile(sbCSV.toString()+"\n", fpStatLineCSV);
 		FileIO.writeStringToFile(sbTXT.toString()+"\n", fpStatLineTXT);
 		
-		System.out.println("end")
+		System.out.println("end");
 		
 		
 		

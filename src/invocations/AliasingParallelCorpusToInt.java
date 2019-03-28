@@ -1,6 +1,7 @@
 package invocations;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -42,22 +43,24 @@ public class AliasingParallelCorpusToInt {
 	}
 	
 	public static void main(String[] args) {
-		String folderInput=PathConstanct.PATH_PROJECT_TTT_DATA;
-		String folderNormalize=PathConstanct.PATH_PROJECT_TTT_ALIAS;
-
-		String fpInTrainSource=folderInput+"train.source.txt";
-		String fpInTrainTarget=folderInput+"train.target.txt";
-		String fpInTuneSource=folderInput+"tune.source.txt";
-		String fpInTuneTarget=folderInput+"tune.target.txt";
-		String fpInTestSource=folderInput+"test.source.txt";
-		String fpInTestTarget=folderInput+"test.target.txt";
+		String folderInput=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA;
+		String folderNormalize=folderInput+"alias"+File.separator;
+		new File(folderNormalize).mkdir();
 		
-		String fpOutTrainSource=folderNormalize+"train.source.txt";
-		String fpOutTrainTarget=folderNormalize+"train.target.txt";
-		String fpOutTuneSource=folderNormalize+"tune.source.txt";
-		String fpOutTuneTarget=folderNormalize+"tune.target.txt";
-		String fpOutTestSource=folderNormalize+"test.source.txt";
-		String fpOutTestTarget=folderNormalize+"test.target.txt";
+
+		String fpInTrainSource=folderInput+"train.s";
+		String fpInTrainTarget=folderInput+"train.t";
+		String fpInTuneSource=folderInput+"tune.s";
+		String fpInTuneTarget=folderInput+"tune.t";
+		String fpInTestSource=folderInput+"test.s";
+		String fpInTestTarget=folderInput+"test.t";
+		
+		String fpOutTrainSource=folderNormalize+"train.s";
+		String fpOutTrainTarget=folderNormalize+"train.t";
+		String fpOutTuneSource=folderNormalize+"tune.s";
+		String fpOutTuneTarget=folderNormalize+"tune.t";
+		String fpOutTestSource=folderNormalize+"test.s";
+		String fpOutTestTarget=folderNormalize+"test.t";
 		String fpAlias=folderNormalize+"alias.txt";
 		
 		HashMap<String,Integer> mapVocabStrInt=new LinkedHashMap<>();
@@ -94,6 +97,9 @@ public class AliasingParallelCorpusToInt {
 				sbResult=new StringBuilder();
 			}
 		}
+		
+		GenerateVocabulary.getVocabulary(folderNormalize+"train.s", folderNormalize+"vocab.s");
+		GenerateVocabulary.getVocabulary(folderNormalize+"train.t", folderNormalize+"vocab.t");
 		
 
 	}

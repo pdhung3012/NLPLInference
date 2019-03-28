@@ -26,7 +26,7 @@ public class AliasingParallelCorpusToInt {
 	
 	public static void addToHashMap(HashMap<String,Integer> mapVocabStrInt,String fpFile){
 		
-		try (BufferedReader br = Files.newBufferedReader(Paths.get(fpFile), StandardCharsets.US_ASCII)) {
+		try (BufferedReader br = Files.newBufferedReader(Paths.get(fpFile), StandardCharsets.ISO_8859_1)) {
 		    for (String line = null; (line = tryGetLine(br)) != null;) {
 		    	//System.out.println(line);
 		    	String[] arrItems=line.trim().split("\\s+");
@@ -108,7 +108,7 @@ public class AliasingParallelCorpusToInt {
 		StringBuilder sbResult=new StringBuilder();
 		FileIO.writeStringToFile("", fpOutput);
 		int i=0;
-		try (BufferedReader br = Files.newBufferedReader(Paths.get(fpInput), StandardCharsets.US_ASCII)) {
+		try (BufferedReader br = Files.newBufferedReader(Paths.get(fpInput), StandardCharsets.ISO_8859_1)) {
 		    for (String line = null; (line = tryGetLine(br)) != null;) {
 		    	//System.out.println(line);
 		    	i++;

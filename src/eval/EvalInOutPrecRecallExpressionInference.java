@@ -36,8 +36,8 @@ public class EvalInOutPrecRecallExpressionInference {
 		String result="";
 		String[] arrLine=info.split(SplitInvocationCharacter);
 		//System.out.println(arrLine[0]);
-		if(arrLine.length>2){
-			String sigInfo=arrLine[arrLine.length-2];
+		if(arrLine.length>4){
+			String sigInfo=arrLine[arrLine.length-4];
 			
 			String[] arrSigs=sigInfo.split("#");
 			if(arrSigs.length>=2){

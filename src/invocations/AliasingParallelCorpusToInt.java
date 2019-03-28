@@ -46,6 +46,7 @@ public class AliasingParallelCorpusToInt {
 		String folderInput=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA;
 		String folderNormalize=folderInput+"alias"+File.separator;
 		new File(folderNormalize).mkdir();
+		int numRestricted=100000;
 		
 
 		String fpInTrainSource=folderInput+"train.s";
@@ -98,8 +99,8 @@ public class AliasingParallelCorpusToInt {
 			}
 		}
 		
-		GenerateVocabulary.getVocabulary(folderNormalize+"train.s", folderNormalize+"vocab.s");
-		GenerateVocabulary.getVocabulary(folderNormalize+"train.t", folderNormalize+"vocab.t");
+		GenerateVocabulary.getDamnRestrictedVocabulary(folderNormalize+"train.s", folderNormalize+"vocab.s",numRestricted);
+		GenerateVocabulary.getDamnRestrictedVocabulary(folderNormalize+"train.t", folderNormalize+"vocab.t",numRestricted);
 		
 
 	}

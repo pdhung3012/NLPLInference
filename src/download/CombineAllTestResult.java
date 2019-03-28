@@ -10,7 +10,7 @@ public class CombineAllTestResult {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String fop_input=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA;
-		String fop_output=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"b11_all";
+		String fop_output=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"b11_all"+File.separator;
 		new File(fop_output).mkdir();
 		
 		String fn_loc="test.locations.txt";

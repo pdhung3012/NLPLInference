@@ -33,6 +33,7 @@ public class AnalyzeTranslatedResultCorrectMapping {
 		ArrayList<String> lstTargetSequences=FileUtil.getFileStringArray(fpTestTarget);
 		ArrayList<String> lstTransSequences=FileUtil.getFileStringArray(fpTestTranslatedResult);
 		
+		new File(fopEval).mkdirs();
 		String fpStatIdenByNumCSV=fopEval+"statCorrectNum.csv";
 		String fpStatIdenBySetCSV=fopEval+"statCorrectSetTarget.csv";		
 		String fpStatLineCSV=fopEval+"statCorrectLine.csv";

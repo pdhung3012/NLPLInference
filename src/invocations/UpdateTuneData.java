@@ -9,6 +9,7 @@ import java.util.LinkedHashSet;
 
 import utils.FileUtil;
 import consts.PathConstanct;
+import download.ReGenerateAlignment;
 
 public class UpdateTuneData {
 
@@ -26,6 +27,8 @@ public class UpdateTuneData {
 		String fp_newTrainSource=fop_newTrain+"train.s";
 		String fp_newTrainTarget=fop_newTrain+"train.t";
 		String fp_newTrainLoc=fop_newTrain+"train.locations.txt";
+		String fp_newTrainST=fop_newTrain+"training.s-t.A3";
+		String fp_newTrainTS=fop_newTrain+"training.t-s.A3";
 		
 		ArrayList<String> arrTrainLocation=FileUtil.getFileStringArray(fp_trainLocation);
 		ArrayList<String> arrTrainSource=FileUtil.getFileStringArray(fp_trainSource);
@@ -63,6 +66,8 @@ public class UpdateTuneData {
 		}catch(Exception ex){
 			
 		}
+		
+		ReGenerateAlignment.generateTotalAlignment(fop_newTrain,fp_newTrainSource,fp_newTrainTarget,fp_newTrainST,fp_newTrainTS,false);
 	}
 
 }

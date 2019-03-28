@@ -14,7 +14,7 @@ public class GenerateVocabulary {
 
 	public static void getVocabulary(String fpFile,String fpVocab){
 		HashSet<String> setVocab=new LinkedHashSet<String>();
-		try (BufferedReader br = Files.newBufferedReader(Paths.get(fpFile), StandardCharsets.UTF_8)) {
+		try (BufferedReader br = Files.newBufferedReader(Paths.get(fpFile), StandardCharsets.ISO_8859_1)) {
 		    
 			for (String line = null; (line = br.readLine()) != null;) {
 		    	String[] arrItems=line.trim().split("\\s+");

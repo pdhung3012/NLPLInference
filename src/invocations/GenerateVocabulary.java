@@ -47,9 +47,9 @@ public class GenerateVocabulary {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String fopVocab=PathConstanct.PATH_PROJECT_TTT_ALIAS;
-		getVocabulary(fopVocab+"train.source.txt", fopVocab+"vocab.source.txt");
-		getVocabulary(fopVocab+"train.target.txt", fopVocab+"vocab.target.txt");
+		String fopVocab=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA;
+		getVocabulary(fopVocab+"train.s", fopVocab+"vocab.s");
+		getVocabulary(fopVocab+"train.t", fopVocab+"vocab.t");
 	}
 
 }

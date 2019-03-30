@@ -45,7 +45,7 @@ public class CombineReplaceTargetIdForTestProject {
 		File[] arrIn=fInFolder.listFiles();
 HashMap<String,Integer> mapTotalIdenAndAppear=getMapFromFileStringInt(mapTrainFolder+"a_mapTotalIdenAppear.txt");
 		HashMap<String,String> mapTotalIdenAndId=getMapFromFileStringString(mapTrainFolder+"a_mapTotalIdenAndId.txt");
-		HashMap<String,String> mapTotalIdAndAllContent=getMapFromFileStringString("a_mapTotalIdAndContent.txt");
+		HashMap<String,String> mapTotalIdAndAllContent=getMapFromFileStringString(mapTrainFolder+"a_mapTotalIdAndContent.txt");
 		
 		for(int i=0;i<arrIn.length;i++){
 			if(arrIn[i].isDirectory()){

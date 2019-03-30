@@ -269,15 +269,16 @@ public static void main(String[] args) {
 	// System.exit(0);
 	String fopSequence = PathConstanct.PATH_PROJECT_TTT_TEST_IDENTIFIER_PROJECT+"TestExpInference"+File.separator;
 	String fopTestMap=PathConstanct.PATH_PROJECT_TTT_TEST_IDENTIFIER_PROJECT+"testMap"+File.separator;
-	String fopOutFinal=fopSequence+"outFinalTest"+File.separator;
+	String fopOutFinal=fopSequence+"outTest"+File.separator;
+	String fopOutOrigin=fopSequence+"outOrigin"+File.separator;
 	new File(fopOutFinal).mkdir();
+	new File(fopOutOrigin).mkdir();
 
 	String fpTempForWrite = fopSequence
 			+ "tempForWrite.txt";
 	String fpIdAndMapContent = fopTestMap
 			+ "a_mapTestTotalIdAndContent.txt";
-	int maximumLine = 100000;
-
+	
 	HashMap<String, String> mapIdAndTotalContent = MapUtil
 			.getHashMapFromFile(fpIdAndMapContent);
 	HashMap<String,String> mapAddTermSource=new LinkedHashMap<>();
@@ -320,7 +321,7 @@ public static void main(String[] args) {
 		String strFilterSource = convertFromArrayListToString(listFilterSources);
 		String strFilterLocation = convertFromArrayListToString(listFilterLocations);
 		
-		FileIO.appendStringToFile(strFilterLocation, fopOutFinal + "test.locations.txt");
+		FileIO.writeStringToFile(strFilterLocation, fopOutFinal + "test.locations.txt");
 
 		HashMap<String, String> mapReplaceId = CombineSequenceFromProjects
 				.getMapFromFileStringString(fpMapReplaceId);
@@ -333,7 +334,9 @@ public static void main(String[] args) {
 				listNumbers, strNewTarget, fpTempForWrite);
 		String fpTermSource=fopOutFinal+"test.s";
 		String fpTermTarget=fopOutFinal+"test.t";
-//
+		FileIO.writeStringToFile(strFilterSource, fopOutOrigin+"test.s");
+		FileIO.writeStringToFile(strFilterForNewTarget, fopOutOrigin+"test.t");
+//	
 		addTermToOriginSourceAndTarget(strFilterSource, strFilterForNewTarget, mapAddTermSource, mapAddTermTarget, fpTermSource, fpTermTarget);
 		
 

@@ -14,6 +14,8 @@ public class PathConstanct {
 	public static String PATH_PROJECT_TTT_ADDTERMS_DATA = "G:\\projectAddTermData\\";
 	public static String PATH_PROJECT_TTT_CUR_EVAL_DATA = "G:\\projectAddTermData\\v5_allFolds\\b12_tune_fold-1\\";
 	public static String PATH_PROJECT_TTT_ALIAS = "G:\\projectTrainTestAlias\\";
+	public static String PATH_PROJECT_TTT_TEST_INPUT_PROJECT = "G:\\expInferenceProject\\";
+	public static String PATH_PROJECT_TTT_TEST_IDENTIFIER_PROJECT = "G:\\expInferSeq\\";
 	public static String PATH_PROJECT_TTT_SPLIT_ALIAS = "G:\\projectTrainTestSplitAlias\\";
 	public static String PATH_PROJECT_STATTYPE_DATA = "G:\\StatTypeOldData\\";
 	public static String PATH_PROJECT_STATTYPE_ALIAS = "G:\\StatTypeAlias\\";

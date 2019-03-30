@@ -53,9 +53,9 @@ public class UpdateTuneData {
 		System.out.println("tune "+setTuneLocs.size()+" old train "+arrTrainLocation.size()+" "+(arrTrainLocation.size()-setTuneLocs.size()));
 		for(int i=0;i<arrTrainLocation.size();i++){
 			if(!setTuneLocs.contains(arrTrainLocation.get(i))){
-				ptTrainLoc.print(arrTrainLocation.get(i));
-				ptTrainSource.print(arrTrainSource.get(i));
-				ptTrainTarget.print(arrTrainTarget.get(i));
+				ptTrainLoc.print(arrTrainLocation.get(i)+"\n");
+				ptTrainSource.print(arrTrainSource.get(i)+"\n");
+				ptTrainTarget.print(arrTrainTarget.get(i)+"\n");
 			}
 		}
 		

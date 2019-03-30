@@ -268,7 +268,7 @@ public static void main(String[] args) {
 	// TODO Auto-generated method stub
 	// System.exit(0);
 	String fopSequence = PathConstanct.PATH_PROJECT_TTT_TEST_IDENTIFIER_PROJECT+"TestExpInference"+File.separator;
-	String fopTestMap=PathConstanct.PATH_PROJECT_TTT_TEST_IDENTIFIER_PROJECT+"testMap"+File.separator;
+	String fopTestMap=PathConstanct.PATH_PROJECT_TTT_TEST_IDENTIFIER_PROJECT+"orgTestMap"+File.separator;
 	String fopOutFinal=fopSequence+"outTest"+File.separator;
 	String fopOutOrigin=fopSequence+"outOrigin"+File.separator;
 	new File(fopOutFinal).mkdir();
@@ -277,7 +277,7 @@ public static void main(String[] args) {
 	String fpTempForWrite = fopSequence
 			+ "tempForWrite.txt";
 	String fpIdAndMapContent = fopTestMap
-			+ "a_mapTestTotalIdAndContent.txt";
+			+ "a_mapTotalIdAndContent.txt";
 	
 	HashMap<String, String> mapIdAndTotalContent = MapUtil
 			.getHashMapFromFile(fpIdAndMapContent);

@@ -36,8 +36,8 @@ public class CombineReplaceTargetIdForTestProject {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String inputFolder=PathConstanct.PATH_PROJECT_TTT_TEST_IDENTIFIER_PROJECT;
-		String mapTrainFolder=PathConstanct.PATH_PROJECT_TTT_TEST_IDENTIFIER_PROJECT+"trainMap"+File.separator;
-		String mapTestFolder=PathConstanct.PATH_PROJECT_TTT_TEST_IDENTIFIER_PROJECT+"testMap"+File.separator;
+		String mapTrainFolder=PathConstanct.PATH_PROJECT_TTT_TEST_IDENTIFIER_PROJECT+"orgTrainMap"+File.separator;
+		String mapTestFolder=PathConstanct.PATH_PROJECT_TTT_TEST_IDENTIFIER_PROJECT+"orgTestMap"+File.separator;
 //		String totalSignatureFolder=PathConstanct.PATH_COMBINE_SIG_PROJECT;
 		
 		File fInFolder=new File(inputFolder);

@@ -333,6 +333,7 @@ public static void main(String[] args) {
 				listNumbers, strNewTarget, fpTempForWrite);
 		String fpTermSource=fopOutFinal+"test.s";
 		String fpTermTarget=fopOutFinal+"test.t";
+//
 		addTermToOriginSourceAndTarget(strFilterSource, strFilterForNewTarget, mapAddTermSource, mapAddTermTarget, fpTermSource, fpTermTarget);
 		
 

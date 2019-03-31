@@ -128,9 +128,9 @@ public static void collectSourceAndTargetTerm(HashMap<String,String> mapIn,HashM
 	}
 }
 
-public static void refineSourceTarget(String strSource,String strTarget,String fpNewSource,String fpNewTarget){
-	String[] arrSource=strSource.split("\n");
-	String[] arrTarget=strSource.split("\n");
+public static void refineSourceTarget(String fpTermSource,String fpTermTarget,String fpNewSource,String fpNewTarget){
+	String[] arrSource=FileIO.readStringFromFile(fpTermSource).split("\n");
+	String[] arrTarget=FileIO.readStringFromFile(fpTermTarget).split("\n");
 	String strNewSource="",strNewTarget="";
 	for(int i=0;i<arrSource.length;i++){
 		String[] arrItS=arrSource[i].split("\\s+");
@@ -142,11 +142,11 @@ public static void refineSourceTarget(String strSource,String strTarget,String f
 //				String targetID=arrItT[j];
 				int start=j-1;
 				int end =j+1;
-				while(start>=0 && arrItS[j].endsWith("#var")){
+				while(start>=0 && arrItS[start].endsWith("#var")){
 					start--;
 				}
 				
-				while(end<arrItS.length && arrItS[j].endsWith("#term")){
+				while(end<arrItS.length && arrItS[end].endsWith("#term")){
 					end++;
 				}
 				for(int k=start+1;k<end;k++){
@@ -156,7 +156,7 @@ public static void refineSourceTarget(String strSource,String strTarget,String f
 			}
 		}
 		strNewSource+=strLineS+"\n";
-		strNewTarget=strLineT+"\n";
+		strNewTarget+=strLineT+"\n";
 	}
 	FileIO.writeStringToFile(strNewSource, fpNewSource);
 	FileIO.writeStringToFile(strNewTarget, fpNewTarget);
@@ -302,7 +302,7 @@ public static void main(String[] args) {
 	// TODO Auto-generated method stub
 	// System.exit(0);
 	String fopSequence = PathConstanct.PATH_PROJECT_TTT_TEST_IDENTIFIER_PROJECT+"TestExpInference"+File.separator;
-	String fopTestMap=PathConstanct.PATH_PROJECT_TTT_TEST_IDENTIFIER_PROJECT+"orgTestMap"+File.separator;
+	String fopTestMap=PathConstanct.PATH_PROJECT_TTT_TEST_IDENTIFIER_PROJECT+"testMap"+File.separator;
 	String fopOutFinal=fopSequence+"outTest"+File.separator;
 	String fopOutOrigin=fopSequence+"outOrigin"+File.separator;
 	String fopOutRemoveContext=fopSequence+"outRemoveContext"+File.separator;
@@ -373,9 +373,9 @@ public static void main(String[] args) {
 		FileIO.writeStringToFile(strFilterSource, fopOutOrigin+"test.s");
 		FileIO.writeStringToFile(strFilterForNewTarget, fopOutOrigin+"test.t");
 //	
-		refineSourceTarget(strFilterSource, strFilterForNewTarget,fopOutRemoveContext+"test.s", fopOutRemoveContext+"test.t");
-		addTermToOriginSourceAndTarget(strFilterSource, strFilterForNewTarget, mapAddTermSource, mapAddTermTarget, fpTermSource, fpTermTarget);
 		
+		addTermToOriginSourceAndTarget(strFilterSource, strFilterForNewTarget, mapAddTermSource, mapAddTermTarget, fpTermSource, fpTermTarget);
+		refineSourceTarget(fpTermSource, fpTermTarget,fopOutRemoveContext+"test.s", fopOutRemoveContext+"test.t");
 
 	}
 	

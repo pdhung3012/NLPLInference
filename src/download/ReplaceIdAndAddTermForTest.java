@@ -128,6 +128,40 @@ public static void collectSourceAndTargetTerm(HashMap<String,String> mapIn,HashM
 	}
 }
 
+public static void refineSourceTarget(String strSource,String strTarget,String fpNewSource,String fpNewTarget){
+	String[] arrSource=strSource.split("\n");
+	String[] arrTarget=strSource.split("\n");
+	String strNewSource="",strNewTarget="";
+	for(int i=0;i<arrSource.length;i++){
+		String[] arrItS=arrSource[i].split("\\s+");
+		String[] arrItT=arrTarget[i].split("\\s+");
+		LinkedHashSet<Integer> setAddToLine=new LinkedHashSet<Integer>();
+		String strLineS="",strLineT="";
+		for(int j=0;j<arrItS.length;j++){
+			if(arrItS[j].endsWith("#identifier")){
+//				String targetID=arrItT[j];
+				int start=j-1;
+				int end =j+1;
+				while(start>=0 && arrItS[j].endsWith("#var")){
+					start--;
+				}
+				
+				while(end<arrItS.length && arrItS[j].endsWith("#term")){
+					end++;
+				}
+				for(int k=start+1;k<end;k++){
+					strLineS+=arrItS[k]+" ";
+					strLineT+=arrItT[k]+" ";
+				}
+			}
+		}
+		strNewSource+=strLineS+"\n";
+		strNewTarget=strLineT+"\n";
+	}
+	FileIO.writeStringToFile(strNewSource, fpNewSource);
+	FileIO.writeStringToFile(strNewTarget, fpNewTarget);
+}
+
 public static void addTermToOriginSourceAndTarget(String strFilterSource,String strFilterTarget,HashMap<String,String> mapSource,HashMap<String,String> mapTarget,String fpTermSource,String fpTermTarget){
 	String[] arrSource=strFilterSource.split("\n");
 	String[] arrTarget=strFilterTarget.split("\n");
@@ -271,8 +305,10 @@ public static void main(String[] args) {
 	String fopTestMap=PathConstanct.PATH_PROJECT_TTT_TEST_IDENTIFIER_PROJECT+"orgTestMap"+File.separator;
 	String fopOutFinal=fopSequence+"outTest"+File.separator;
 	String fopOutOrigin=fopSequence+"outOrigin"+File.separator;
+	String fopOutRemoveContext=fopSequence+"outRemoveContext"+File.separator;
 	new File(fopOutFinal).mkdir();
 	new File(fopOutOrigin).mkdir();
+	new File(fopOutRemoveContext).mkdir();
 
 	String fpTempForWrite = fopSequence
 			+ "tempForWrite.txt";
@@ -337,6 +373,7 @@ public static void main(String[] args) {
 		FileIO.writeStringToFile(strFilterSource, fopOutOrigin+"test.s");
 		FileIO.writeStringToFile(strFilterForNewTarget, fopOutOrigin+"test.t");
 //	
+		refineSourceTarget(strFilterSource, strFilterForNewTarget,fopOutRemoveContext+"test.s", fopOutRemoveContext+"test.t");
 		addTermToOriginSourceAndTarget(strFilterSource, strFilterForNewTarget, mapAddTermSource, mapAddTermTarget, fpTermSource, fpTermTarget);
 		
 

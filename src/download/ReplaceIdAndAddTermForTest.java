@@ -162,6 +162,50 @@ public static void refineSourceTarget(String fpTermSource,String fpTermTarget,St
 	FileIO.writeStringToFile(strNewTarget, fpNewTarget);
 }
 
+public static void refineRemoveSuggestion(String fpTermSource,String fpTermTarget,String fpNewSource,String fpNewTarget){
+	String[] arrSource=FileIO.readStringFromFile(fpTermSource).split("\n");
+	String[] arrTarget=FileIO.readStringFromFile(fpTermTarget).split("\n");
+	String strNewSource="",strNewTarget="";
+	for(int i=0;i<arrSource.length;i++){
+		String[] arrItS=arrSource[i].split("\\s+");
+		String[] arrItT=arrTarget[i].split("\\s+");
+		LinkedHashSet<Integer> setRemove=new LinkedHashSet<Integer>();
+		String strLineS="",strLineT="";
+		for(int j=0;j<arrItS.length;j++){
+			if(arrItS[j].endsWith("#identifier")){
+//				String targetID=arrItT[j];
+				int start=j-1;
+				int end =j+1;
+				while(start>=0 && arrItS[start].endsWith("#var")){
+					start--;
+				}
+				
+				while(end<arrItS.length && arrItS[end].endsWith("#term")){
+					end++;
+				}
+				for(int k=start+1;k<end;k++){
+//					strLineS+=arrItS[k]+" ";
+//					strLineT+=arrItT[k]+" ";
+					if(j!=k){
+						setRemove.add(k);
+					}
+				}
+			}
+		}
+		
+		for(int j=0;j<arrItS.length;j++){
+			if(!setRemove.contains(j)){
+				strLineS+=arrItS[j]+" ";
+				strLineT+=arrItT[j]+" ";
+			}
+		}
+		strNewSource+=strLineS+"\n";
+		strNewTarget+=strLineT+"\n";
+	}
+	FileIO.writeStringToFile(strNewSource, fpNewSource);
+	FileIO.writeStringToFile(strNewTarget, fpNewTarget);
+}
+
 public static void addTermToOriginSourceAndTarget(String strFilterSource,String strFilterTarget,HashMap<String,String> mapSource,HashMap<String,String> mapTarget,String fpTermSource,String fpTermTarget){
 	String[] arrSource=strFilterSource.split("\n");
 	String[] arrTarget=strFilterTarget.split("\n");
@@ -306,9 +350,11 @@ public static void main(String[] args) {
 	String fopOutFinal=fopSequence+"outTest"+File.separator;
 	String fopOutOrigin=fopSequence+"outOrigin"+File.separator;
 	String fopOutRemoveContext=fopSequence+"outRemoveContext"+File.separator;
+	String fopOutRemoveSug=fopSequence+"outRemoveSug"+File.separator;
 	new File(fopOutFinal).mkdir();
 	new File(fopOutOrigin).mkdir();
 	new File(fopOutRemoveContext).mkdir();
+	new File(fopOutRemoveSug).mkdir();
 
 	String fpTempForWrite = fopSequence
 			+ "tempForWrite.txt";
@@ -376,6 +422,7 @@ public static void main(String[] args) {
 		
 		addTermToOriginSourceAndTarget(strFilterSource, strFilterForNewTarget, mapAddTermSource, mapAddTermTarget, fpTermSource, fpTermTarget);
 		refineSourceTarget(fpTermSource, fpTermTarget,fopOutRemoveContext+"test.s", fopOutRemoveContext+"test.t");
+		refineRemoveSuggestion(fpTermSource, fpTermTarget,fopOutRemoveSug+"test.s", fopOutRemoveSug+"test.t");
 
 	}
 	

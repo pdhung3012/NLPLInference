@@ -1572,8 +1572,8 @@ public class MethodEncoderVisitor extends ASTVisitor {
 	public boolean visit(VariableDeclarationFragment node) {
 		Type type = getType(node);
 		String utype = getUnresolvedType(type), rtype = getResolvedType(type);
-		this.partialTokens.append(" " + utype + " ");
-		this.fullTokens.append(" " + rtype + " ");
+		this.partialTokens.append(" " + utype + "#var ");
+		this.fullTokens.append(" " + rtype + "#var ");
 		if (node.getInitializer() != null) {
 			this.partialTokens.append("= ");
 			this.fullTokens.append("= ");

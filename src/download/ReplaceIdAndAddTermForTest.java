@@ -213,7 +213,6 @@ public static void refineRemoveSuggestionAddVarContext(String fpTermSource,Strin
 	for(int i=0;i<arrSource.length;i++){
 		String[] arrItS=arrSource[i].split("\\s+");
 		String[] arrItT=arrTarget[i].split("\\s+");
-		LinkedHashSet<Integer> setRemove=new LinkedHashSet<Integer>();
 		String strLineS="",strLineT="";
 		for(int j=0;j<arrItS.length;j++){
 			if(arrItS[j].endsWith("#identifier")){

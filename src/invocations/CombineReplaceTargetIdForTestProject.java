@@ -36,8 +36,8 @@ public class CombineReplaceTargetIdForTestProject {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String inputFolder=PathConstanct.PATH_PROJECT_TTT_TEST_IDENTIFIER_PROJECT;
-		String mapTrainFolder=PathConstanct.PATH_PROJECT_TTT_TEST_IDENTIFIER_PROJECT+"orgTrainMap"+File.separator;
-		String mapTestFolder=PathConstanct.PATH_PROJECT_TTT_TEST_IDENTIFIER_PROJECT+"orgTestMap"+File.separator;
+		String mapTrainFolder=PathConstanct.PATH_PROJECT_TTT_TEST_IDENTIFIER_PROJECT+"trainMap"+File.separator;
+		String mapTestFolder=PathConstanct.PATH_PROJECT_TTT_TEST_IDENTIFIER_PROJECT+"testMap"+File.separator;
 //		String totalSignatureFolder=PathConstanct.PATH_COMBINE_SIG_PROJECT;
 		
 		File fInFolder=new File(inputFolder);
@@ -99,8 +99,8 @@ HashMap<String,Integer> mapTotalIdenAndAppear=getMapFromFileStringInt(mapTrainFo
 			sbAppear.append(iden+"\t"+mapTotalIdenAndAppear.get(iden)+"\n");
 			sbId.append(iden+"\t"+mapTotalIdenAndId.get(iden)+"\n");
 			if(indexCount%100000==0 || indexCount==mapTotalIdenAndAppear.size()){
-				FileIO.appendStringToFile(sbId.toString(), mapTestFolder+"a_mapTestTotalIdenAndId.txt");
-				FileIO.appendStringToFile(sbAppear.toString(), mapTestFolder+"a_mapTestTotalIdenAppear.txt");
+				FileIO.appendStringToFile(sbId.toString(), mapTestFolder+"a_mapTotalIdenAndId.txt");
+				FileIO.appendStringToFile(sbAppear.toString(), mapTestFolder+"a_mapTotalIdenAppear.txt");
 				sbId=new StringBuilder();
 				sbAppear=new StringBuilder();
 			}
@@ -108,13 +108,13 @@ HashMap<String,Integer> mapTotalIdenAndAppear=getMapFromFileStringInt(mapTrainFo
 		}
 		
 		StringBuilder sbTotalIdAndAllContent=new StringBuilder();
-		FileIO.writeStringToFile("", mapTestFolder+"a_mapTestTotalIdAndContent.txt");
+		FileIO.writeStringToFile("", mapTestFolder+"a_mapTotalIdAndContent.txt");
 		indexCount=0;
 		for(String id:mapTotalIdAndAllContent.keySet()){
 			indexCount++;
 			sbTotalIdAndAllContent.append(id+"\t"+mapTotalIdAndAllContent.get(id)+"\n");
 			if(indexCount%100000==0 || indexCount==mapTotalIdenAndAppear.size()){
-				FileIO.appendStringToFile(sbTotalIdAndAllContent.toString(), mapTestFolder+"a_mapTestTotalIdAndContent.txt");
+				FileIO.appendStringToFile(sbTotalIdAndAllContent.toString(), mapTestFolder+"a_mapTotalIdAndContent.txt");
 				sbTotalIdAndAllContent=new StringBuilder();			
 			}
 			

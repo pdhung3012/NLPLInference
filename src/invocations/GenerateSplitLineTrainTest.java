@@ -1,6 +1,7 @@
 package invocations;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -61,15 +62,16 @@ public class GenerateSplitLineTrainTest {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String fopIn=PathConstanct.PATH_PROJECT_TTT_ALIAS;
-		String fopOut=PathConstanct.PATH_PROJECT_TTT_SPLIT_ALIAS;
+		String fopIn=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"alias"+File.separator;
+		String fopOut=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"split_alias"+File.separator;
+		new File(fopOut).mkdir();
 		int numLine=50;
-		getSplitData(fopIn+"train.source.txt", fopOut+"train.source.txt", fopOut+"train.source.line.txt",numLine);
-		getSplitData(fopIn+"train.target.txt", fopOut+"train.target.txt", fopOut+"train.target.line.txt",numLine);
-		getSplitData(fopIn+"tune.source.txt", fopOut+"tune.source.txt", fopOut+"tune.source.line.txt",numLine);
-		getSplitData(fopIn+"tune.target.txt", fopOut+"tune.target.txt", fopOut+"tune.target.line.txt",numLine);
-		getSplitData(fopIn+"test.source.txt", fopOut+"test.source.txt", fopOut+"test.source.line.txt",numLine);
-		getSplitData(fopIn+"test.target.txt", fopOut+"test.target.txt", fopOut+"test.target.line.txt",numLine);
+		getSplitData(fopIn+"train.s", fopOut+"train.s", fopOut+"train.s.line.txt",numLine);
+		getSplitData(fopIn+"train.t", fopOut+"train.t", fopOut+"train.t.line.txt",numLine);
+		getSplitData(fopIn+"tune.s", fopOut+"tune.s", fopOut+"tune.s.line.txt",numLine);
+		getSplitData(fopIn+"tune.t", fopOut+"tune.t", fopOut+"tune.t.line.txt",numLine);
+		getSplitData(fopIn+"test.s", fopOut+"test.s", fopOut+"test.s.line.txt",numLine);
+		getSplitData(fopIn+"test.t", fopOut+"test.t", fopOut+"test.t.line.txt",numLine);
 		
 	}
 	

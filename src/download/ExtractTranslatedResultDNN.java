@@ -13,7 +13,7 @@ public class ExtractTranslatedResultDNN {
 		String folderOrigin=PathConstanct.PATH_PROJECT_TTT_DNN_TRANS_DATA;
 		String folderInput=PathConstanct.PATH_PROJECT_TTT_DNN_SPLIT_ALIAS_DATA;
 		String folderTemp=PathConstanct.PATH_PROJECT_TTT_DNN_SPLIT_ALIAS_DATA;
-		String fpTranslatedNumber=folderTemp+"test.line.txt";
+		String fpTranslatedNumber=folderTemp+"test.s.line.txt";
 		String fpTestSourceNumber=folderInput+"test.s";
 		String fpTranslatedResult=folderInput+"output_test";
 		String fpMixOutput=folderOrigin+"test.tune.baseline.trans";
@@ -33,7 +33,7 @@ public class ExtractTranslatedResultDNN {
 		HashMap<Integer,StringBuilder> mapResult=new LinkedHashMap<Integer, StringBuilder>();
 		HashMap<Integer,StringBuilder> mapSource=new LinkedHashMap<Integer, StringBuilder>();
 		for(int i=0;i<arrResult.length;i++){
-			int itemNumber=Integer.parseInt(arrNumber[i].trim());
+			int itemNumber=Integer.parseInt(arrNumber[i].split("\t")[0].trim());
 			String itemResult=arrResult[i].trim();
 			if(!mapResult.containsKey(itemNumber)){
 				mapResult.put(itemNumber, new StringBuilder());

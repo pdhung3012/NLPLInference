@@ -3,18 +3,19 @@ package download;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import consts.PathConstanct;
 import utils.FileIO;
 
 public class ExtractTranslatedResultDNN {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String folderOrigin="/Users/hungphan/git/translationExample/st_data/origin/";
-		String folderInput="/Users/hungphan/git/translationExample/st_data/";
-		String folderTemp="/Users/hungphan/git/translationExample/st_data/temp/";
-		String fpTranslatedNumber=folderTemp+"test.s";
+		String folderOrigin=PathConstanct.PATH_PROJECT_TTT_DNN_TRANS_DATA;
+		String folderInput=PathConstanct.PATH_PROJECT_TTT_DNN_SPLIT_ALIAS_DATA;
+		String folderTemp=PathConstanct.PATH_PROJECT_TTT_DNN_SPLIT_ALIAS_DATA;
+		String fpTranslatedNumber=folderTemp+"test.line.txt";
 		String fpTestSourceNumber=folderInput+"test.s";
-		String fpTranslatedResult=folderInput+"pred.txt";
+		String fpTranslatedResult=folderInput+"output_test";
 		String fpMixOutput=folderOrigin+"test.tune.baseline.trans";
 		String fpMapAlias=folderInput+"alias.txt";
 		

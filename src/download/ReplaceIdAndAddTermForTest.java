@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Random;
 
 import utils.FileIO;
 import utils.FileUtil;
@@ -294,6 +295,70 @@ public static void addTermToOriginSourceAndTarget(String strFilterSource,String 
 	FileIO.writeStringToFile(strTT, fpTermTarget);
 }
 
+public static void addTerm50PercentToOriginSourceAndTarget(String strFilterSource,String strFilterTarget,HashMap<String,String> mapSource,HashMap<String,String> mapTarget,String fpTermSource,String fpTermTarget){
+	String[] arrSource=strFilterSource.split("\n");
+	String[] arrTarget=strFilterTarget.split("\n");
+	StringBuilder sbTotalSource=new StringBuilder();
+	StringBuilder sbTotalTarget=new StringBuilder();
+	for(int i=0;i<arrSource.length;i++){
+		String[] arrItS=arrSource[i].split("\\s+");
+		String[] arrItT=arrTarget[i].split("\\s+");
+		int len=arrItS.length;
+		int countIden=0;
+		for(int j=0;j<arrItS.length;j++){
+			if(arrItS[j].endsWith("#identifier")){
+//				String targetID=arrItT[j];
+				countIden++;
+			}
+		}
+		int maxTermRequired=(int)Math.floor((255-len)*1.0/countIden);
+		
+		StringBuilder sbNewSource=new StringBuilder();
+		StringBuilder sbNewTarget=new StringBuilder();
+		Random r=new Random();
+		for(int j=0;j<arrItS.length;j++){
+			sbNewSource.append(arrItS[j]+" ");
+			sbNewTarget.append(arrItT[j]+" ");
+			if(arrItS[j].endsWith("#identifier")){
+				String targetID=arrItT[j];
+				String[] arrTermSource=mapSource.get(targetID).trim().split("\\s+");
+				String[] arrTermTarget=mapTarget.get(targetID).trim().split("\\s+");
+				int min=Math.min(maxTermRequired, arrTermSource.length);
+				ArrayList<Integer> lstSelectedRandom=new ArrayList<Integer>();
+				ArrayList<Integer> lstMinIndexes=new ArrayList<Integer>();
+				int mHalp=(int)Math.ceil(min*1.0/2);
+				
+				for(int k=0;k<min;k++){
+					lstMinIndexes.add(k);
+				}
+				while(lstSelectedRandom.size()<mHalp && lstMinIndexes.size()>0){
+					int numSelectedIndex=r.nextInt(lstMinIndexes.size());
+					int numSel=lstMinIndexes.get(numSelectedIndex);
+					lstSelectedRandom.add(numSel);
+					lstMinIndexes.remove(numSelectedIndex);
+				}
+				
+				
+				
+				for(int k=0;k<lstSelectedRandom.size();k++){
+					int k1=lstSelectedRandom.get(k);
+					sbNewSource.append(arrTermSource[k1]+" ");
+					sbNewTarget.append(arrTermTarget[k1]+" ");
+				}
+				
+			}
+			
+		}
+		sbTotalSource.append(sbNewSource.toString().trim()+"\n");
+		sbTotalTarget.append(sbNewTarget.toString().trim()+"\n");
+		
+	}
+	String strTS=sbTotalSource.toString()+"\n";
+	String strTT=sbTotalTarget.toString()+"\n";
+	FileIO.writeStringToFile(strTS, fpTermSource);
+	FileIO.writeStringToFile(strTT, fpTermTarget);
+}
+
 /**
  * 
  * @param inPath
@@ -465,6 +530,7 @@ public static void main(String[] args) {
 //	
 		
 		addTermToOriginSourceAndTarget(strFilterSource, strFilterForNewTarget, mapAddTermSource, mapAddTermTarget, fpTermSource, fpTermTarget);
+		addTermToOrigin50PercentSourceAndTarget(strFilterSource, strFilterForNewTarget, mapAddTermSource, mapAddTermTarget, fpTermSource, fpTermTarget);
 		refineSourceTarget(fpTermSource, fpTermTarget,fopOutRemoveContext+"test.s", fopOutRemoveContext+"test.t");
 		refineRemoveSuggestion(fpTermSource, fpTermTarget,fopOutRemoveSug+"test.s", fopOutRemoveSug+"test.t");
 		refineRemoveSuggestionAddVarContext(fopOutRemoveSug+"test.s", fopOutRemoveSug+"test.t",fopOutRemoveSugAndAddVarContext+"test.s", fopOutRemoveSugAndAddVarContext+"test.t");

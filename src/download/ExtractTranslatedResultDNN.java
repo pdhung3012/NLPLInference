@@ -17,9 +17,7 @@ public class ExtractTranslatedResultDNN {
 		String fpTranslatedResult=folderInput+"pred.txt";
 		String fpMixOutput=folderOrigin+"test.tune.baseline.trans";
 		String fpMapAlias=folderInput+"alias.txt";
-		//
-		//
-		//
+		
 		String[] arrNumber=FileIO.readStringFromFile(fpTranslatedNumber).trim().split("\n");
 		String[] arrResult=FileIO.readStringFromFile(fpTranslatedResult).trim().split("\n");
 		String[] arrTestS=FileIO.readStringFromFile(fpTestSourceNumber).trim().split("\n");

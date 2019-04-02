@@ -457,12 +457,14 @@ public static void main(String[] args) {
 	String fopOutOrigin=fopSequence+"outOrigin"+File.separator;
 	String fopOutRemoveContext=fopSequence+"outRemoveContext"+File.separator;
 	String fopOutRemoveSug=fopSequence+"outRemoveSug"+File.separator;
+	String fop50PercentTerm=fopSequence+"out50PercentTerm"+File.separator;
 	String fopOutRemoveSugAndAddVarContext=fopSequence+"outRSAddVar"+File.separator;
 	new File(fopOutFinal).mkdir();
 	new File(fopOutOrigin).mkdir();
 	new File(fopOutRemoveContext).mkdir();
 	new File(fopOutRemoveSug).mkdir();
 	new File(fopOutRemoveSugAndAddVarContext).mkdir();
+	new File(fop50PercentTerm).mkdir();
 	
 
 	String fpTempForWrite = fopSequence
@@ -530,7 +532,7 @@ public static void main(String[] args) {
 //	
 		
 		addTermToOriginSourceAndTarget(strFilterSource, strFilterForNewTarget, mapAddTermSource, mapAddTermTarget, fpTermSource, fpTermTarget);
-		addTermToOrigin50PercentSourceAndTarget(strFilterSource, strFilterForNewTarget, mapAddTermSource, mapAddTermTarget, fpTermSource, fpTermTarget);
+		addTerm50PercentToOriginSourceAndTarget(strFilterSource, strFilterForNewTarget, mapAddTermSource, mapAddTermTarget, fop50PercentTerm+"test.s", fop50PercentTerm+"test.t");
 		refineSourceTarget(fpTermSource, fpTermTarget,fopOutRemoveContext+"test.s", fopOutRemoveContext+"test.t");
 		refineRemoveSuggestion(fpTermSource, fpTermTarget,fopOutRemoveSug+"test.s", fopOutRemoveSug+"test.t");
 		refineRemoveSuggestionAddVarContext(fopOutRemoveSug+"test.s", fopOutRemoveSug+"test.t",fopOutRemoveSugAndAddVarContext+"test.s", fopOutRemoveSugAndAddVarContext+"test.t");

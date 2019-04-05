@@ -100,6 +100,8 @@ public static void addToHashMapCount(HashMap<String,Integer> mapVocabStrInt,Stri
 		mapIndexTrainSource=SortUtil.getOrderInHM(mapTrainSource);
 		mapIndexTrainTarget=SortUtil.getOrderInHM(mapTrainTarget);
 		
+		System.out.println("source vocab size "+mapTrainSource.size());
+		System.out.println("target vocab size "+mapTrainTarget.size());
 		
 		MapUtil.saveToFile(mapTrainSource, fopOutputEval+fnTrainSource);
 		MapUtil.saveToFile(mapTrainTarget, fopOutputEval+fnTrainTarget);

@@ -15,7 +15,7 @@ public class ExtractTranslatedResultDNN {
 		String folderTemp=PathConstanct.PATH_PROJECT_TTT_DNN_SPLIT_ALIAS_DATA;
 		String fpTranslatedNumber=folderTemp+"test.s.line.txt";
 		String fpTestSourceNumber=folderInput+"test.s";
-		String fpTranslatedResult=folderInput+"output_test";
+		String fpTranslatedResult=folderInput+"pred.txt";
 		String fpMixOutput=folderOrigin+"test.tune.baseline.trans";
 		String fpMapAlias=folderInput+"alias.txt";
 		

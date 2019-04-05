@@ -28,7 +28,7 @@ public class AnalyzeNLPWMT2016Data {
 	
 public static void addToHashMapCount(HashMap<String,Integer> mapVocabStrInt,String fpFile){
 		
-		try (BufferedReader br = Files.newBufferedReader(Paths.get(fpFile), StandardCharsets.US_ASCII)) {
+		try (BufferedReader br = Files.newBufferedReader(Paths.get(fpFile), StandardCharsets.ISO_8859_1)) {
 		    for (String line = null; (line = tryGetLine(br)) != null;) {
 		    	//System.out.println(line);
 		    	String[] arrItems=line.trim().split("\\s+");
@@ -49,7 +49,7 @@ public static void addToHashMapCount(HashMap<String,Integer> mapVocabStrInt,Stri
 	
 	public static void addVocabToHashMapCount(HashMap<String,Integer> mapVocabStrInt,String fpFile){
 		
-		try (BufferedReader br = Files.newBufferedReader(Paths.get(fpFile), StandardCharsets.US_ASCII)) {
+		try (BufferedReader br = Files.newBufferedReader(Paths.get(fpFile), StandardCharsets.ISO_8859_1)) {
 		    for (String line = null; (line = tryGetLine(br)) != null;) {
 		    	//System.out.println(line);
 		    	String strItems=line.trim();

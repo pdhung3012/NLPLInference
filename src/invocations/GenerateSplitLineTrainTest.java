@@ -28,7 +28,7 @@ public class GenerateSplitLineTrainTest {
 		    	StringBuilder sbPerLine=new StringBuilder();
 		    	for(int j=0;j<arrItems.length;j++){
 		    		sbPerLine.append(arrItems[j]+" ");
-		    		if(j+1%numLine==0){
+		    		if(j+1%number==0){
 		    			sbResult.append(sbPerLine.toString().trim()+"\n");
 		    			sbLine.append(numLine+"\n");
 		    			sbPerLine=new StringBuilder();

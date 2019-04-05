@@ -32,6 +32,16 @@ public class SortUtil {
 		return temp;
 	}
 	
+	public static HashMap<String, Integer> getOrderInHM(HashMap<String, Integer> hIn){
+		HashMap<String, Integer> hOut =new LinkedHashMap<>();
+		int index=0;
+		for(String str:hIn.keySet()){
+			index++;
+			hOut.put(str, index);
+		}
+		return hOut;
+	}
+	
 	
 	
 	public static HashMap<String,HashSet<String>> sortHashMapStringStringSetByValueDesc(HashMap<String, HashSet<String>> hm) {

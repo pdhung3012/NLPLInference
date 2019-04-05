@@ -25,6 +25,8 @@ public class PathConstanct {
 	public static String PATH_PROJECT_STATTYPE_ALIAS = "G:\\StatTypeAlias\\";
 	public static String PATH_PROJECT_STATTYPE_SPLIT = "G:\\StatTypeSplit\\";
 	public static String PATH_PROJECT_STATTYPE_TYPE_SEQUENCES = "G:\\st_6libs\\";
+	public static String PATH_PROJECT_NLP_DATA="G:\\NLPAnalyzeData\\";
+	
 	public static int NUM_CHARACTER_MAXIMUM=255;
 	
 	public static String fop2ndProjectLocation = "G:\\gitHighQualitySpec\\";

@@ -19,6 +19,18 @@ public class MapUtil {
 		return line;
 	}
 	
+	public static void saveToFile(HashMap<String,Integer> map,String fpOutFile){
+		try{
+			StringBuilder sb=new StringBuilder();
+			for(String str:map.keySet()){
+				sb.append(str+"\t"+map.get(str)+"\n");
+			}
+			FileIO.writeStringToFile(sb.toString()+"\n", fpOutFile);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+	}
+	
 	public static HashMap<String,String> getHashMapFromFile(String fp){
 		HashMap<String,String> map=new LinkedHashMap<String, String>();
 		String[] arr=FileIO.readStringFromFile(fp).split("\n");

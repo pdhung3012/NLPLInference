@@ -20,7 +20,7 @@ public class GenerateSplitLineTrainTest {
 
 		FileIO.writeStringToFile("",fpOut);
 		FileIO.writeStringToFile("",fpLine);
-		try (BufferedReader br = Files.newBufferedReader(Paths.get(fpIn), StandardCharsets.UTF_8)) {
+		try (BufferedReader br = Files.newBufferedReader(Paths.get(fpIn), StandardCharsets.ISO_8859_1)) {
 		    
 			for (String line = null; (line = br.readLine()) != null;) {
 		    	String[] arrItems=line.trim().split("\\s+");

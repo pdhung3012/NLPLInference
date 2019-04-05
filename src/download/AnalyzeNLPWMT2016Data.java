@@ -106,22 +106,22 @@ public static void addToHashMapCount(HashMap<String,Integer> mapVocabStrInt,Stri
 		
 		StringBuilder sb=new StringBuilder();
 		for(String item:mapVocabStatusSource.keySet()){
-			if(mapVocabStatusSource.containsKey(item)){
-				int numAppear=mapVocabStatusSource.get(item);
-				sb.append(item+"\ttrue\t"+numAppear+"\t"+mapVocabStatusSource.size()+"\t"+(numAppear*1.0/mapVocabStatusSource.size())+"\n");
+			if(mapTrainSource.containsKey(item)){
+				int numAppear=mapTrainSource.get(item);
+				sb.append(item+"\ttrue\t"+mapIndexTrainSource.get(item)+"\t"+numAppear+"\t"+mapTrainSource.size()+"\t"+(numAppear*1.0/mapTrainSource.size())+"\n");
 			} else{
-				sb.append(item+"\tfalse\t"+0+"\t"+mapVocabStatusSource.size()+"\t"+0+"\n");
+				sb.append(item+"\tfalse\t0\t"+0+"\t"+mapVocabStatusSource.size()+"\t"+0+"\n");
 			}
 		}
 		FileIO.writeStringToFile(sb.toString()+"\n", fopOutputEval+fnAnaTrainSource);
 		
 		sb=new StringBuilder();
 		for(String item:mapVocabStatusTarget.keySet()){
-			if(mapVocabStatusTarget.containsKey(item)){
-				int numAppear=mapVocabStatusTarget.get(item);
-				sb.append(item+"\ttrue\t"+numAppear+"\t"+mapVocabStatusTarget.size()+"\t"+(numAppear*1.0/mapVocabStatusTarget.size())+"\n");
+			if(mapTrainTarget.containsKey(item)){
+				int numAppear=mapTrainTarget.get(item);
+				sb.append(item+"\ttrue\t"+mapIndexTrainTarget.get(item)+"\t"+numAppear+"\t"+mapTrainTarget.size()+"\t"+(numAppear*1.0/mapTrainTarget.size())+"\n");
 			} else{
-				sb.append(item+"\tfalse\t"+0+"\t"+mapVocabStatusTarget.size()+"\t"+0+"\n");
+				sb.append(item+"\tfalse\t0\t"+0+"\t"+mapVocabStatusTarget.size()+"\t"+0+"\n");
 			}
 		}
 		FileIO.writeStringToFile(sb.toString()+"\n", fopOutputEval+fnAnaTrainTarget);
@@ -129,7 +129,7 @@ public static void addToHashMapCount(HashMap<String,Integer> mapVocabStrInt,Stri
 		
 		
 		MapUtil.saveToFile(mapVocabStatusSource, fopOutputEval+fnVocabSource);
-		MapUtil.saveToFile(mapVocabStatusTarget, fopOutputEval+fnVocabSource);
+		MapUtil.saveToFile(mapVocabStatusTarget, fopOutputEval+fnVocabTarget);
 		
 		
 	}

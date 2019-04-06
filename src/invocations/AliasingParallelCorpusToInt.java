@@ -99,8 +99,8 @@ public class AliasingParallelCorpusToInt {
 			}
 		}
 		
-		GenerateVocabulary.getDamnRestrictedVocabulary(folderNormalize+"train.s", folderNormalize+"vocab.s",numRestricted);
-		GenerateVocabulary.getDamnRestrictedVocabulary(folderNormalize+"train.t", folderNormalize+"vocab.t",numRestricted);
+		GenerateVocabulary.getVocabulary(folderNormalize+"train.s", folderNormalize+"vocab.s");
+		GenerateVocabulary.getVocabulary(folderNormalize+"train.t", folderNormalize+"vocab.t");
 		
 
 	}

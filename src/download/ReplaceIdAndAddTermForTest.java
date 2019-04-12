@@ -193,7 +193,8 @@ public static void refineSourceTarget(String fpTermSource,String fpTermTarget,St
 public static void refineRemoveSuggestion(String fpTermSource,String fpTermTarget,String fpNewSource,String fpNewTarget){
 	String[] arrSource=FileIO.readFromLargeFile(fpTermSource).split("\n");
 	String[] arrTarget=FileIO.readFromLargeFile(fpTermTarget).split("\n");
-	String strNewSource="",strNewTarget="";
+	StringBuilder strNewSource=new StringBuilder();
+	StringBuilder strNewTarget=new StringBuilder();
 	for(int i=0;i<arrSource.length;i++){
 		String[] arrItS=arrSource[i].split("\\s+");
 		String[] arrItT=arrTarget[i].split("\\s+");
@@ -227,17 +228,18 @@ public static void refineRemoveSuggestion(String fpTermSource,String fpTermTarge
 				strLineT+=arrItT[j]+" ";
 			}
 		}
-		strNewSource+=strLineS+"\n";
-		strNewTarget+=strLineT+"\n";
+		strNewSource.append(strLineS+"\n");
+		strNewTarget.append(strLineT+"\n");
 	}
-	FileIO.writeStringToFile(strNewSource, fpNewSource);
-	FileIO.writeStringToFile(strNewTarget, fpNewTarget);
+	FileIO.writeStringToFile(strNewSource.toString().trim()+"\n", fpNewSource);
+	FileIO.writeStringToFile(strNewTarget.toString().trim()+"\n", fpNewTarget);
 }
 
 public static void removeFromFullToCodeContextOnly(String fpTermSource,String fpTermTarget,String fpNewSource,String fpNewTarget){
 	String[] arrSource=FileIO.readFromLargeFile(fpTermSource).split("\n");
 	String[] arrTarget=FileIO.readFromLargeFile(fpTermTarget).split("\n");
-	String strNewSource="",strNewTarget="";
+	StringBuilder strNewSource=new StringBuilder();
+	StringBuilder strNewTarget=new StringBuilder();
 	for(int i=0;i<arrSource.length;i++){
 		String[] arrItS=arrSource[i].split("\\s+");
 		String[] arrItT=arrTarget[i].split("\\s+");
@@ -271,17 +273,18 @@ public static void removeFromFullToCodeContextOnly(String fpTermSource,String fp
 				strLineT+=arrItT[j]+" ";
 			}
 		}
-		strNewSource+=strLineS+"\n";
-		strNewTarget+=strLineT+"\n";
+		strNewSource.append(strLineS+"\n");
+		strNewTarget.append(strLineT+"\n");
 	}
-	FileIO.writeStringToFile(strNewSource, fpNewSource);
-	FileIO.writeStringToFile(strNewTarget, fpNewTarget);
+	FileIO.writeStringToFile(strNewSource.toString().trim()+"\n", fpNewSource);
+	FileIO.writeStringToFile(strNewTarget.toString().trim()+"\n", fpNewTarget);
 }
 
 public static void refineRemoveSuggestionAddVarContext(String fpTermSource,String fpTermTarget,String fpNewSource,String fpNewTarget){
 	String[] arrSource=FileIO.readFromLargeFile(fpTermSource).split("\n");
 	String[] arrTarget=FileIO.readFromLargeFile(fpTermTarget).split("\n");
-	String strNewSource="",strNewTarget="";
+	StringBuilder strNewSource=new StringBuilder();
+	StringBuilder strNewTarget=new StringBuilder();
 	for(int i=0;i<arrSource.length;i++){
 		String[] arrItS=arrSource[i].split("\\s+");
 		String[] arrItT=arrTarget[i].split("\\s+");
@@ -311,11 +314,11 @@ public static void refineRemoveSuggestionAddVarContext(String fpTermSource,Strin
 			}
 		}
 		
-		strNewSource+=strLineS+"\n";
-		strNewTarget+=strLineT+"\n";
+		strNewSource.append(strLineS+"\n");
+		strNewTarget.append(strLineT+"\n");
 	}
-	FileIO.writeStringToFile(strNewSource, fpNewSource);
-	FileIO.writeStringToFile(strNewTarget, fpNewTarget);
+	FileIO.writeStringToFile(strNewSource.toString().trim()+"\n", fpNewSource);
+	FileIO.writeStringToFile(strNewTarget.toString().trim()+"\n", fpNewTarget);
 }
 
 

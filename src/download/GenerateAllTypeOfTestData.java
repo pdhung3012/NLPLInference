@@ -1,0 +1,55 @@
+package download;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
+import utils.FileIO;
+import utils.MapUtil;
+import consts.PathConstanct;
+
+public class GenerateAllTypeOfTestData {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		String fopEvaluation=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA;
+		String fopEvaluationMap=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"map"+File.separator;
+		String fopTestFullTextAndCode=fopEvaluation+"test5Full"+File.separator;
+		String fopTestTempOnlySurroundingCode=fopEvaluation+"test1TempOnlySurrounding"+File.separator;
+		String fopTestOnlySurroundingCode=fopEvaluation+"test2FinalOnlySurrounding"+File.separator;		
+		String fopTestCodeContext=fopEvaluation+"test3CodeContext"+File.separator;
+		String fopTestRandomTextContext=fopEvaluation+"test4RandomTextContext"+File.separator;
+		
+		String fpIdAndMapContent = fopEvaluationMap
+				+ "a_mapTotalIdAndContent.txt";
+		
+		new File(fopTestFullTextAndCode).mkdir();
+		new File(fopTestTempOnlySurroundingCode).mkdir();
+		new File(fopTestOnlySurroundingCode).mkdir();
+		new File(fopTestCodeContext).mkdir();
+		new File(fopTestRandomTextContext).mkdir();
+		
+		String fnTestSource="test.s";
+		String fnTestTarget="test.t";
+		
+//		remove this when run the second time		
+		FileIO.copyFileReplaceExist(fopEvaluation+fnTestSource,fopTestFullTextAndCode+fnTestSource);
+		FileIO.copyFileReplaceExist(fopEvaluation+fnTestTarget,fopTestFullTextAndCode+fnTestTarget);
+		
+		
+		HashMap<String, String> mapIdAndTotalContent = MapUtil
+				.getHashMapFromFile(fpIdAndMapContent);
+		HashMap<String,String> mapAddTermSource=new LinkedHashMap<>();
+		HashMap<String,String> mapAddTermTarget=new LinkedHashMap<>();
+		HashMap<String,ArrayList<String>> mapAddTermListSource=new LinkedHashMap<>();
+		HashMap<String,ArrayList<String>> mapAddTermListTarget=new LinkedHashMap<>();
+		ReplaceIdAndAddTermForTest.collectSourceAndTargetTerm(mapIdAndTotalContent, mapAddTermSource, mapAddTermTarget,mapAddTermListSource,mapAddTermListTarget);
+		
+		ReplaceIdAndAddTermForTest.refineRemoveSuggestion(fopTestFullTextAndCode+fnTestSource,fopTestFullTextAndCode+fnTestTarget,fopTestTempOnlySurroundingCode+fnTestSource,fopTestTempOnlySurroundingCode+fnTestTarget);
+		ReplaceIdAndAddTermForTest.refineRemoveSuggestionAddVarContext(fopTestFullTextAndCode+fnTestSource,fopTestFullTextAndCode+fnTestTarget,fopTestOnlySurroundingCode+fnTestSource,fopTestOnlySurroundingCode+fnTestTarget);
+		ReplaceIdAndAddTermForTest.removeFromFullToCodeContextOnly(fopTestFullTextAndCode+fnTestSource,fopTestFullTextAndCode+fnTestTarget,fopTestCodeContext+fnTestSource,fopTestCodeContext+fnTestTarget);
+		ReplaceIdAndAddTermForTest.addTerm50PercentToOriginSourceAndTargetForFile(fopTestFullTextAndCode+fnTestSource,fopTestFullTextAndCode+fnTestTarget, mapAddTermSource, mapAddTermTarget,fopTestRandomTextContext+fnTestSource,fopTestRandomTextContext+fnTestTarget);
+	}
+
+}

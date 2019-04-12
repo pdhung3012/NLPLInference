@@ -129,6 +129,33 @@ public static void collectSourceAndTargetTerm(HashMap<String,String> mapIn,HashM
 	}
 }
 
+public static void collectSourceAndTargetTerm(HashMap<String,String> mapIn,HashMap<String,String> mapSource,HashMap<String,String> mapTarget,HashMap<String,ArrayList<String>> mapListSource,HashMap<String,ArrayList<String>> mapListTarget){
+	for(String key:mapIn.keySet()){
+		String info=mapIn.get(key);
+		String[] arrLine=info.split(SplitInvocationCharacter);
+		if(arrLine.length>=4){
+			String strSource=arrLine[arrLine.length-3];
+			String strTarget=arrLine[arrLine.length-2];
+			String[] arrSource=strSource.trim().split("\\s+");
+			String[] arrTarget=strTarget.trim().split("\\s+");
+			
+			ArrayList<String> lstSourceItems=new ArrayList<String>();
+			ArrayList<String> lstTargetItems=new ArrayList<String>();
+			
+			for(int i=0;i<arrSource.length;i++){
+				lstSourceItems.add(arrSource[i]);
+				lstTargetItems.add(arrTarget[i]);
+			}
+			
+			mapSource.put(key, strSource);
+			mapTarget.put(key, strTarget);
+			mapListSource.put(key,lstSourceItems);
+			mapListTarget.put(key,lstTargetItems);
+			
+		}
+	}
+}
+
 public static void refineSourceTarget(String fpTermSource,String fpTermTarget,String fpNewSource,String fpNewTarget){
 	String[] arrSource=FileIO.readStringFromFile(fpTermSource).split("\n");
 	String[] arrTarget=FileIO.readStringFromFile(fpTermTarget).split("\n");
@@ -190,6 +217,50 @@ public static void refineRemoveSuggestion(String fpTermSource,String fpTermTarge
 					if(j!=k){
 						setRemove.add(k);
 					}
+				}
+			}
+		}
+		
+		for(int j=0;j<arrItS.length;j++){
+			if(!setRemove.contains(j)){
+				strLineS+=arrItS[j]+" ";
+				strLineT+=arrItT[j]+" ";
+			}
+		}
+		strNewSource+=strLineS+"\n";
+		strNewTarget+=strLineT+"\n";
+	}
+	FileIO.writeStringToFile(strNewSource, fpNewSource);
+	FileIO.writeStringToFile(strNewTarget, fpNewTarget);
+}
+
+public static void removeFromFullToCodeContextOnly(String fpTermSource,String fpTermTarget,String fpNewSource,String fpNewTarget){
+	String[] arrSource=FileIO.readStringFromFile(fpTermSource).split("\n");
+	String[] arrTarget=FileIO.readStringFromFile(fpTermTarget).split("\n");
+	String strNewSource="",strNewTarget="";
+	for(int i=0;i<arrSource.length;i++){
+		String[] arrItS=arrSource[i].split("\\s+");
+		String[] arrItT=arrTarget[i].split("\\s+");
+		LinkedHashSet<Integer> setRemove=new LinkedHashSet<Integer>();
+		String strLineS="",strLineT="";
+		for(int j=0;j<arrItS.length;j++){
+			if(arrItS[j].endsWith("#identifier")){
+//				String targetID=arrItT[j];
+//				int start=j-1;
+				int end =j+1;
+//				while(start>=0 && arrItS[start].endsWith("#var")){
+//					start--;
+//				}
+				
+				while(end<arrItS.length && arrItS[end].endsWith("#term")){
+					end++;
+				}
+				for(int k=j+1;k<end;k++){
+//					strLineS+=arrItS[k]+" ";
+//					strLineT+=arrItT[k]+" ";
+//					if(j!=k){
+						setRemove.add(k);
+//					}
 				}
 			}
 		}
@@ -358,6 +429,71 @@ public static void addTerm50PercentToOriginSourceAndTarget(String strFilterSourc
 	FileIO.writeStringToFile(strTS, fpTermSource);
 	FileIO.writeStringToFile(strTT, fpTermTarget);
 }
+
+public static void addTerm50PercentToOriginSourceAndTargetForFile(String fpFilterSource,String fpFilterTarget,HashMap<String,String> mapSource,HashMap<String,String> mapTarget,String fpTermSource,String fpTermTarget){
+	String[] arrSource=FileIO.readStringFromFile(fpFilterSource).trim().split("\n");
+	String[] arrTarget=FileIO.readStringFromFile(fpFilterTarget).trim().split("\n");
+	StringBuilder sbTotalSource=new StringBuilder();
+	StringBuilder sbTotalTarget=new StringBuilder();
+	for(int i=0;i<arrSource.length;i++){
+		String[] arrItS=arrSource[i].split("\\s+");
+		String[] arrItT=arrTarget[i].split("\\s+");
+		int len=arrItS.length;
+		int countIden=0;
+		for(int j=0;j<arrItS.length;j++){
+			if(arrItS[j].endsWith("#identifier")){
+//				String targetID=arrItT[j];
+				countIden++;
+			}
+		}
+		int maxTermRequired=(int)Math.floor((255-len)*1.0/countIden);
+		
+		StringBuilder sbNewSource=new StringBuilder();
+		StringBuilder sbNewTarget=new StringBuilder();
+		Random r=new Random();
+		for(int j=0;j<arrItS.length;j++){
+			sbNewSource.append(arrItS[j]+" ");
+			sbNewTarget.append(arrItT[j]+" ");
+			if(arrItS[j].endsWith("#identifier")){
+				String targetID=arrItT[j];
+				String[] arrTermSource=mapSource.get(targetID).trim().split("\\s+");
+				String[] arrTermTarget=mapTarget.get(targetID).trim().split("\\s+");
+				int min=Math.min(maxTermRequired, arrTermSource.length);
+				ArrayList<Integer> lstSelectedRandom=new ArrayList<Integer>();
+				ArrayList<Integer> lstMinIndexes=new ArrayList<Integer>();
+				int mHalp=(int)Math.ceil(min*1.0/2);
+				
+				for(int k=0;k<min;k++){
+					lstMinIndexes.add(k);
+				}
+				while(lstSelectedRandom.size()<mHalp && lstMinIndexes.size()>0){
+					int numSelectedIndex=r.nextInt(lstMinIndexes.size());
+					int numSel=lstMinIndexes.get(numSelectedIndex);
+					lstSelectedRandom.add(numSel);
+					lstMinIndexes.remove(numSelectedIndex);
+				}
+				
+				
+				
+				for(int k=0;k<lstSelectedRandom.size();k++){
+					int k1=lstSelectedRandom.get(k);
+					sbNewSource.append(arrTermSource[k1]+" ");
+					sbNewTarget.append(arrTermTarget[k1]+" ");
+				}
+				
+			}
+			
+		}
+		sbTotalSource.append(sbNewSource.toString().trim()+"\n");
+		sbTotalTarget.append(sbNewTarget.toString().trim()+"\n");
+		
+	}
+	String strTS=sbTotalSource.toString()+"\n";
+	String strTT=sbTotalTarget.toString()+"\n";
+	FileIO.writeStringToFile(strTS, fpTermSource);
+	FileIO.writeStringToFile(strTT, fpTermTarget);
+}
+
 
 /**
  * 

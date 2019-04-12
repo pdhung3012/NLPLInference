@@ -11,7 +11,9 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
 public class FileIO {
@@ -49,6 +51,18 @@ public class FileIO {
 	    	}
 	           
 	   }
+	}
+	
+	public static void copyFileReplaceExist(String source, String dest) {
+	    try {
+	    	Path pSource=Paths.get(source);
+	    	Path pTarget=Paths.get(dest);
+	    	Files.copy(pSource, pTarget, StandardCopyOption.REPLACE_EXISTING);
+	       }
+	    catch(Exception ex){
+	    	ex.printStackTrace();
+	    }
+	    
 	}
 	
 	public static void writeStringToFile(String string, String outputFile) {

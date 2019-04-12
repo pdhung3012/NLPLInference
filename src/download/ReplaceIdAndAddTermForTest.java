@@ -191,8 +191,8 @@ public static void refineSourceTarget(String fpTermSource,String fpTermTarget,St
 }
 
 public static void refineRemoveSuggestion(String fpTermSource,String fpTermTarget,String fpNewSource,String fpNewTarget){
-	String[] arrSource=FileIO.readStringFromFile(fpTermSource).split("\n");
-	String[] arrTarget=FileIO.readStringFromFile(fpTermTarget).split("\n");
+	String[] arrSource=FileIO.readFromLargeFile(fpTermSource).split("\n");
+	String[] arrTarget=FileIO.readFromLargeFile(fpTermTarget).split("\n");
 	String strNewSource="",strNewTarget="";
 	for(int i=0;i<arrSource.length;i++){
 		String[] arrItS=arrSource[i].split("\\s+");
@@ -235,8 +235,8 @@ public static void refineRemoveSuggestion(String fpTermSource,String fpTermTarge
 }
 
 public static void removeFromFullToCodeContextOnly(String fpTermSource,String fpTermTarget,String fpNewSource,String fpNewTarget){
-	String[] arrSource=FileIO.readStringFromFile(fpTermSource).split("\n");
-	String[] arrTarget=FileIO.readStringFromFile(fpTermTarget).split("\n");
+	String[] arrSource=FileIO.readFromLargeFile(fpTermSource).split("\n");
+	String[] arrTarget=FileIO.readFromLargeFile(fpTermTarget).split("\n");
 	String strNewSource="",strNewTarget="";
 	for(int i=0;i<arrSource.length;i++){
 		String[] arrItS=arrSource[i].split("\\s+");
@@ -279,8 +279,8 @@ public static void removeFromFullToCodeContextOnly(String fpTermSource,String fp
 }
 
 public static void refineRemoveSuggestionAddVarContext(String fpTermSource,String fpTermTarget,String fpNewSource,String fpNewTarget){
-	String[] arrSource=FileIO.readStringFromFile(fpTermSource).split("\n");
-	String[] arrTarget=FileIO.readStringFromFile(fpTermTarget).split("\n");
+	String[] arrSource=FileIO.readFromLargeFile(fpTermSource).split("\n");
+	String[] arrTarget=FileIO.readFromLargeFile(fpTermTarget).split("\n");
 	String strNewSource="",strNewTarget="";
 	for(int i=0;i<arrSource.length;i++){
 		String[] arrItS=arrSource[i].split("\\s+");
@@ -431,8 +431,8 @@ public static void addTerm50PercentToOriginSourceAndTarget(String strFilterSourc
 }
 
 public static void addTerm50PercentToOriginSourceAndTargetForFile(String fpFilterSource,String fpFilterTarget,HashMap<String,String> mapSource,HashMap<String,String> mapTarget,String fpTermSource,String fpTermTarget){
-	String[] arrSource=FileIO.readStringFromFile(fpFilterSource).trim().split("\n");
-	String[] arrTarget=FileIO.readStringFromFile(fpFilterTarget).trim().split("\n");
+	String[] arrSource=FileIO.readFromLargeFile(fpFilterSource).trim().split("\n");
+	String[] arrTarget=FileIO.readFromLargeFile(fpFilterTarget).trim().split("\n");
 	StringBuilder sbTotalSource=new StringBuilder();
 	StringBuilder sbTotalTarget=new StringBuilder();
 	for(int i=0;i<arrSource.length;i++){

@@ -44,12 +44,17 @@ public class GenerateAllTypeOfTestData {
 		HashMap<String,String> mapAddTermTarget=new LinkedHashMap<>();
 		HashMap<String,ArrayList<String>> mapAddTermListSource=new LinkedHashMap<>();
 		HashMap<String,ArrayList<String>> mapAddTermListTarget=new LinkedHashMap<>();
+		System.out.println("map");
 		ReplaceIdAndAddTermForTest.collectSourceAndTargetTerm(mapIdAndTotalContent, mapAddTermSource, mapAddTermTarget,mapAddTermListSource,mapAddTermListTarget);
-		
+		System.out.println("1");
 		ReplaceIdAndAddTermForTest.refineRemoveSuggestion(fopTestFullTextAndCode+fnTestSource,fopTestFullTextAndCode+fnTestTarget,fopTestTempOnlySurroundingCode+fnTestSource,fopTestTempOnlySurroundingCode+fnTestTarget);
+		System.out.println("2");
 		ReplaceIdAndAddTermForTest.refineRemoveSuggestionAddVarContext(fopTestFullTextAndCode+fnTestSource,fopTestFullTextAndCode+fnTestTarget,fopTestOnlySurroundingCode+fnTestSource,fopTestOnlySurroundingCode+fnTestTarget);
+		System.out.println("3");
 		ReplaceIdAndAddTermForTest.removeFromFullToCodeContextOnly(fopTestFullTextAndCode+fnTestSource,fopTestFullTextAndCode+fnTestTarget,fopTestCodeContext+fnTestSource,fopTestCodeContext+fnTestTarget);
-		ReplaceIdAndAddTermForTest.addTerm50PercentToOriginSourceAndTargetForFile(fopTestFullTextAndCode+fnTestSource,fopTestFullTextAndCode+fnTestTarget, mapAddTermSource, mapAddTermTarget,fopTestRandomTextContext+fnTestSource,fopTestRandomTextContext+fnTestTarget);
+		System.out.println("4");
+		ReplaceIdAndAddTermForTest.addTerm50PercentToOriginSourceAndTargetForFile(fopTestCodeContext+fnTestSource,fopTestCodeContext+fnTestTarget, mapAddTermSource, mapAddTermTarget,fopTestRandomTextContext+fnTestSource,fopTestRandomTextContext+fnTestTarget);
+		System.out.println("5");
 	}
 
 }

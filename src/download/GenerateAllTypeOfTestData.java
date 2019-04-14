@@ -34,8 +34,8 @@ public class GenerateAllTypeOfTestData {
 		String fnTestTarget="test.t";
 		
 //		remove this when run the second time		
-		FileIO.copyFileReplaceExist(fopEvaluation+fnTestSource,fopTestFullTextAndCode+fnTestSource);
-		FileIO.copyFileReplaceExist(fopEvaluation+fnTestTarget,fopTestFullTextAndCode+fnTestTarget);
+//		FileIO.copyFileReplaceExist(fopEvaluation+fnTestSource,fopTestFullTextAndCode+fnTestSource);
+//		FileIO.copyFileReplaceExist(fopEvaluation+fnTestTarget,fopTestFullTextAndCode+fnTestTarget);
 		
 		
 		HashMap<String, String> mapIdAndTotalContent = MapUtil

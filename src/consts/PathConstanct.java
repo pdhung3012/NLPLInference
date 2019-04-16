@@ -13,7 +13,7 @@ public class PathConstanct {
 	public static String PATH_PROJECT_TTT_DATA = "G:\\projectTrainTestData\\";
 	public static String PATH_PROJECT_TTT_ADDTERMS_DATA = "G:\\projectAddTermData\\";
 	public static String PATH_PROJECT_TTT_TOTAL_TUNE_DATA = "G:\\projectAddTermData\\v5_allFolds\\";
-	public static String PATH_PROJECT_TTT_CUR_EVAL_DATA = "G:\\projectAddTermData\\v5_allFolds\\b12_tune_fold-10\\";
+	public static String PATH_PROJECT_TTT_CUR_EVAL_DATA = "G:\\projectAddTermData\\v5_allFolds\\b13_assume_fold-1\\";
 	public static String PATH_PROJECT_TTT_DNN_SPLIT_ALIAS_DATA = "G:\\projectAddTermData\\v5_allFolds\\b12_tune_fold-1\\v3_tune\\alias\\";
 	public static String PATH_PROJECT_TTT_DNN_TRANS_DATA = "G:\\projectAddTermData\\v5_allFolds\\b12_tune_fold-1\\";
 	//public static String PATH_PROJECT_TTT_CUR_EVAL_DATA = "G:\\projectTrainTestData\\StatNLPLInfer_v3_allfolds\\b1_sov_fold-1\\";

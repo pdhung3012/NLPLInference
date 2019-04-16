@@ -308,7 +308,7 @@ public class AnalysisRelation {
 				
 				
 				int numCSourceLine=0,numCTargetLine=0,numIncorrect=0,numCorrect=0;
-				System.out.println("Line "+i);
+			//	System.out.println("Line "+i);
 				for(int j=0;j<itemSource.length;j++){
 					
 					//&&(!itemTrans[j].startsWith("."))
@@ -425,8 +425,8 @@ public class AnalysisRelation {
 				FileUtil.appendToFile(fop_output+fn_result, strItem+": "+mapTemp.get("Correct")+"\t"+mapTemp.get("Incorrect")+"\t"+mapTemp.get("OOS")+"\t"+mapTemp.get("OOT")+"\t"+(mapTemp.get("OOS")+mapTemp.get("OOT"))+"\t"+precision+"\t"+recall+"\t"+f1score+"\n");
 			}
 			
-			System.out.println("end fold"+indexFold);
-			break;
+			System.out.println("end fold "+indexFold);
+		// 	break;
 			
 		}
 		

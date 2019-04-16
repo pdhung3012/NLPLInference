@@ -158,8 +158,8 @@ public class AnalysisRelation {
 		for(int indexFold=1;indexFold<=10;indexFold++){
 			String fnTuneName="b12_tune_fold-"+indexFold;
 			String fop_input=PathConstanct.PATH_PROJECT_TTT_TOTAL_TUNE_DATA+File.separator+fnTuneName+File.separator;
-			String fopTestDataAndResult=fop_input+fnTuneName+File.separator+fnTestConfiguration+File.separator;			
-			String fop_output=fop_input+fnTuneName+File.separator+"eval_inside"+File.separator;
+			String fopTestDataAndResult=fop_input+fnTestConfiguration+File.separator;			
+			String fop_output=fopTestDataAndResult+File.separator+"eval_inside"+File.separator;
 			
 			new File(fop_output).mkdir();
 			
@@ -182,7 +182,7 @@ public class AnalysisRelation {
 			ReorderingTokens.reorderingTokens(fopTestDataAndResult+fn_testSource,fopTestDataAndResult+fn_testTarget, fopTestDataAndResult+fn_testTranslation, fopTestDataAndResult+fn_correctOrderTranslated, mapTotalId);
 			System.out.println("Finish reorder!");
 			
-			ArrayList<String> arrTrainSource=FileUtil.getFileStringArray(fopTestDataAndResult+fn_trainSource);
+			ArrayList<String> arrTrainSource=FileUtil.getFileStringArray(fop_input+fn_trainSource);
 			ArrayList<String> arrTestSource=FileUtil.getFileStringArray(fopTestDataAndResult+fn_testSource);
 			ArrayList<String> arrTestTarget=FileUtil.getFileStringArray(fopTestDataAndResult+fn_testTarget);
 			ArrayList<String> arrTestTranslation=FileUtil.getFileStringArray(fopTestDataAndResult+fn_correctOrderTranslated);
@@ -355,7 +355,7 @@ public class AnalysisRelation {
 							mapCountPerLibrary.get(strPackageName).put("Correct",currentNumber+1);
 							ptCorrect_map.print((i+1)+"\t"+itemSource[j]+"\t"+itemTarget[j]+"\t"+strTargetAPIInfo+"\n");
 //							mapCorrectPrintScreen.get(strPackageName).print(itemSource[j]+","+mapVocabTraining.get(itemSource[j])+"\n");
-							int numMapPerSource=mapMapForEachIdentifiersCount.get(i);
+							int numMapPerSource=mapMapForEachIdentifiersCount.get(itemSource[j]);
 							String strItemUpdateMap=getMappingNumRange(lstNameMap, numMapPerSource);
 							HashMap<String,Integer> mapMapInside = mapAnalysisAll.get(strPackageName).get(strItemUpdateMap);
 							mapMapInside.put(name_correct, mapMapInside.get(name_correct)+1);
@@ -376,7 +376,7 @@ public class AnalysisRelation {
 								
 								ptIncorrect_map.print((i+1)+"\t"+itemSource[j]+"\t"+itemTrans[j]+"\t"+itemTarget[j]+"\t"+strTransAPIInfo+"\t"+strTargetAPIInfo+"\n");
 //								mapIncorrectPrintScreen.get(strPackageName).print(itemSource[j]+","+mapVocabTraining.get(itemSource[j])+","+itemTarget[j]+"\n");
-								int numMapPerSource=mapMapForEachIdentifiersCount.get(i);
+								int numMapPerSource=mapMapForEachIdentifiersCount.get(itemSource[j]);
 								
 								String strItemUpdateMap=getMappingNumRange(lstNameMap, numMapPerSource);
 								HashMap<String,Integer> mapMapInside = mapAnalysisAll.get(strPackageName).get(strItemUpdateMap);
@@ -424,6 +424,9 @@ public class AnalysisRelation {
 				f1score=precision*recall*2/(precision+recall);
 				FileUtil.appendToFile(fop_output+fn_result, strItem+": "+mapTemp.get("Correct")+"\t"+mapTemp.get("Incorrect")+"\t"+mapTemp.get("OOS")+"\t"+mapTemp.get("OOT")+"\t"+(mapTemp.get("OOS")+mapTemp.get("OOT"))+"\t"+precision+"\t"+recall+"\t"+f1score+"\n");
 			}
+			
+			System.out.println("end fold"+indexFold);
+			break;
 			
 		}
 		

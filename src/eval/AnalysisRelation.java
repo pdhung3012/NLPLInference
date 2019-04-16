@@ -81,12 +81,32 @@ public class AnalysisRelation {
 		return result;
 	}
 	
+	public static String getMappingNumRange(ArrayList<String> lst,int numMap){
+		String strResult="";
+		if(numMap<=1){
+			strResult=lst.get(0);
+		} else if(numMap>=2 && numMap<=10){
+			strResult=lst.get(1);
+		} else if(numMap>=11 && numMap<=20){
+			strResult=lst.get(2);
+		} else if(numMap>=21 && numMap<=50){
+			strResult=lst.get(3);
+		} else if(numMap>=51 && numMap<=100){
+			strResult=lst.get(4);
+		} else {
+			strResult=lst.get(5);
+		}
+		return strResult;
+	}
+	
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
+		String fopCurrentOutAnalysis=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA;
 		String fop_mapTotalId=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+File.separator+"map"+File.separator;
 		String fnTestConfiguration="test4RandomTextContext";
+		String fnAnalysis="analysis_"+fnTestConfiguration+".txt";
 		HashMap<String,String> mapTotalId=MapUtil.getHashMapFromFile(fop_mapTotalId+"a_mapTotalIdAndContent.txt");
 		HashMap<String,String> mapIdLibrary=getLibraryInfo(mapTotalId);
 		String name_correct="Correct";
@@ -177,8 +197,8 @@ public class AnalysisRelation {
 					HashMap<String,Integer> mapInt=new LinkedHashMap<String, Integer>();
 					mapInt.put(name_correct, 0);
 					mapInt.put(name_incorrect, 0);
-					mapInt.put(name_OOS, 0);
-					mapInt.put(name_OOT, 0);
+//					mapInt.put(name_OOS, 0);
+//					mapInt.put(name_OOT, 0);
 					mapMapStoreMapInt.put(lstNameMap.get(q),mapInt);					
 					
 				}
@@ -286,6 +306,8 @@ public class AnalysisRelation {
 					String strTransAPIInfo=mapTotalId.get(itemTrans[j]);
 					String strPackageName=getPackageAPIsInLibrary(set5Libraries, strTargetCode);
 					
+					
+					
 					if(!setVocabTrainSource.contains(itemSource[j])){
 							numCSourceLine++;
 							int currentNumber=mapCountPerLibrary.get(strPackageName).get("OOS");
@@ -317,6 +339,10 @@ public class AnalysisRelation {
 							mapCountPerLibrary.get(strPackageName).put("Correct",currentNumber+1);
 							ptCorrect_map.print((i+1)+"\t"+itemSource[j]+"\t"+itemTarget[j]+"\t"+strTargetAPIInfo+"\n");
 //							mapCorrectPrintScreen.get(strPackageName).print(itemSource[j]+","+mapVocabTraining.get(itemSource[j])+"\n");
+							int numMapPerSource=mapMapForEachIdentifiersCount.get(i);
+							String strItemUpdateMap=getMappingNumRange(lstNameMap, numMapPerSource);
+							HashMap<String,Integer> mapMapInside = mapAnalysisAll.get(strPackageName).get(strItemUpdateMap);
+							mapMapInside.put(name_correct, mapMapInside.get(name_correct)+1);
 						} else{
 							numIncorrect++;
 							int currentNumber=mapCountPerLibrary.get(strPackageName).get("Incorrect");
@@ -331,8 +357,14 @@ public class AnalysisRelation {
 //									sc.next();
 //								}
 								//
+								
 								ptIncorrect_map.print((i+1)+"\t"+itemSource[j]+"\t"+itemTrans[j]+"\t"+itemTarget[j]+"\t"+strTransAPIInfo+"\t"+strTargetAPIInfo+"\n");
 //								mapIncorrectPrintScreen.get(strPackageName).print(itemSource[j]+","+mapVocabTraining.get(itemSource[j])+","+itemTarget[j]+"\n");
+								int numMapPerSource=mapMapForEachIdentifiersCount.get(i);
+								
+								String strItemUpdateMap=getMappingNumRange(lstNameMap, numMapPerSource);
+								HashMap<String,Integer> mapMapInside = mapAnalysisAll.get(strPackageName).get(strItemUpdateMap);
+								mapMapInside.put(name_incorrect, mapMapInside.get(name_incorrect)+1);
 						}
 					}
 													
@@ -376,6 +408,22 @@ public class AnalysisRelation {
 				f1score=precision*recall*2/(precision+recall);
 				FileUtil.appendToFile(fop_output+fn_result, strItem+": "+mapTemp.get("Correct")+"\t"+mapTemp.get("Incorrect")+"\t"+mapTemp.get("OOS")+"\t"+mapTemp.get("OOT")+"\t"+(mapTemp.get("OOS")+mapTemp.get("OOT"))+"\t"+precision+"\t"+recall+"\t"+f1score+"\n");
 			}
+			StringBuilder sbInfoAnalysisMap=new StringBuilder();
+			sbInfoAnalysisMap.append("\t");
+			for(String strItem:lstNameMap){
+				sbInfoAnalysisMap.append(strItem+"\t\t");
+			}
+			sbInfoAnalysisMap.append("\n");
+			
+			for(String strLib:set5Libraries){
+				sbInfoAnalysisMap.append(strLib+"\t");
+				for(String strItem:lstNameMap){
+					HashMap<String,Integer> mapInt=mapAnalysisAll.get(strLib).get(strItem);
+					sbInfoAnalysisMap.append(mapInt.get(name_correct)+"\t"+mapInt.get(name_incorrect)+"\t");
+				}
+				sbInfoAnalysisMap.append("\n");
+			}
+			FileIO.writeStringToFile(sbInfoAnalysisMap.toString()+"\n", fopCurrentOutAnalysis+fnAnalysis);
 		}
 		
 		

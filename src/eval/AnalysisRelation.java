@@ -129,6 +129,14 @@ public class AnalysisRelation {
 		lstNameMap.add(name_map_51_100);
 		lstNameMap.add(name_map_greaterThan_100);
 		
+		HashSet<String> set5Libraries=new HashSet<String>();		
+		set5Libraries.add("android");
+		set5Libraries.add("com.google.gwt");
+		set5Libraries.add("com.thoughtworks.xstream");
+		set5Libraries.add("org.hibernate");
+		set5Libraries.add("org.joda.time");		
+				//set5Libraries.add("org.apache.commons.");
+		set5Libraries.add("java");
 		
 		for(int indexFold=1;indexFold<=10;indexFold++){
 			String fnTuneName="b12_tune_fold-"+indexFold;
@@ -165,20 +173,13 @@ public class AnalysisRelation {
 			HashSet<String> setVocabTrainTarget=new HashSet<String>();
 			HashSet<String> setVocabTrainMapping=new HashSet<String>();
 //			HashMap<String,Integer> mapVocabTraining=new HashMap<String, Integer>();
-			HashSet<String> set5Libraries=new HashSet<String>();
 			HashMap<String,HashSet<String>> mapMapForEachIdentifiersDistinct=new LinkedHashMap<String, HashSet<String>>();
 			HashMap<String,Integer> mapMapForEachIdentifiersCount=new LinkedHashMap<String, Integer>();
 
 //			HashMap<String,HashMap<String,HashMap<String,HashSet<String>>>> mapAnalysisDistinctMapping=new LinkedHashMap<String, HashMap<String,HashMap<String,HashSet<String>>>>();
 			HashMap<String,HashMap<String,HashMap<String,Integer>>> mapAnalysisAll=new LinkedHashMap<String, HashMap<String,HashMap<String,Integer>>>();
 			
-			set5Libraries.add("android");
-			set5Libraries.add("com.google.gwt");
-			set5Libraries.add("com.thoughtworks.xstream");
-			set5Libraries.add("org.hibernate");
-			set5Libraries.add("org.joda.time");		
-					//set5Libraries.add("org.apache.commons.");
-			set5Libraries.add("java");
+			
 
 			
 			
@@ -408,23 +409,25 @@ public class AnalysisRelation {
 				f1score=precision*recall*2/(precision+recall);
 				FileUtil.appendToFile(fop_output+fn_result, strItem+": "+mapTemp.get("Correct")+"\t"+mapTemp.get("Incorrect")+"\t"+mapTemp.get("OOS")+"\t"+mapTemp.get("OOT")+"\t"+(mapTemp.get("OOS")+mapTemp.get("OOT"))+"\t"+precision+"\t"+recall+"\t"+f1score+"\n");
 			}
-			StringBuilder sbInfoAnalysisMap=new StringBuilder();
-			sbInfoAnalysisMap.append("\t");
+			
+		}
+		
+		StringBuilder sbInfoAnalysisMap=new StringBuilder();
+		sbInfoAnalysisMap.append("\t");
+		for(String strItem:lstNameMap){
+			sbInfoAnalysisMap.append(strItem+"\t\t");
+		}
+		sbInfoAnalysisMap.append("\n");
+		
+		for(String strLib:set5Libraries){
+			sbInfoAnalysisMap.append(strLib+"\t");
 			for(String strItem:lstNameMap){
-				sbInfoAnalysisMap.append(strItem+"\t\t");
+				HashMap<String,Integer> mapInt=mapAnalysisAll.get(strLib).get(strItem);
+				sbInfoAnalysisMap.append(mapInt.get(name_correct)+"\t"+mapInt.get(name_incorrect)+"\t");
 			}
 			sbInfoAnalysisMap.append("\n");
-			
-			for(String strLib:set5Libraries){
-				sbInfoAnalysisMap.append(strLib+"\t");
-				for(String strItem:lstNameMap){
-					HashMap<String,Integer> mapInt=mapAnalysisAll.get(strLib).get(strItem);
-					sbInfoAnalysisMap.append(mapInt.get(name_correct)+"\t"+mapInt.get(name_incorrect)+"\t");
-				}
-				sbInfoAnalysisMap.append("\n");
-			}
-			FileIO.writeStringToFile(sbInfoAnalysisMap.toString()+"\n", fopCurrentOutAnalysis+fnAnalysis);
 		}
+		FileIO.writeStringToFile(sbInfoAnalysisMap.toString()+"\n", fopCurrentOutAnalysis+fnAnalysis);
 		
 		
 		

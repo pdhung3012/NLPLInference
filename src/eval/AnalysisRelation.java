@@ -355,7 +355,7 @@ public class AnalysisRelation {
 							mapCountPerLibrary.get(strPackageName).put("Correct",currentNumber+1);
 							ptCorrect_map.print((i+1)+"\t"+itemSource[j]+"\t"+itemTarget[j]+"\t"+strTargetAPIInfo+"\n");
 //							mapCorrectPrintScreen.get(strPackageName).print(itemSource[j]+","+mapVocabTraining.get(itemSource[j])+"\n");
-							int numMapPerSource=mapMapForEachIdentifiersCount.get(itemSource[j]);
+							int numMapPerSource=mapMapForEachIdentifiersDistinct.get(itemSource[j]).size();
 							String strItemUpdateMap=getMappingNumRange(lstNameMap, numMapPerSource);
 							HashMap<String,Integer> mapMapInside = mapAnalysisAll.get(strPackageName).get(strItemUpdateMap);
 							mapMapInside.put(name_correct, mapMapInside.get(name_correct)+1);
@@ -376,7 +376,7 @@ public class AnalysisRelation {
 								
 								ptIncorrect_map.print((i+1)+"\t"+itemSource[j]+"\t"+itemTrans[j]+"\t"+itemTarget[j]+"\t"+strTransAPIInfo+"\t"+strTargetAPIInfo+"\n");
 //								mapIncorrectPrintScreen.get(strPackageName).print(itemSource[j]+","+mapVocabTraining.get(itemSource[j])+","+itemTarget[j]+"\n");
-								int numMapPerSource=mapMapForEachIdentifiersCount.get(itemSource[j]);
+								int numMapPerSource=mapMapForEachIdentifiersDistinct.get(itemSource[j]).size();
 								
 								String strItemUpdateMap=getMappingNumRange(lstNameMap, numMapPerSource);
 								HashMap<String,Integer> mapMapInside = mapAnalysisAll.get(strPackageName).get(strItemUpdateMap);

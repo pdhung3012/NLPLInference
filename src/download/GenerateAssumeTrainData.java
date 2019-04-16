@@ -25,7 +25,7 @@ public class GenerateAssumeTrainData {
 			String[] arrItemTarget=lstOrgTargets.get(i).trim().split("\\s+");
 			
 			for(int j=0;j<arrItemSource.length;j++){
-				if(arrItemSource[j].endsWith("#identifier")){
+				if(!arrItemSource[j].endsWith("#identifier")){
 					sb.append(arrItemTarget[j]);
 				}else{
 					sb.append(arrItemSource[j]);
@@ -35,9 +35,10 @@ public class GenerateAssumeTrainData {
 					sb.append(" ");
 				}
 			}
+			sb.append("\n");
 			
 			if((i+1)%numLineBuffer==0){
-				FileIO.appendStringToFile(sb.toString().trim()+"\n", fpNewTarget);
+				FileIO.appendStringToFile(sb.toString().trim()+"\n", fpNewSource);
 				sb=new StringBuilder();
 			}
 			
@@ -45,7 +46,7 @@ public class GenerateAssumeTrainData {
 		
 		String str=sb.toString().trim();
 		if(!str.isEmpty()){
-			FileIO.appendStringToFile(str+"\n", fpNewTarget);
+			FileIO.appendStringToFile(str+"\n", fpNewSource);
 		}
 		
 		
@@ -54,7 +55,7 @@ public class GenerateAssumeTrainData {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String fopInput=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"originData"+File.separator;
-		String fopOutput=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"realTrain";
+		String fopOutput=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"realTrain"+File.separator;
 		
 		String fn_trainSource="train.s";
 		String fn_trainTarget="train.t";
@@ -64,12 +65,12 @@ public class GenerateAssumeTrainData {
 		String fn_tuneTarget="tune.t";
 		
 		new File(fopOutput).mkdir();
-		
+		/*
 		getAssumeSourceData(fopInput+fn_trainSource, fopInput+fn_trainTarget, fopOutput+fn_trainSource, fopOutput+fn_trainTarget);
 		getAssumeSourceData(fopInput+fn_tuneSource, fopInput+fn_tuneTarget, fopOutput+fn_tuneSource, fopOutput+fn_tuneTarget);
 		getAssumeSourceData(fopInput+fn_testSource, fopInput+fn_testTarget, fopOutput+fn_testSource, fopOutput+fn_testTarget);
-		
-		ReGenerateAlignment.generateTotalAlignment(fopOutput, fopInput+fn_trainSource, fopInput+fn_trainTarget,  fopOutput 
+		*/
+		ReGenerateAlignment.generateTotalAlignment(fopOutput, fopOutput+fn_trainSource, fopOutput+fn_trainTarget,  fopOutput 
 				+ "training.s-t.A3", fopOutput 
 				+ "training.t-s.A3", true);
 		

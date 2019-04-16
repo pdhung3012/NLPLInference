@@ -8,10 +8,6 @@ public class CombineTenFoldResultIntrinsicEval {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String fnTest2OnlySurrounding="";
-		String fnTestCodeContext="";
-		String fnTestRandomTerm="";
-		String fnTestFull="testFull";
 		String fopOutput="G:\\projectAddTermData\\v5_allFolds\\b12_tune_fold-1"
 				 + "\\";
 		

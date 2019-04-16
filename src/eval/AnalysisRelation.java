@@ -137,6 +137,23 @@ public class AnalysisRelation {
 		set5Libraries.add("org.joda.time");		
 				//set5Libraries.add("org.apache.commons.");
 		set5Libraries.add("java");
+//		HashMap<String,HashMap<String,HashMap<String,HashSet<String>>>> mapAnalysisDistinctMapping=new LinkedHashMap<String, HashMap<String,HashMap<String,HashSet<String>>>>();
+		HashMap<String,HashMap<String,HashMap<String,Integer>>> mapAnalysisAll=new LinkedHashMap<String, HashMap<String,HashMap<String,Integer>>>();
+		
+		for(String strItem:set5Libraries){
+			HashMap<String,HashMap<String,Integer>> mapMapStoreMapInt=new LinkedHashMap<String, HashMap<String,Integer>>();
+			for(int q=0;q<lstNameMap.size();q++){
+				HashMap<String,Integer> mapInt=new LinkedHashMap<String, Integer>();
+				mapInt.put(name_correct, 0);
+				mapInt.put(name_incorrect, 0);
+//				mapInt.put(name_OOS, 0);
+//				mapInt.put(name_OOT, 0);
+				mapMapStoreMapInt.put(lstNameMap.get(q),mapInt);					
+				
+			}
+			mapAnalysisAll.put(strItem, mapMapStoreMapInt);
+		}
+
 		
 		for(int indexFold=1;indexFold<=10;indexFold++){
 			String fnTuneName="b12_tune_fold-"+indexFold;
@@ -176,8 +193,6 @@ public class AnalysisRelation {
 			HashMap<String,HashSet<String>> mapMapForEachIdentifiersDistinct=new LinkedHashMap<String, HashSet<String>>();
 			HashMap<String,Integer> mapMapForEachIdentifiersCount=new LinkedHashMap<String, Integer>();
 
-//			HashMap<String,HashMap<String,HashMap<String,HashSet<String>>>> mapAnalysisDistinctMapping=new LinkedHashMap<String, HashMap<String,HashMap<String,HashSet<String>>>>();
-			HashMap<String,HashMap<String,HashMap<String,Integer>>> mapAnalysisAll=new LinkedHashMap<String, HashMap<String,HashMap<String,Integer>>>();
 			
 			
 
@@ -193,17 +208,17 @@ public class AnalysisRelation {
 				mapElement.put("OOS", 0);
 				mapCountPerLibrary.put(strItem, mapElement);
 				
-				HashMap<String,HashMap<String,Integer>> mapMapStoreMapInt=new LinkedHashMap<String, HashMap<String,Integer>>();
-				for(int q=0;q<lstNameMap.size();q++){
-					HashMap<String,Integer> mapInt=new LinkedHashMap<String, Integer>();
-					mapInt.put(name_correct, 0);
-					mapInt.put(name_incorrect, 0);
-//					mapInt.put(name_OOS, 0);
-//					mapInt.put(name_OOT, 0);
-					mapMapStoreMapInt.put(lstNameMap.get(q),mapInt);					
-					
-				}
-				mapAnalysisAll.put(strItem, mapMapStoreMapInt);
+//				HashMap<String,HashMap<String,Integer>> mapMapStoreMapInt=new LinkedHashMap<String, HashMap<String,Integer>>();
+//				for(int q=0;q<lstNameMap.size();q++){
+//					HashMap<String,Integer> mapInt=new LinkedHashMap<String, Integer>();
+//					mapInt.put(name_correct, 0);
+//					mapInt.put(name_incorrect, 0);
+////					mapInt.put(name_OOS, 0);
+////					mapInt.put(name_OOT, 0);
+//					mapMapStoreMapInt.put(lstNameMap.get(q),mapInt);					
+//					
+//				}
+//				mapAnalysisAll.put(strItem, mapMapStoreMapInt);
 				
 				
 				

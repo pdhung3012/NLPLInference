@@ -41,7 +41,7 @@ public class SortUtil {
 		Collections.sort(list, new Comparator<Map.Entry<String, HashSet<String>>>() {
 			public int compare(Map.Entry<String, HashSet<String>> o1,
 					Map.Entry<String, HashSet<String>> o2) {
-				return (o2.getValue().size())-(o1.getValue().size());
+				return (o2.getValue().size()-o1.getValue().size());
 			}
 		});
 

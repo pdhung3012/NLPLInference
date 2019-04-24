@@ -32,6 +32,27 @@ public class SortUtil {
 		return temp;
 	}
 	
+	public static HashMap<String, HashSet<String>> sortHashMapStringHSStringByValueDesc(HashMap<String, HashSet<String>> hm) {
+		// Create a list from elements of HashMap
+		List<Map.Entry<String, HashSet<String>>> list = new LinkedList<Map.Entry<String, HashSet<String>>>(
+				hm.entrySet());
+
+		// Sort the list
+		Collections.sort(list, new Comparator<Map.Entry<String, HashSet<String>>>() {
+			public int compare(Map.Entry<String, HashSet<String>> o1,
+					Map.Entry<String, HashSet<String>> o2) {
+				return (o2.getValue().size())-(o1.getValue().size());
+			}
+		});
+
+		// put data from sorted list to hashmap
+		HashMap<String, HashSet<String>> temp = new LinkedHashMap<String, HashSet<String>>();
+		for (Map.Entry<String, HashSet<String>> aa : list) {
+			temp.put(aa.getKey(), aa.getValue());
+		}
+		return temp;
+	}
+	
 	public static HashMap<String, Integer> getOrderInHM(HashMap<String, Integer> hIn){
 		HashMap<String, Integer> hOut =new LinkedHashMap<>();
 		int index=0;

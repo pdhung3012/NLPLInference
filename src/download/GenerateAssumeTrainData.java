@@ -68,12 +68,13 @@ public class GenerateAssumeTrainData {
 		/*
 		getAssumeSourceData(fopInput+fn_trainSource, fopInput+fn_trainTarget, fopOutput+fn_trainSource, fopOutput+fn_trainTarget);
 		getAssumeSourceData(fopInput+fn_tuneSource, fopInput+fn_tuneTarget, fopOutput+fn_tuneSource, fopOutput+fn_tuneTarget);
-		getAssumeSourceData(fopInput+fn_testSource, fopInput+fn_testTarget, fopOutput+fn_testSource, fopOutput+fn_testTarget);
 		*/
-		ReGenerateAlignment.generateTotalAlignment(fopOutput, fopOutput+fn_trainSource, fopOutput+fn_trainTarget,  fopOutput 
+		getAssumeSourceData(fopInput+fn_testSource, fopInput+fn_testTarget, fopOutput+fn_testSource, fopOutput+fn_testTarget);
+		
+		/*ReGenerateAlignment.generateTotalAlignment(fopOutput, fopOutput+fn_trainSource, fopOutput+fn_trainTarget,  fopOutput 
 				+ "training.s-t.A3", fopOutput 
 				+ "training.t-s.A3", true);
-		
+		*/
 		
 	}
 

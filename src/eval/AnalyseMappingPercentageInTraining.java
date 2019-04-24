@@ -42,7 +42,7 @@ public static String SplitInvocationCharacter="\\$\\%\\$";
 		HashMap<String,String> map=new LinkedHashMap<String, String>();
 		for(String key:mapTotalId.keySet()){
 			String val=mapTotalId.get(key);
-			String fqn=getInvocationReceiverInLibrary(val);
+			String fqn=getInvocationVarInLibrary(val);
 			map.put(key, fqn);
 		}
 		return map;

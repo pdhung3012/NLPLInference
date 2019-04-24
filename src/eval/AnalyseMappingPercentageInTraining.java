@@ -119,7 +119,7 @@ public static String SplitInvocationCharacter="\\$\\%\\$";
 									
 		}
 		
-		SortUtil.sortHashMapStringHSStringByValueDesc(mapAnalyseExprs);
+		mapAnalyseExprs=SortUtil.sortHashMapStringHSStringByValueDesc(mapAnalyseExprs);
 		
 		ArrayList<String> lstNum=new ArrayList<>();
 		lstNum.add("1");

@@ -166,7 +166,7 @@ public static String SplitInvocationCharacter="\\$\\%\\$";
 		FileIO.writeStringToFile(sbAna.toString()+"\n", fop_mapTotalId+fn_anaMapParamResult);
 		sbAna=new StringBuilder();
 		for(String ket:mapAnalyseExprs.keySet()){
-			sbAna.append(ket+"\t"+mapAnalyseExprs.get(ket).size()+"\t"+mapAnalyseExprs.get(ket).toString());
+			sbAna.append(ket+"\t"+mapAnalyseExprs.get(ket).size()+"\t"+mapAnalyseExprs.get(ket).toString()+"\n");
 		}
 		FileIO.writeStringToFile(sbAna.toString()+"\n", fop_mapTotalId+"ana_countOrder.txt");
 	}

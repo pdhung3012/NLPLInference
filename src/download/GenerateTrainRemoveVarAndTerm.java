@@ -87,6 +87,7 @@ public static String SplitInvocationCharacter="\\$\\%\\$";
 			String[] arrItS=arrSource[i].split("\\s+");
 			String[] arrItT=arrTarget[i].split("\\s+");
 			String strLineS="",strLineT="";
+			LinkedHashSet<Integer> setRemove=new LinkedHashSet<Integer>();
 			for(int j=0;j<arrItS.length;j++){
 				if(arrItS[j].endsWith("#identifier")){
 //					String targetID=arrItT[j];
@@ -110,11 +111,18 @@ public static String SplitInvocationCharacter="\\$\\%\\$";
 					}
 					//System.out.println(arrTarget[i]);
 					for(int k=start+1;k<end;k++){
-						strLineS+=arrItS[k]+" ";
-						strLineT+=arrItT[k]+" ";
+//						strLineS+=arrItS[k]+" ";
+//						strLineT+=arrItT[k]+" ";
+						if(j!=k){
+							setRemove.add(k);
+						}
 					}
-				} else {
-					
+				}
+			}
+			for(int j=0;j<arrItS.length;j++){
+				if(!setRemove.contains(j)){
+					strLineS+=arrItS[j]+" ";
+					strLineT+=arrItT[j]+" ";
 				}
 			}
 			strNewSource.append(strLineS+"\n");

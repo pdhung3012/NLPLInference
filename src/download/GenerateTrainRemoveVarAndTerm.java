@@ -82,7 +82,7 @@ public static String SplitInvocationCharacter="\\$\\%\\$";
 	public static void refineSourceTarget(String fpTermSource,String fpTermTarget,String fpNewSource,String fpNewTarget,HashMap<String,String> mapVar){
 		String[] arrSource=FileIO.readStringFromFile(fpTermSource).split("\n");
 		String[] arrTarget=FileIO.readStringFromFile(fpTermTarget).split("\n");
-		String strNewSource="",strNewTarget="";
+		StringBuilder strNewSource=new StringBuilder(),strNewTarget=new StringBuilder();
 		for(int i=0;i<arrSource.length;i++){
 			String[] arrItS=arrSource[i].split("\\s+");
 			String[] arrItT=arrTarget[i].split("\\s+");
@@ -110,11 +110,11 @@ public static String SplitInvocationCharacter="\\$\\%\\$";
 					}
 				}
 			}
-			strNewSource+=strLineS+"\n";
-			strNewTarget+=strLineT+"\n";
+			strNewSource.append(strLineS+"\n");
+			strNewTarget.append(strLineT+"\n");
 		}
-		FileIO.writeStringToFile(strNewSource, fpNewSource);
-		FileIO.writeStringToFile(strNewTarget, fpNewTarget);
+		FileIO.writeStringToFile(strNewSource.toString()+"\n", fpNewSource);
+		FileIO.writeStringToFile(strNewTarget.toString()+"\n", fpNewTarget);
 	}
 
 	public static void main(String[] args) {

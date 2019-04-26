@@ -94,20 +94,27 @@ public static String SplitInvocationCharacter="\\$\\%\\$";
 					int stopStartIndex=0;
 					String strLstVar=mapVar.get(arrItT[j]);
 					if(!strLstVar.isEmpty()){
-						stopStartIndex=strLstVar.split("\\#").length;
+						stopStartIndex=strLstVar.split("#").length;
+						//System.out.println(strLstVar+" "+stopStartIndex);
 					}
 					for(int q=0;q<stopStartIndex;q++){
 						start--;
+					}
+					if(start<-1) {
+						start=j-1;
 					}
 					
 					int end =j+1;
 					while(end<arrItS.length && arrItS[end].endsWith("#term")){
 						end++;
 					}
+					//System.out.println(arrTarget[i]);
 					for(int k=start+1;k<end;k++){
 						strLineS+=arrItS[k]+" ";
 						strLineT+=arrItT[k]+" ";
 					}
+				} else {
+					
 				}
 			}
 			strNewSource.append(strLineS+"\n");
@@ -134,9 +141,9 @@ public static String SplitInvocationCharacter="\\$\\%\\$";
 		new File(fopOutput).mkdir();
 		
 		
-		refineSourceTarget(fopInput+fn_trainSource,fopInput+fn_trainTarget,fopOutput+fn_trainSource,fopOutput+fn_trainTarget,mapIdVars);
 		refineSourceTarget(fopInput+fn_testSource,fopInput+fn_testTarget,fopOutput+fn_testSource,fopOutput+fn_testTarget,mapIdVars);
 		refineSourceTarget(fopInput+fn_tuneSource,fopInput+fn_tuneTarget,fopOutput+fn_tuneSource,fopOutput+fn_tuneTarget,mapIdVars);
+		refineSourceTarget(fopInput+fn_trainSource,fopInput+fn_trainTarget,fopOutput+fn_trainSource,fopOutput+fn_trainTarget,mapIdVars);
 		
 		ReGenerateAlignment.generateTotalAlignment(fopOutput, fopOutput+fn_trainSource, fopOutput+fn_trainTarget,  fopOutput 
 				+ "training.s-t.A3", fopOutput 

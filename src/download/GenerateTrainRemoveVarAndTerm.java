@@ -94,7 +94,7 @@ public static String SplitInvocationCharacter="\\$\\%\\$";
 					int stopStartIndex=0;
 					String strLstVar=mapVar.get(arrItT[j]);
 					if(!strLstVar.isEmpty()){
-						stopStartIndex=strLstVar.split("#").length;
+						stopStartIndex=strLstVar.split("\\#").length;
 					}
 					for(int q=0;q<stopStartIndex;q++){
 						start--;

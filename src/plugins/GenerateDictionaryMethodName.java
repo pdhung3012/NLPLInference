@@ -28,12 +28,19 @@ public class GenerateDictionaryMethodName {
 			String[] arrItemSource=lstOrgSources.get(i).trim().split("\\s+");
 			
 			for(int j=0;j<arrItemSource.length;j++){
+				
+				
 				if(arrItemSource[j].endsWith("#identifier")){
-					if(!mapDictionary.containsKey(arrItemSource[j])) {
-						mapDictionary.put(arrItemSource[j], 1);
-					} else {
-						mapDictionary.put(arrItemSource[j],mapDictionary.get(arrItemSource[j])+ 1);
+					char c = arrItemSource[j].charAt(0);
+					if ((c >= 'A' && c <= 'Z') ||(c >= 'a' && c <= 'z')) {
+						if(!mapDictionary.containsKey(arrItemSource[j])) {
+							mapDictionary.put(arrItemSource[j], 1);
+						} else {
+							mapDictionary.put(arrItemSource[j],mapDictionary.get(arrItemSource[j])+ 1);
+						}
 					}
+					
+					
 				}
 			}
 		}

@@ -28,7 +28,7 @@ public class GenerateDictionaryMethodName {
 			String[] arrItemSource=lstOrgSources.get(i).trim().split("\\s+");
 			
 			for(int j=0;j<arrItemSource.length;j++){
-				if(!arrItemSource[j].endsWith("#identifier")){
+				if(arrItemSource[j].endsWith("#identifier")){
 					if(!mapDictionary.containsKey(arrItemSource[j])) {
 						mapDictionary.put(arrItemSource[j], 1);
 					} else {

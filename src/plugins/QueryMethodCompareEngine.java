@@ -126,9 +126,14 @@ public class QueryMethodCompareEngine {
 		String[] arrQueries=FileIO.readStringFromFile(fileQuery.getAbsolutePath()).split("\n");
 		StringBuilder sbResult=new StringBuilder();
 		for(int i=0;i<arrQueries.length;i++) {
+			long startTime = System.nanoTime();
 			HashMap<String,Double> mapQueryResult=calculateSimilarInvocationByEditSimilarity(arrQueries[i], fileDictionary, fileDictLemma);
+			long endTime   = System.nanoTime();
+			long totalTime = endTime - startTime;
+			
 			int indexPrintOut=0;
 			sbResult.append("Query "+(i+1)+": "+arrQueries[i]+"\n");
+			sbResult.append("Time : "+totalTime+"\n");
 			for(String strItemMethod:mapQueryResult.keySet()) {
 				indexPrintOut++;
 				sbResult.append(indexPrintOut+". "+strItemMethod+"\t"+mapQueryResult.get(strItemMethod)+"\n");

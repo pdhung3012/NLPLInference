@@ -145,10 +145,10 @@ public class QueryMethodCompareEngine {
 		// TODO Auto-generated method stub
 
 		String fop=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA;
-		String fn_query="queries.txt";
+		String fn_query="queryTextDesc.txt";
 		String fn_dictionary="dictionary_mn.txt";
 		String fn_dict_lemma="dictionary_lemma.txt";
-		String fn_output="queries_result.txt";
+		String fn_output="queryTextDesc_result.txt";
 		int topResultNum=20;
 		
 		StanfordLemmatizer lemm=new StanfordLemmatizer();

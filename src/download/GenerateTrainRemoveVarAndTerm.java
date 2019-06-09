@@ -150,14 +150,14 @@ public static String SplitInvocationCharacter="\\$\\%\\$";
 		
 		
 		refineSourceTarget(fopInput+fn_testSource,fopInput+fn_testTarget,fopOutput+fn_testSource,fopOutput+fn_testTarget,mapIdVars);
-		refineSourceTarget(fopInput+fn_tuneSource,fopInput+fn_tuneTarget,fopOutput+fn_tuneSource,fopOutput+fn_tuneTarget,mapIdVars);
-		refineSourceTarget(fopInput+fn_trainSource,fopInput+fn_trainTarget,fopOutput+fn_trainSource,fopOutput+fn_trainTarget,mapIdVars);
-		
+		//refineSourceTarget(fopInput+fn_tuneSource,fopInput+fn_tuneTarget,fopOutput+fn_tuneSource,fopOutput+fn_tuneTarget,mapIdVars);
+		//refineSourceTarget(fopInput+fn_trainSource,fopInput+fn_trainTarget,fopOutput+fn_trainSource,fopOutput+fn_trainTarget,mapIdVars);
+		/*
 		ReGenerateAlignment.generateTotalAlignment(fopOutput, fopOutput+fn_trainSource, fopOutput+fn_trainTarget,  fopOutput 
 				+ "training.s-t.A3", fopOutput 
 				+ "training.t-s.A3", true);
 		
-		
+		*/
 	}
 
 }

@@ -87,7 +87,7 @@ public class QueryMethodCompareEngine {
 		String strResult="";
 		try{
 			
-			strResult=lemm.lemmatizeToString(strItem.replaceAll(regexCamelCase, "$1 $2"));
+			strResult=lemm.lemmatizeToString(strItem.replaceAll(regexCamelCase, "$1 $2").replaceAll("_", " "));
 			
 		}catch(Exception ex){
 			

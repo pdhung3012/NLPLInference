@@ -102,6 +102,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.WhileStatement;
 import org.eclipse.jdt.core.dom.WildcardType;
 
+import utils.FileIO;
 import utils.JavaASTUtil;
 import utils.StanfordLemmatizer;
 import consts.PathConstanct;
@@ -109,16 +110,14 @@ import entities.InvocationObject;
 import entities.LocalEntity;
 import entities.LocalForMethod;
 
-public class OnlySourceEncoderVisitor  extends ASTVisitor {
+public class OnlySourceEncoderVisitor extends ASTVisitor {
 
 	// sequence generator properties
 	private static final String SEPARATOR = "#";
 	private String className, superClassName;
 	private int numOfExpressions = 0, numOfResolvedExpressions = 0;
-	private StringBuilder fullTokens = new StringBuilder(),
-			partialTokens = new StringBuilder();
-	private StringBuilder fullAddNLTokens = new StringBuilder(),
-			partialAddNLTokens = new StringBuilder();
+	private StringBuilder partialTokens = new StringBuilder();
+	private StringBuilder fullAddNLTokens = new StringBuilder(), partialAddNLTokens = new StringBuilder();
 	private String fullSequence = null, partialSequence = null;
 	private String[] fullSequenceTokens, partialSequenceTokens;
 	private LinkedHashMap<String, String> mapIdenAndID, mapIDAndIden;
@@ -137,8 +136,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 
 	// end
 	/**
-	 * Internal synonym for {@link AST#JLS2}. Use to alleviate deprecation
-	 * warnings.
+	 * Internal synonym for {@link AST#JLS2}. Use to alleviate deprecation warnings.
 	 * 
 	 * @deprecated
 	 * @since 3.4
@@ -146,8 +144,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 	private static final int JLS2 = AST.JLS2;
 
 	/**
-	 * Internal synonym for {@link AST#JLS3}. Use to alleviate deprecation
-	 * warnings.
+	 * Internal synonym for {@link AST#JLS3}. Use to alleviate deprecation warnings.
 	 * 
 	 * @deprecated
 	 * @since 3.4
@@ -155,8 +152,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 	private static final int JLS3 = AST.JLS3;
 
 	/**
-	 * Internal synonym for {@link AST#JLS4}. Use to alleviate deprecation
-	 * warnings.
+	 * Internal synonym for {@link AST#JLS4}. Use to alleviate deprecation warnings.
 	 * 
 	 * @deprecated
 	 * @since 3.10
@@ -169,8 +165,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 
 	protected StringBuffer buffer = new StringBuffer();
 	private HashMap<String, String> setSequencesOfMethods, setOfUnResolvedType;
-	private LinkedHashSet<LocalEntity> setFields, setArguments,
-			setLocalVariables;
+	private LinkedHashSet<LocalEntity> setFields, setArguments, setLocalVariables;
 	// private LinkedHashSet<String> setRequiredAPIsForMI = new
 	// LinkedHashSet<String>();;
 	private String strSplitCharacter = " ";
@@ -179,8 +174,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 	private boolean isVisitMethod = false;
 	private int typeOfTraverse = 0;
 	private boolean isParsingType;
-	private boolean isVisitInsideMethodDeclaration = false,
-			isSimpleNameMethod = false;
+	private boolean isVisitInsideMethodDeclaration = false, isSimpleNameMethod = false;
 	private StringBuffer unresolvedBuffer;
 
 	ASTParser parser = ASTParser.newParser(AST.JLS4);
@@ -196,10 +190,9 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 	private MethodDeclaration currentMethodDecl = null;
 	private int levelOfTraverMD = 0;
 	private String fopInvocationObject;
+	private String fopDictionaryTextDescription;
 	private String hashIdenPath;
 	private StanfordLemmatizer lemm;
-	
-	
 
 	public StanfordLemmatizer getLemm() {
 		return lemm;
@@ -226,15 +219,13 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 	}
 
 	/**
-	 * Internal synonym for
-	 * {@link TypeDeclarationStatement#getTypeDeclaration()}. Use to alleviate
-	 * deprecation warnings.
+	 * Internal synonym for {@link TypeDeclarationStatement#getTypeDeclaration()}.
+	 * Use to alleviate deprecation warnings.
 	 * 
 	 * @deprecated
 	 * @since 3.4
 	 */
-	private static TypeDeclaration getTypeDeclaration(
-			TypeDeclarationStatement node) {
+	private static TypeDeclaration getTypeDeclaration(TypeDeclarationStatement node) {
 		return node.getTypeDeclaration();
 	}
 
@@ -285,8 +276,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 		return setSequencesOfMethods;
 	}
 
-	public void setSetSequencesOfMethods(
-			HashMap<String, String> setSequencesOfMethods) {
+	public void setSetSequencesOfMethods(HashMap<String, String> setSequencesOfMethods) {
 		this.setSequencesOfMethods = setSequencesOfMethods;
 	}
 
@@ -294,9 +284,18 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 		return setOfUnResolvedType;
 	}
 
-	public void setSetOfUnResolvedType(
-			HashMap<String, String> setOfUnResolvedType) {
+	public void setSetOfUnResolvedType(HashMap<String, String> setOfUnResolvedType) {
 		this.setOfUnResolvedType = setOfUnResolvedType;
+	}
+	
+	
+
+	public String getFopDictionaryTextDescription() {
+		return fopDictionaryTextDescription;
+	}
+
+	public void setFopDictionaryTextDescription(String fopDictionaryTextDescription) {
+		this.fopDictionaryTextDescription = fopDictionaryTextDescription;
 	}
 
 	public OnlySourceEncoderVisitor(String className, String superClassName) {
@@ -305,14 +304,13 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 		this.superClassName = superClassName;
 	}
 
-	public void parseProject(String projectLocation,
-			String fopInvocationObject, String jdkPath) {
+	public void parseProject(String projectLocation, String fopInvocationObject,String fopDictionaryTextDescription, String jdkPath) {
 		this.fopInvocationObject = fopInvocationObject;
+		this.fopDictionaryTextDescription=fopDictionaryTextDescription;
 		setSequencesOfMethods = new LinkedHashMap<String, String>();
 		Map<String, String> options = JavaCore.getOptions();
 		String[] arrChildJars = utils.FileIO.findAllJarFiles(projectLocation);
-		String[] jarPaths = utils.FileIO.combineFilesToArray(jdkPath,
-				arrChildJars);
+		String[] jarPaths = utils.FileIO.combineFilesToArray(jdkPath, arrChildJars);
 		// String[] jarPaths = { jdkPath };
 		// File f = new File(fileLocation);
 		String[] filePaths = utils.FileIO.findAllJavaFiles(projectLocation);
@@ -334,15 +332,13 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 		setLocalVariables = new LinkedHashSet<LocalEntity>();
 		setFields = new LinkedHashSet<LocalEntity>();
 		final OnlySourceEncoderVisitor visitor = this;
-		parser.createASTs(filePaths, null, new String[] {},
-				new FileASTRequestor() {
-					@Override
-					public void acceptAST(String sourceFilePath,
-							CompilationUnit javaUnit) {
-						// javaUnit.accept(visitor);
-						mapCU.put(sourceFilePath, javaUnit);
-					}
-				}, null);
+		parser.createASTs(filePaths, null, new String[] {}, new FileASTRequestor() {
+			@Override
+			public void acceptAST(String sourceFilePath, CompilationUnit javaUnit) {
+				// javaUnit.accept(visitor);
+				mapCU.put(sourceFilePath, javaUnit);
+			}
+		}, null);
 
 	}
 
@@ -375,20 +371,17 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 		StringBuilder sb = new StringBuilder();
 		sb.append("setLocalVariable " + setLocalVariables.size() + ": ");
 		for (LocalEntity ent : setLocalVariables) {
-			sb.append(ent.getStrCodeReprensent() + " - "
-					+ ent.getStrTypeOfEntity() + ",");
+			sb.append(ent.getStrCodeReprensent() + " - " + ent.getStrTypeOfEntity() + ",");
 		}
 		sb.append("\n");
 		sb.append("setArgument " + setArguments.size() + ": ");
 		for (LocalEntity ent : setArguments) {
-			sb.append(ent.getStrCodeReprensent() + " - "
-					+ ent.getStrTypeOfEntity() + ",");
+			sb.append(ent.getStrCodeReprensent() + " - " + ent.getStrTypeOfEntity() + ",");
 		}
 		sb.append("\n");
 		sb.append("setField " + setFields.size() + ": ");
 		for (LocalEntity ent : setFields) {
-			sb.append(ent.getStrCodeReprensent() + " - "
-					+ ent.getStrTypeOfEntity() + ",");
+			sb.append(ent.getStrCodeReprensent() + " - " + ent.getStrTypeOfEntity() + ",");
 		}
 		sb.append("\n");
 
@@ -403,11 +396,11 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 		this.fopInvocationObject = fopInvocationObject;
 	}
 
-	public String[] getFullSequenceTokens() {
-		if (fullSequenceTokens == null)
-			buildFullSequence();
-		return fullSequenceTokens;
-	}
+//	public String[] getFullSequenceTokens() {
+//		if (fullSequenceTokens == null)
+//			buildFullSequence();
+//		return fullSequenceTokens;
+//	}
 
 	public String[] getPartialSequenceTokens() {
 		if (partialSequenceTokens == null)
@@ -415,11 +408,11 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 		return partialSequenceTokens;
 	}
 
-	public String getFullSequence() {
-		if (fullSequence == null)
-			buildFullSequence();
-		return fullSequence;
-	}
+//	public String getFullSequence() {
+//		if (fullSequence == null)
+//			buildFullSequence();
+//		return fullSequence;
+//	}
 
 	public String getPartialSequence() {
 		if (partialSequence == null)
@@ -427,13 +420,13 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 		return partialSequence;
 	}
 
-	private void buildFullSequence() {
-		ArrayList<String> parts = buildSequence(fullTokens);
-		this.fullSequence = parts.get(0);
-		this.fullSequenceTokens = new String[parts.size() - 1];
-		for (int i = 1; i < parts.size(); i++)
-			this.fullSequenceTokens[i - 1] = parts.get(i);
-	}
+//	private void buildFullSequence() {
+//		ArrayList<String> parts = buildSequence(fullTokens);
+//		this.fullSequence = parts.get(0);
+//		this.fullSequenceTokens = new String[parts.size() - 1];
+//		for (int i = 1; i < parts.size(); i++)
+//			this.fullSequenceTokens[i - 1] = parts.get(i);
+//	}
 
 	private void buildPartialSequence() {
 		ArrayList<String> parts = buildSequence(partialTokens);
@@ -466,14 +459,12 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 		return l;
 	}
 
-	public static LinkedHashSet<LocalEntity> setInfoOfFieldDeclaration(
-			TypeDeclaration node) {
+	public static LinkedHashSet<LocalEntity> setInfoOfFieldDeclaration(TypeDeclaration node) {
 		LinkedHashSet<LocalEntity> setFields = new LinkedHashSet<LocalEntity>();
 		setFields.clear();
 		FieldDeclaration[] arrFields = node.getFields();
 		for (int i = 0; i < arrFields.length; i++) {
-			List<VariableDeclarationFragment> arrDeclaration = arrFields[i]
-					.fragments();
+			List<VariableDeclarationFragment> arrDeclaration = arrFields[i].fragments();
 			for (int j = 0; j < arrDeclaration.size(); j++) {
 				VariableDeclarationFragment item = arrDeclaration.get(j);
 				IVariableBinding varBind = item.resolveBinding();
@@ -499,8 +490,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 			setFields.clear();
 			FieldDeclaration[] arrFields = node.getFields();
 			for (int i = 0; i < arrFields.length; i++) {
-				List<VariableDeclarationFragment> arrDeclaration = arrFields[i]
-						.fragments();
+				List<VariableDeclarationFragment> arrDeclaration = arrFields[i].fragments();
 				for (int j = 0; j < arrDeclaration.size(); j++) {
 					VariableDeclarationFragment item = arrDeclaration.get(j);
 					IVariableBinding varBind = item.resolveBinding();
@@ -553,8 +543,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 		}
 		setArguments.clear();
 		setLocalVariables.clear();
-		Iterator<SingleVariableDeclaration> parameters = node.parameters()
-				.iterator();
+		Iterator<SingleVariableDeclaration> parameters = node.parameters().iterator();
 		while (parameters.hasNext()) {
 			SingleVariableDeclaration parameter = parameters.next();
 			IVariableBinding parameterType = parameter.resolveBinding();
@@ -575,8 +564,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 		LocalForMethod lfm = new LocalForMethod();
 		lfm.setMethod(node);
 		lfm.setSetArguments((LinkedHashSet<LocalEntity>) setArguments.clone());
-		lfm.setSetLocalVariables((LinkedHashSet<LocalEntity>) setLocalVariables
-				.clone());
+		lfm.setSetLocalVariables((LinkedHashSet<LocalEntity>) setLocalVariables.clone());
 		lfm.setSetFields((LinkedHashSet<LocalEntity>) setFields.clone());
 		// currentLcalMethod = lfm;
 		mapLocalcontextForMethod.put(strSignature, lfm);
@@ -597,14 +585,16 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 					IBinding bindMethod = bindT.getDeclaringMember();
 					if (bindMethod instanceof IMethodBinding) {
 						IMethodBinding bind2M = (IMethodBinding) bindMethod;
-						currentClassDeclaration = bind2M.getDeclaringClass() != null ? bind2M
-								.getDeclaringClass().getQualifiedName() : "";
+						currentClassDeclaration = bind2M.getDeclaringClass() != null
+								? bind2M.getDeclaringClass().getQualifiedName()
+								: "";
 					}
 
 				}
 				// System.out.println("null class "+currentClassDeclaration);
 			}
-			// System.out.println("current class "+currentClassDeclaration+" and "+currentMethodDeclaration);
+			// System.out.println("current class "+currentClassDeclaration+" and
+			// "+currentMethodDeclaration);
 		}
 		if (iaVisitor == null) {
 			iaVisitor = new InvocationAbstractorVisitor();
@@ -666,8 +656,8 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 
 	public String viewSelectedTypeReceiver(IMethodBinding iMethod) {
 
-		String strType = iMethod != null ? (iMethod.getDeclaringClass() != null ? iMethod
-				.getDeclaringClass().getQualifiedName() : "")
+		String strType = iMethod != null
+				? (iMethod.getDeclaringClass() != null ? iMethod.getDeclaringClass().getQualifiedName() : "")
 				: ":";
 		return strType;
 	}
@@ -694,8 +684,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 		if (arrBindArgs.length < i + 1) {
 			return "";
 		}
-		String strType = arrBindArgs[i] != null ? arrBindArgs[i]
-				.getQualifiedName() : "";
+		String strType = arrBindArgs[i] != null ? arrBindArgs[i].getQualifiedName() : "";
 		return strType;
 	}
 
@@ -718,8 +707,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 
 	private String getSignature(IMethodBinding method) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(method.getDeclaringClass().getTypeDeclaration()
-				.getQualifiedName());
+		sb.append(method.getDeclaringClass().getTypeDeclaration().getQualifiedName());
 		sb.append("." + method.getName());
 		sb.append("(");
 		sb.append(SEPARATOR);
@@ -732,8 +720,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 	public static String getUnresolvedType(Type type) {
 		if (type.isArrayType()) {
 			ArrayType t = (ArrayType) type;
-			return getUnresolvedType(t.getElementType())
-					+ getDimensions(t.getDimensions());
+			return getUnresolvedType(t.getElementType()) + getDimensions(t.getDimensions());
 		} else if (type.isIntersectionType()) {
 			IntersectionType it = (IntersectionType) type;
 			@SuppressWarnings("unchecked")
@@ -755,14 +742,12 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 			return s;
 		} else if (type.isNameQualifiedType()) {
 			NameQualifiedType qt = (NameQualifiedType) type;
-			return qt.getQualifier().getFullyQualifiedName() + "."
-					+ qt.getName().getIdentifier();
+			return qt.getQualifier().getFullyQualifiedName() + "." + qt.getName().getIdentifier();
 		} else if (type.isPrimitiveType()) {
 			return type.toString();
 		} else if (type.isQualifiedType()) {
 			QualifiedType qt = (QualifiedType) type;
-			return getUnresolvedType(qt.getQualifier()) + "."
-					+ qt.getName().getIdentifier();
+			return getUnresolvedType(qt.getQualifier()) + "." + qt.getName().getIdentifier();
 		} else if (type.isSimpleType()) {
 			return type.toString();
 		} else if (type.isWildcardType()) {
@@ -797,8 +782,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 			return getUnresolvedType(type);
 		if (type.isArrayType()) {
 			ArrayType t = (ArrayType) type;
-			return getResolvedType(t.getElementType())
-					+ getDimensions(t.getDimensions());
+			return getResolvedType(t.getElementType()) + getDimensions(t.getDimensions());
 		} else if (type.isIntersectionType()) {
 			IntersectionType it = (IntersectionType) type;
 			@SuppressWarnings("unchecked")
@@ -873,22 +857,18 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 		if (node instanceof Expression) {
 			numOfExpressions++;
 			Expression e = (Expression) node;
-			if (e.resolveTypeBinding() != null
-					&& !e.resolveTypeBinding().isRecovered())
+			if (e.resolveTypeBinding() != null && !e.resolveTypeBinding().isRecovered())
 				numOfResolvedExpressions++;
 		} else if (node instanceof Statement) {
 			if (node instanceof ConstructorInvocation) {
 				numOfExpressions++;
 				if (((ConstructorInvocation) node).resolveConstructorBinding() != null
-						&& !((ConstructorInvocation) node)
-								.resolveConstructorBinding().isRecovered())
+						&& !((ConstructorInvocation) node).resolveConstructorBinding().isRecovered())
 					numOfResolvedExpressions++;
 			} else if (node instanceof SuperConstructorInvocation) {
 				numOfExpressions++;
-				if (((SuperConstructorInvocation) node)
-						.resolveConstructorBinding() != null
-						&& !((SuperConstructorInvocation) node)
-								.resolveConstructorBinding().isRecovered())
+				if (((SuperConstructorInvocation) node).resolveConstructorBinding() != null
+						&& !((SuperConstructorInvocation) node).resolveConstructorBinding().isRecovered())
 					numOfResolvedExpressions++;
 			}
 		} else if (node instanceof Type) {
@@ -952,6 +932,22 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 	// return false;
 	// }
 
+	public boolean checkMIInTemplate(MethodInvocation node) {
+		boolean result = false;
+		String receiverType = node.getExpression() != null ? node.getExpression().toString() : "";
+		if (receiverType.equals("MICAliasMethod")) {
+			result = true;
+		}
+		return result;
+	}
+
+	public String viewAliasKeyOfMethod(MethodInvocation node) {
+		String result = "";
+		String receiverType = node.getExpression() != null ? node.getExpression().toString() : "";
+		result = receiverType + "." + node.getName().getIdentifier();
+		return result;
+	}
+
 	public boolean visit(MethodInvocation node) {
 		levelOfTraverMD++;
 		if (levelOfTraverMD == 1) {
@@ -1006,56 +1002,62 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 //		}
 //		for (int i = 0; i < node.arguments().size(); i++)
 //			((ASTNode) node.arguments().get(i)).accept(this);
-		
-		//get abstract information
+
+		// get abstract information
 		if (levelOfTraverMD == 1) {
 
-			String receiverType = viewReceiverOfExpression(node.getExpression());
-			if (!receiverType.isEmpty()
-					&& checkPrefix(receiverType, arrLibrariesPrefix)) {
-				InvocationObject io = new InvocationObject();
-				String methodInfo = JavaASTUtil.buildAllSigIngo(node);
-				io.setStrMethodInfo(methodInfo);
-				if (iaVisitor != null) {
-					node.accept(iaVisitor);
+			if (checkMIInTemplate(node)) {
+				String methodName=node.getName().getIdentifier();
+				File fTokens=new File(fopDictionaryTextDescription+File.separator+methodName+File.separator+"tokens.txt");
+				if(fTokens.exists()) {
+//					FileIO.appendStringToFile(methodName+"\n", fopDictionaryTextDescription+File.separator+"dictionaryQuery.txt");
+					String strNaturalTokens =FileIO.readStringFromFile(fTokens.getAbsolutePath());
+					this.partialTokens.append(strNaturalTokens + " ");
 				}
-				if (!iaVisitor.getSbAbstractInformation().toString()
-						.equals("#")) {
-					String strIdentifier = node.getName().getIdentifier()
-							+ "#identifier";
-					iaVisitor.sortRequiredAPI();
-					io.setStrCodeRepresent(iaVisitor.getSbAbstractInformation()
-							.toString());
-					io.setListQuestionMarkTypes(iaVisitor
-							.getListAbstractTypeQuestionMark());
-					io.setSetImportedAPIs(iaVisitor.getSetRequiredAPIsForMI());
-					io.setStrIdentifier(strIdentifier);
-					io.setListOfRelatedWordsSource(iaVisitor.getListOfRelatedWordsSource());
-					io.setListOfRelatedWordsTarget(iaVisitor.getListOfRelatedWordsTarget());
-					String idenInfo = io.setIDRepresent();
-					String id = "";
-					if (!mapIdenAndID.containsKey(idenInfo)) {
-						id = "E-"
-								+ String.format("%09d", mapIDAndIden.size() + 1);
-						//
-						mapIdenAndID.put(idenInfo, id);
-						mapIDAndIden.put(id, idenInfo);
-						mapIDAppear.put(id, 1);
-						io.saveToFile(hashIdenPath + "/" + id + ".txt");
-					} else {
-						String existId = mapIdenAndID.get(idenInfo);
-						id = existId;
-						mapIDAppear.put(existId, mapIDAppear.get(existId) + 1);
+				
+				
+			} else {
+				String receiverType = viewReceiverOfExpression(node.getExpression());
+				if (!receiverType.isEmpty() && checkPrefix(receiverType, arrLibrariesPrefix)) {
+					InvocationObject io = new InvocationObject();
+					String methodInfo = JavaASTUtil.buildAllSigIngo(node);
+					io.setStrMethodInfo(methodInfo);
+					if (iaVisitor != null) {
+						node.accept(iaVisitor);
 					}
+					if (!iaVisitor.getSbAbstractInformation().toString().equals("#")) {
+						String strIdentifier = node.getName().getIdentifier() + "#identifier";
+						iaVisitor.sortRequiredAPI();
+						io.setStrCodeRepresent(iaVisitor.getSbAbstractInformation().toString());
+						io.setListQuestionMarkTypes(iaVisitor.getListAbstractTypeQuestionMark());
+						io.setSetImportedAPIs(iaVisitor.getSetRequiredAPIsForMI());
+						io.setStrIdentifier(strIdentifier);
+						io.setListOfRelatedWordsSource(iaVisitor.getListOfRelatedWordsSource());
+						io.setListOfRelatedWordsTarget(iaVisitor.getListOfRelatedWordsTarget());
+//						String idenInfo = io.setIDRepresent();
+//						String id = "";
+//						if (!mapIdenAndID.containsKey(idenInfo)) {
+//							id = "E-"
+//									+ String.format("%09d", mapIDAndIden.size() + 1);
+//							//
+//							mapIdenAndID.put(idenInfo, id);
+//							mapIDAndIden.put(id, idenInfo);
+//							mapIDAppear.put(id, 1);
+//							io.saveToFile(hashIdenPath + "/" + id + ".txt");
+//						} else {
+//							String existId = mapIdenAndID.get(idenInfo);
+//							id = existId;
+//							mapIDAppear.put(existId, mapIDAppear.get(existId) + 1);
+//						}
 
-					this.partialTokens.append(iaVisitor.getPartialParamSequence()+ " ");
-					this.fullTokens.append(iaVisitor.getFQNParamSequence()+" ");
-					this.partialTokens.append(strIdentifier + " ");
-					this.fullTokens.append(id + " ");
+						this.partialTokens.append(iaVisitor.getPartialParamSequence() + " ");
+//						this.fullTokens.append(iaVisitor.getFQNParamSequence()+" ");
+						this.partialTokens.append(strIdentifier + " ");
+//						this.fullTokens.append(id + " ");
 
+					}
+					iaVisitor.refreshInformation();
 				}
-
-				iaVisitor.refreshInformation();
 
 			}
 		}
@@ -1071,10 +1073,9 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 
 	@Override
 	public boolean visit(ArrayCreation node) {
-		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
-				.getType());
+		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node.getType());
 		this.partialTokens.append(" new " + utype + " ");
-		this.fullTokens.append(" new " + rtype + " ");
+//		this.fullTokens.append(" new " + rtype + " ");
 		if (node.getInitializer() != null)
 			node.getInitializer().accept(this);
 		else
@@ -1090,7 +1091,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 
 	@Override
 	public boolean visit(AssertStatement node) {
-		this.fullTokens.append(" assert ");
+//		this.fullTokens.append(" assert ");
 		this.partialTokens.append(" assert ");
 		return super.visit(node);
 	}
@@ -1098,7 +1099,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 	@Override
 	public boolean visit(Assignment node) {
 		node.getLeftHandSide().accept(this);
-		this.fullTokens.append(" = ");
+//		this.fullTokens.append(" = ");
 		this.partialTokens.append(" = ");
 		node.getRightHandSide().accept(this);
 		return false;
@@ -1111,7 +1112,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 
 	@Override
 	public boolean visit(BooleanLiteral node) {
-		this.fullTokens.append(" boolean ");
+//		this.fullTokens.append(" boolean ");
 		this.partialTokens.append(" boolean ");
 		return false;
 	}
@@ -1123,9 +1124,8 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 
 	@Override
 	public boolean visit(CastExpression node) {
-		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
-				.getType());
-		this.fullTokens.append(" " + rtype + " <cast> ");
+		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node.getType());
+//		this.fullTokens.append(" " + rtype + " <cast> ");
 		this.partialTokens.append(" " + utype + " <cast> ");
 		node.getExpression().accept(this);
 		return false;
@@ -1138,7 +1138,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 
 	@Override
 	public boolean visit(CharacterLiteral node) {
-		this.fullTokens.append(" char ");
+//		this.fullTokens.append(" char ");
 		this.partialTokens.append(" char ");
 		return false;
 	}
@@ -1148,9 +1148,8 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 		ITypeBinding tb = node.getType().resolveBinding();
 		if (tb != null && tb.getTypeDeclaration().isLocal())
 			return false;
-		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
-				.getType());
-		this.fullTokens.append(" new " + rtype + "() ");
+		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node.getType());
+//		this.fullTokens.append(" new " + rtype + "() ");
 		this.partialTokens.append(" new " + utype + "() ");
 		for (Iterator it = node.arguments().iterator(); it.hasNext();) {
 			Expression e = (Expression) it.next();
@@ -1180,7 +1179,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 		this.partialTokens.append(" " + name + " ");
 		if (tb != null)
 			name = getQualifiedName(tb) + name;
-		this.fullTokens.append(" " + name + " ");
+//		this.fullTokens.append(" " + name + " ");
 		for (int i = 0; i < node.arguments().size(); i++)
 			((ASTNode) node.arguments().get(i)).accept(this);
 		return false;
@@ -1248,7 +1247,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 					return false;
 			}
 		}
-		this.fullTokens.append(" ");
+//		this.fullTokens.append(" ");
 		this.partialTokens.append(" ");
 		node.getExpression().accept(this);
 		String name = "." + node.getName().getIdentifier();
@@ -1260,7 +1259,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 			 * else name = "Array" + name;
 			 */
 		}
-		this.fullTokens.append(" " + name + " ");
+//		this.fullTokens.append(" " + name + " ");
 		return false;
 	}
 
@@ -1296,14 +1295,13 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 
 	@Override
 	public boolean visit(InstanceofExpression node) {
-		this.fullTokens.append(" ");
+//		this.fullTokens.append(" ");
 		this.partialTokens.append(" ");
 		node.getLeftOperand().accept(this);
-		this.fullTokens.append(" <instanceof> ");
+//		this.fullTokens.append(" <instanceof> ");
 		this.partialTokens.append(" <instanceof> ");
-		String rtype = getResolvedType(node.getRightOperand()), utype = getUnresolvedType(node
-				.getRightOperand());
-		this.fullTokens.append(rtype + " ");
+		String rtype = getResolvedType(node.getRightOperand()), utype = getUnresolvedType(node.getRightOperand());
+//		this.fullTokens.append(rtype + " ");
 		this.partialTokens.append(utype + " ");
 		return false;
 	}
@@ -1337,14 +1335,14 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 
 	@Override
 	public boolean visit(NullLiteral node) {
-		this.fullTokens.append(" null ");
+//		this.fullTokens.append(" null ");
 		this.partialTokens.append(" null ");
 		return false;
 	}
 
 	@Override
 	public boolean visit(NumberLiteral node) {
-		this.fullTokens.append(" number ");
+//		this.fullTokens.append(" number ");
 		this.partialTokens.append(" number ");
 		return false;
 	}
@@ -1387,14 +1385,13 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 				tb = ((ITypeBinding) b).getTypeDeclaration();
 				if (tb.isLocal() || tb.getQualifiedName().isEmpty())
 					return false;
-				this.partialTokens.append(" " + node.getFullyQualifiedName()
-						+ " ");
-				this.fullTokens.append(" " + getQualifiedName(tb) + " ");
+				this.partialTokens.append(" " + node.getFullyQualifiedName() + " ");
+//				this.fullTokens.append(" " + getQualifiedName(tb) + " ");
 				return false;
 			}
 		} else {
 			this.partialTokens.append(" " + node.getFullyQualifiedName() + " ");
-			this.fullTokens.append(" " + node.getFullyQualifiedName() + " ");
+//			this.fullTokens.append(" " + node.getFullyQualifiedName() + " ");
 			return false;
 		}
 		node.getQualifier().accept(this);
@@ -1409,7 +1406,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 				 */
 			}
 		}
-		this.fullTokens.append(" " + name + " ");
+//		this.fullTokens.append(" " + name + " ");
 		return false;
 	}
 
@@ -1429,7 +1426,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 					tb = tb.getTypeDeclaration();
 					if (tb.isLocal() || tb.getQualifiedName().isEmpty())
 						return false;
-					this.fullTokens.append(" " + getQualifiedName(tb) + "#var ");
+//					this.fullTokens.append(" " + getQualifiedName(tb) + "#var ");
 					this.partialTokens.append(" " + getName(tb) + "#var ");
 				}
 			} else if (b instanceof ITypeBinding) {
@@ -1437,11 +1434,11 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 				tb = tb.getTypeDeclaration();
 				if (tb.isLocal() || tb.getQualifiedName().isEmpty())
 					return false;
-				this.fullTokens.append(" " + getQualifiedName(tb) + " ");
+//				this.fullTokens.append(" " + getQualifiedName(tb) + " ");
 				this.partialTokens.append(" " + getName(tb) + " ");
 			}
 		} else {
-			this.fullTokens.append(" " + node.getIdentifier() + " ");
+//			this.fullTokens.append(" " + node.getIdentifier() + " ");
 			this.partialTokens.append(" " + node.getIdentifier() + " ");
 		}
 		return false;
@@ -1457,13 +1454,12 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 		ITypeBinding tb = node.getType().resolveBinding();
 		if (tb != null && tb.getTypeDeclaration().isLocal())
 			return false;
-		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
-				.getType());
+		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node.getType());
 		this.partialTokens.append(" " + utype + " ");
-		this.fullTokens.append(" " + rtype + " ");
+//		this.fullTokens.append(" " + rtype + " ");
 		if (node.getInitializer() != null) {
 			this.partialTokens.append("= ");
-			this.fullTokens.append("= ");
+//			this.fullTokens.append("= ");
 			node.getInitializer().accept(this);
 		}
 		return false;
@@ -1471,7 +1467,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 
 	@Override
 	public boolean visit(StringLiteral node) {
-		this.fullTokens.append(" java.lang.String ");
+//		this.fullTokens.append(" java.lang.String ");
 		this.partialTokens.append(" String ");
 		return false;
 	}
@@ -1490,7 +1486,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 		this.partialTokens.append(" " + name + " ");
 		if (tb != null)
 			name = getQualifiedName(tb) + name;
-		this.fullTokens.append(" " + name + " ");
+//		this.fullTokens.append(" " + name + " ");
 		for (int i = 0; i < node.arguments().size(); i++)
 			((ASTNode) node.arguments().get(i)).accept(this);
 		return false;
@@ -1505,16 +1501,16 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 			if (tb.isLocal() || tb.getQualifiedName().isEmpty())
 				return false;
 			this.partialTokens.append(" " + getName(tb) + " ");
-			this.fullTokens.append(" " + getQualifiedName(tb) + " ");
+//			this.fullTokens.append(" " + getQualifiedName(tb) + " ");
 		} else {
 			this.partialTokens.append(" super ");
-			this.fullTokens.append(" super ");
+//			this.fullTokens.append(" super ");
 		}
 		String name = "." + node.getName().getIdentifier();
 		this.partialTokens.append(" " + name + " ");
 		if (tb != null)
 			name = getQualifiedName(tb) + name;
-		this.fullTokens.append(" " + name + " ");
+//		this.fullTokens.append(" " + name + " ");
 		return false;
 	}
 
@@ -1528,10 +1524,10 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 			if (tb.isLocal() || tb.getQualifiedName().isEmpty())
 				return false;
 			this.partialTokens.append(" " + getName(tb) + " ");
-			this.fullTokens.append(" " + getQualifiedName(tb) + " ");
+//			this.fullTokens.append(" " + getQualifiedName(tb) + " ");
 		} else {
 			this.partialTokens.append(" super ");
-			this.fullTokens.append(" super ");
+//			this.fullTokens.append(" super ");
 		}
 		String name = "." + node.getName().getIdentifier() + "()";
 		this.partialTokens.append(" " + name + " ");
@@ -1544,7 +1540,7 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 		// && !name.equals(".valueOf()")
 		)
 			name = getQualifiedName(tb) + name;
-		this.fullTokens.append(" " + name + " ");
+//		this.fullTokens.append(" " + name + " ");
 		for (int i = 0; i < node.arguments().size(); i++)
 			((ASTNode) node.arguments().get(i)).accept(this);
 		return false;
@@ -1578,10 +1574,10 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 			if (b.isLocal() || b.getQualifiedName().isEmpty())
 				return false;
 			this.partialTokens.append(" " + getName(b) + " ");
-			this.fullTokens.append(" " + getQualifiedName(b) + " ");
+//			this.fullTokens.append(" " + getQualifiedName(b) + " ");
 		} else {
 			this.partialTokens.append(" this ");
-			this.fullTokens.append(" this ");
+//			this.fullTokens.append(" this ");
 		}
 		return false;
 	}
@@ -1608,9 +1604,8 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 
 	@Override
 	public boolean visit(TypeLiteral node) {
-		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
-				.getType());
-		this.fullTokens.append(" " + rtype + ".class ");
+		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node.getType());
+//		this.fullTokens.append(" " + rtype + ".class ");
 		this.partialTokens.append(" " + utype + ".class ");
 		return false;
 	}
@@ -1630,10 +1625,9 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 		ITypeBinding tb = node.getType().resolveBinding();
 		if (tb != null && tb.getTypeDeclaration().isLocal())
 			return false;
-		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
-				.getType());
+		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node.getType());
 		this.partialTokens.append(" " + utype + " ");
-		this.fullTokens.append(" " + rtype + " ");
+//		this.fullTokens.append(" " + rtype + " ");
 		for (int i = 0; i < node.fragments().size(); i++)
 			((ASTNode) node.fragments().get(i)).accept(this);
 		return false;
@@ -1644,10 +1638,9 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 		ITypeBinding tb = node.getType().resolveBinding();
 		if (tb != null && tb.getTypeDeclaration().isLocal())
 			return false;
-		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
-				.getType());
+		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node.getType());
 		this.partialTokens.append(" " + utype + " ");
-		this.fullTokens.append(" " + rtype + " ");
+//		this.fullTokens.append(" " + rtype + " ");
 		for (int i = 0; i < node.fragments().size(); i++)
 			((ASTNode) node.fragments().get(i)).accept(this);
 		return false;
@@ -1658,10 +1651,10 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 		Type type = getType(node);
 		String utype = getUnresolvedType(type), rtype = getResolvedType(type);
 		this.partialTokens.append(" " + utype + "#var ");
-		this.fullTokens.append(" " + rtype + "#var ");
+//		this.fullTokens.append(" " + rtype + "#var ");
 		if (node.getInitializer() != null) {
 			this.partialTokens.append("= ");
-			this.fullTokens.append("= ");
+//			this.fullTokens.append("= ");
 			node.getInitializer().accept(this);
 		}
 		return false;
@@ -1719,15 +1712,13 @@ public class OnlySourceEncoderVisitor  extends ASTVisitor {
 
 	private String getQualifiedName(ITypeBinding tb) {
 		if (tb.isArray())
-			return getQualifiedName(tb.getComponentType().getTypeDeclaration())
-					+ getDimensions(tb.getDimensions());
+			return getQualifiedName(tb.getComponentType().getTypeDeclaration()) + getDimensions(tb.getDimensions());
 		return tb.getQualifiedName();
 	}
 
 	private String getName(ITypeBinding tb) {
 		if (tb.isArray())
-			return getName(tb.getComponentType().getTypeDeclaration())
-					+ getDimensions(tb.getDimensions());
+			return getName(tb.getComponentType().getTypeDeclaration()) + getDimensions(tb.getDimensions());
 		return tb.getName();
 	}
 

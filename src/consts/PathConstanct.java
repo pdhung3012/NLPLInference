@@ -5,6 +5,8 @@ public class PathConstanct {
 	public static String PATH_JAVA_CLASSPATH = "C:\\Program Files\\Java\\jdk1.8.0_144\\jre\\lib\\rt.jar";
 	public static String PATH_INPUT_IDENTIFER_PROJECT = "G:\\gitExtractedST2\\";
 	public static String PATH_OUTPUT_IDENTIFER_PROJECT = "G:\\SeqSequence7\\";
+	
+	
 //	public static String PATH_OUTPUT_IDENTIFER_PROJECT = "/Users/hungphan/git/NLPLTranslation/sequences/";
 	public static String PATH_COMBINE_TRANS = "G:\\CombineTrans\\";
 	public static String PATH_COMBINE_SIG_PROJECT = "G:\\CombineSigs\\";
@@ -22,6 +24,10 @@ public class PathConstanct {
 	public static String PATH_PROJECT_TTT_ALIAS = "G:\\projectTrainTestAlias\\";
 	public static String PATH_PROJECT_TTT_TEST_INPUT_PROJECT = "G:\\expInferenceProject\\";
 	public static String PATH_PROJECT_TTT_TEST_IDENTIFIER_PROJECT = "G:\\expInferSeq\\";
+	
+	public static String PATH_PROJECT_TTT_QUERY_INPUT_PROJECT = "G:\\expInferenceQueryProject\\";
+	public static String PATH_PROJECT_TTT_QUERY_IDENTIFIER_PROJECT = "G:\\expInferQuerySeq\\";
+	
 	public static String PATH_PROJECT_TTT_SPLIT_ALIAS = "G:\\projectTrainTestSplitAlias\\";
 	public static String PATH_PROJECT_STATTYPE_DATA = "G:\\StatTypeOldData\\";
 	public static String PATH_PROJECT_STATTYPE_ALIAS = "G:\\StatTypeAlias\\";

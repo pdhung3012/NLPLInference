@@ -37,7 +37,7 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 	
 	private String inPath, outPath;
 	private boolean testing = false;
-	private PrintStream stLocations, stSourceSequences, stTargetSequences, stLog;
+	private PrintStream stLocations, stSourceSequences, stLog;
 	private HashSet<String> badFiles = new HashSet<>();
 	private String fopInvocationObject,fopQueryObject;
 	private String idenHashPath;
@@ -103,7 +103,7 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 		try {
 			stLocations = new PrintStream(new FileOutputStream(outPath + "/locations.txt"));
 			stSourceSequences = new PrintStream(new FileOutputStream(outPath + "/source.txt"));
-			stTargetSequences = new PrintStream(new FileOutputStream(outPath + "/target.txt"));
+//			stTargetSequences = new PrintStream(new FileOutputStream(outPath + "/target.txt"));
 			stLog = new PrintStream(new FileOutputStream(outPath + "/log.txt"));
 		} catch (FileNotFoundException e) {
 			if (testing)

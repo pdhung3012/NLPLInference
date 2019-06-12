@@ -196,12 +196,22 @@ package invocations;
  	private MethodDeclaration currentMethodDecl = null;
  	private int levelOfTraverMD = 0;
  	private String fopInvocationObject;
+ 	private String fopQueryPath;
  	private String hashIdenPath;
  	private StanfordLemmatizer lemm;
 
  
+ 	
  
-  	public StanfordLemmatizer getLemm() {
+  	public String getFopQueryPath() {
+		return fopQueryPath;
+	}
+
+	public void setFopQueryPath(String fopQueryPath) {
+		this.fopQueryPath = fopQueryPath;
+	}
+
+	public StanfordLemmatizer getLemm() {
  		return lemm;
  	}
 

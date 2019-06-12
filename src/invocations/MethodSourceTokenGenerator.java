@@ -46,16 +46,19 @@ public class MethodSourceTokenGenerator {
 	private LinkedHashMap<String, String> mapIdenAndID;
 	private String[] arrPrefix;
 	private StanfordLemmatizer lemm;
+	private ExtractQueryConfiguration config;
 
-	public MethodSourceTokenGenerator(String inPath, String[] arrPrefix, StanfordLemmatizer lemm) {
+	public MethodSourceTokenGenerator(String inPath, String[] arrPrefix, StanfordLemmatizer lemm,ExtractQueryConfiguration config) {
 		this.inPath = inPath;
 		this.arrPrefix = arrPrefix;
 		this.lemm = lemm;
+		this.config=config;
 	}
 
-	public MethodSourceTokenGenerator(String inPath, String[] arrPrefix, boolean testing, StanfordLemmatizer lemm) {
-		this(inPath, arrPrefix, lemm);
+	public MethodSourceTokenGenerator(String inPath, String[] arrPrefix, boolean testing, StanfordLemmatizer lemm,ExtractQueryConfiguration config) {
+		this(inPath, arrPrefix, lemm,config);
 		this.testing = testing;
+//		this.config=config;
 
 	}
 
@@ -177,6 +180,16 @@ public class MethodSourceTokenGenerator {
 		private LinkedHashMap<String, Integer> mapIDAppear;
 		private String[] arrLibNames;
 		private StanfordLemmatizer lemm;
+		
+		
+
+		public String getFopQueryPath() {
+			return fopQueryPath;
+		}
+
+		public void setFopQueryPath(String fopQueryPath) {
+			this.fopQueryPath = fopQueryPath;
+		}
 
 		public String[] getArrLibNames() {
 			return arrLibNames;
@@ -333,7 +346,7 @@ public class MethodSourceTokenGenerator {
 			sg.setSetFields(setFieldsForTD);
 			sg.setArrLibrariesPrefix(this.arrPrefix);
 			sg.setFopInvocationObject(fopInvocationObject);
-			sg.setFopDictionaryTextDescription(fopQueryObject);
+			sg.setFopQueryPath(fopQueryObject);
 			sg.setHashIdenPath(this.idenHashPath);
 			sg.setMapIDAndIden(mapIDAndIden);
 			sg.setMapIdenAndID(mapIdenAndID);

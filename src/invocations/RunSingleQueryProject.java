@@ -18,6 +18,9 @@ public class RunSingleQueryProject {
 		String inputProjectPath = PathConstanct.PATH_PROJECT_TTT_QUERY_INPUT_PROJECT;
 		String outputProjectPath = PathConstanct.PATH_PROJECT_TTT_QUERY_IDENTIFIER_PROJECT;
 		String fpOutputLog=outputProjectPath+File.separator+"alog.txt";
+		
+		ExtractQueryConfiguration config=new ExtractQueryConfiguration();
+		
 		ExecutorService executor = Executors.newFixedThreadPool(MYTHREADS);
 		StanfordLemmatizer lemm=new StanfordLemmatizer();
 		if(!new File(fpOutputLog).isFile()){
@@ -53,15 +56,17 @@ class ExtractSourceQueryRunnable implements Runnable {
 	private int index = 0;
 	private String logPath="";
 	private String[] arrLibNames;
+	private ExtractQueryConfiguration config;
 	private StanfordLemmatizer lemm;
 
-	ExtractSourceQueryRunnable(String inputPath, String outputPath, String[] arrLibName, int index,String logPath,StanfordLemmatizer lemm) {
+	ExtractSourceQueryRunnable(String inputPath, String outputPath, String[] arrLibName, int index,String logPath,ExtractQueryConfiguration config,StanfordLemmatizer lemm) {
 		this.inputPath = inputPath;
 		this.outputPath = outputPath;
 		this.arrLibNames=arrLibName;
 		this.index = index;
 		this.logPath=logPath;
 		this.lemm=lemm;
+		this.config=config;
 	}
 
 	@Override
@@ -73,7 +78,7 @@ class ExtractSourceQueryRunnable implements Runnable {
 //			File fSourceOut=new File(outputPath+"source.txt");
 			
 			MethodSourceTokenGenerator mcsg = new MethodSourceTokenGenerator(
-					inputPath,arrLibNames,lemm);
+					inputPath,arrLibNames,lemm,config);
 			mcsg.generateSequences(outputPath);
 			System.out.println(index+"\tFinish success for " + outputPath);
 //			FileIO.appendStringToFile(index+"\t"+fIn.getName()+"\tSuccess\n", logPath);

@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
+import org.apache.bcel.generic.LSTORE;
+
 import utils.FileIO;
 import utils.StringUtil;
 
@@ -134,6 +136,14 @@ public class InvocationObject {
 		StringBuilder sb=new StringBuilder();
 		for(int i=0;i<lst.size();i++){
 			sb.append(lst.get(i)+" ");
+		}
+		return sb.toString().trim();
+	}
+	
+	public String getHalfOfTermFromListSource() {
+		StringBuilder sb=new StringBuilder();
+		for(int i=(listOfRelatedWordsSource.size()/2);i<listOfRelatedWordsSource.size();i++){
+			sb.append(listOfRelatedWordsSource.get(i)+" ");
 		}
 		return sb.toString().trim();
 	}

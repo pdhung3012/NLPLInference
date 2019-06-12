@@ -73,7 +73,7 @@ class ExtractSourceQueryRunnable implements Runnable {
 			MethodSourceTokenGenerator mcsg = new MethodSourceTokenGenerator(
 					inputPath,arrLibNames,lemm);
 			mcsg.generateSequences(outputPath);
-//			System.out.println(index+"\tFinish success for " + outputPath);
+			System.out.println(index+"\tFinish success for " + outputPath);
 //			FileIO.appendStringToFile(index+"\t"+fIn.getName()+"\tSuccess\n", logPath);
 			
 		} catch (Exception ex) {

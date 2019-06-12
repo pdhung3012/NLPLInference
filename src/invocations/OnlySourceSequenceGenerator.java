@@ -109,7 +109,7 @@ package invocations;
  import entities.LocalEntity;
  import entities.LocalForMethod;
 
-  public class OnlySourceEncoderVisitor  extends ASTVisitor {
+  public class OnlySourceSequenceGenerator  extends ASTVisitor {
 
   	// sequence generator properties
  	private static final String SEPARATOR = "#";
@@ -309,7 +309,7 @@ package invocations;
  		this.setOfUnResolvedType = setOfUnResolvedType;
  	}
 
-  	public OnlySourceEncoderVisitor(String className, String superClassName) {
+  	public OnlySourceSequenceGenerator(String className, String superClassName) {
  		super(false);
  		this.className = className;
  		this.superClassName = superClassName;
@@ -343,7 +343,7 @@ package invocations;
  		setArguments = new LinkedHashSet<>();
  		setLocalVariables = new LinkedHashSet<LocalEntity>();
  		setFields = new LinkedHashSet<LocalEntity>();
- 		final OnlySourceEncoderVisitor visitor = this;
+ 		final OnlySourceSequenceGenerator visitor = this;
  		parser.createASTs(filePaths, null, new String[] {},
  				new FileASTRequestor() {
  					@Override

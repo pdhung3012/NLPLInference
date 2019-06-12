@@ -1,635 +1,1745 @@
 package invocations;
 
+  import java.io.File;
+ import java.util.ArrayList;
+ import java.util.HashMap;
+ import java.util.Iterator;
+ import java.util.LinkedHashMap;
+ import java.util.LinkedHashSet;
+ import java.util.List;
+ import java.util.Map;
 
+  import org.eclipse.jdt.core.JavaCore;
+ import org.eclipse.jdt.core.dom.AST;
+ import org.eclipse.jdt.core.dom.ASTNode;
+ import org.eclipse.jdt.core.dom.ASTParser;
+ import org.eclipse.jdt.core.dom.ASTVisitor;
+ import org.eclipse.jdt.core.dom.ArrayAccess;
+ import org.eclipse.jdt.core.dom.ArrayCreation;
+ import org.eclipse.jdt.core.dom.ArrayInitializer;
+ import org.eclipse.jdt.core.dom.ArrayType;
+ import org.eclipse.jdt.core.dom.AssertStatement;
+ import org.eclipse.jdt.core.dom.Assignment;
+ import org.eclipse.jdt.core.dom.Block;
+ import org.eclipse.jdt.core.dom.BooleanLiteral;
+ import org.eclipse.jdt.core.dom.BreakStatement;
+ import org.eclipse.jdt.core.dom.CastExpression;
+ import org.eclipse.jdt.core.dom.CatchClause;
+ import org.eclipse.jdt.core.dom.CharacterLiteral;
+ import org.eclipse.jdt.core.dom.ClassInstanceCreation;
+ import org.eclipse.jdt.core.dom.CompilationUnit;
+ import org.eclipse.jdt.core.dom.ConditionalExpression;
+ import org.eclipse.jdt.core.dom.ConstructorInvocation;
+ import org.eclipse.jdt.core.dom.ContinueStatement;
+ import org.eclipse.jdt.core.dom.CreationReference;
+ import org.eclipse.jdt.core.dom.Dimension;
+ import org.eclipse.jdt.core.dom.DoStatement;
+ import org.eclipse.jdt.core.dom.EmptyStatement;
+ import org.eclipse.jdt.core.dom.EnhancedForStatement;
+ import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
+ import org.eclipse.jdt.core.dom.EnumDeclaration;
+ import org.eclipse.jdt.core.dom.Expression;
+ import org.eclipse.jdt.core.dom.ExpressionMethodReference;
+ import org.eclipse.jdt.core.dom.ExpressionStatement;
+ import org.eclipse.jdt.core.dom.FieldAccess;
+ import org.eclipse.jdt.core.dom.FieldDeclaration;
+ import org.eclipse.jdt.core.dom.FileASTRequestor;
+ import org.eclipse.jdt.core.dom.ForStatement;
+ import org.eclipse.jdt.core.dom.IBinding;
+ import org.eclipse.jdt.core.dom.IMethodBinding;
+ import org.eclipse.jdt.core.dom.ITypeBinding;
+ import org.eclipse.jdt.core.dom.IVariableBinding;
+ import org.eclipse.jdt.core.dom.IfStatement;
+ import org.eclipse.jdt.core.dom.ImportDeclaration;
+ import org.eclipse.jdt.core.dom.InfixExpression;
+ import org.eclipse.jdt.core.dom.Initializer;
+ import org.eclipse.jdt.core.dom.InstanceofExpression;
+ import org.eclipse.jdt.core.dom.IntersectionType;
+ import org.eclipse.jdt.core.dom.LabeledStatement;
+ import org.eclipse.jdt.core.dom.LambdaExpression;
+ import org.eclipse.jdt.core.dom.MethodDeclaration;
+ import org.eclipse.jdt.core.dom.MethodInvocation;
+ import org.eclipse.jdt.core.dom.Modifier;
+ import org.eclipse.jdt.core.dom.NameQualifiedType;
+ import org.eclipse.jdt.core.dom.NormalAnnotation;
+ import org.eclipse.jdt.core.dom.NullLiteral;
+ import org.eclipse.jdt.core.dom.NumberLiteral;
+ import org.eclipse.jdt.core.dom.PackageDeclaration;
+ import org.eclipse.jdt.core.dom.ParameterizedType;
+ import org.eclipse.jdt.core.dom.ParenthesizedExpression;
+ import org.eclipse.jdt.core.dom.PostfixExpression;
+ import org.eclipse.jdt.core.dom.PrefixExpression;
+ import org.eclipse.jdt.core.dom.PrimitiveType;
+ import org.eclipse.jdt.core.dom.QualifiedName;
+ import org.eclipse.jdt.core.dom.QualifiedType;
+ import org.eclipse.jdt.core.dom.ReturnStatement;
+ import org.eclipse.jdt.core.dom.SimpleName;
+ import org.eclipse.jdt.core.dom.SimpleType;
+ import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
+ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
+ import org.eclipse.jdt.core.dom.Statement;
+ import org.eclipse.jdt.core.dom.StringLiteral;
+ import org.eclipse.jdt.core.dom.SuperConstructorInvocation;
+ import org.eclipse.jdt.core.dom.SuperFieldAccess;
+ import org.eclipse.jdt.core.dom.SuperMethodInvocation;
+ import org.eclipse.jdt.core.dom.SuperMethodReference;
+ import org.eclipse.jdt.core.dom.SwitchCase;
+ import org.eclipse.jdt.core.dom.SwitchStatement;
+ import org.eclipse.jdt.core.dom.SynchronizedStatement;
+ import org.eclipse.jdt.core.dom.ThisExpression;
+ import org.eclipse.jdt.core.dom.ThrowStatement;
+ import org.eclipse.jdt.core.dom.TryStatement;
+ import org.eclipse.jdt.core.dom.Type;
+ import org.eclipse.jdt.core.dom.TypeDeclaration;
+ import org.eclipse.jdt.core.dom.TypeDeclarationStatement;
+ import org.eclipse.jdt.core.dom.TypeLiteral;
+ import org.eclipse.jdt.core.dom.TypeMethodReference;
+ import org.eclipse.jdt.core.dom.TypeParameter;
+ import org.eclipse.jdt.core.dom.UnionType;
+ import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
+ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
+ import org.eclipse.jdt.core.dom.WhileStatement;
+ import org.eclipse.jdt.core.dom.WildcardType;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Stack;
+  import utils.JavaASTUtil;
+ import utils.StanfordLemmatizer;
+ import consts.PathConstanct;
+ import entities.InvocationObject;
+ import entities.LocalEntity;
+ import entities.LocalForMethod;
 
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTParser;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.FileASTRequestor;
-import org.eclipse.jdt.core.dom.ImportDeclaration;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+  public class OnlySourceEncoderVisitor  extends ASTVisitor {
 
-import parser.ClassPathUtil;
-import parser.ClassPathUtil.PomFile;
-import utils.FileIO;
-import utils.FileUtil;
-import utils.StanfordLemmatizer;
-import entities.LocalEntity;
+  	// sequence generator properties
+ 	private static final String SEPARATOR = "#";
+ 	private String className, superClassName;
+ 	private int numOfExpressions = 0, numOfResolvedExpressions = 0;
+ 	private StringBuilder fullTokens = new StringBuilder(),
+ 			partialTokens = new StringBuilder();
+ 	private StringBuilder fullAddNLTokens = new StringBuilder(),
+ 			partialAddNLTokens = new StringBuilder();
+ 	private String fullSequence = null, partialSequence = null;
+ 	private String[] fullSequenceTokens, partialSequenceTokens;
+ 	private LinkedHashMap<String, String> mapIdenAndID, mapIDAndIden;
+ 	private LinkedHashMap<String, Integer> mapIDAppear;
+ 	private InvocationAbstractorVisitor iaVisitor;
+ 	private String[] arrLibrariesPrefix;
+ 	private static final boolean USE_SIMPLE_METHOD_NAME = false;
 
-public class OnlySourceSequenceGenerator {
+  	public LinkedHashMap<String, Integer> getMapIDAppear() {
+ 		return mapIDAppear;
+ 	}
 
-private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = false;
-	
-	private String inPath, outPath;
-	private boolean testing = false;
-	private PrintStream stLocations, stSourceSequences, stTargetSequences, stLog;
-	private HashSet<String> badFiles = new HashSet<>();
-	private String fopInvocationObject;
-	private String idenHashPath;
-	private LinkedHashMap<String,String> mapIDAndIden;
-	private LinkedHashMap<String,Integer> mapIDAppear;
-	private LinkedHashMap<String,String> mapIdenAndID;
-	private String[] arrPrefix;
-	private StanfordLemmatizer lemm;
-	
-	public OnlySourceSequenceGenerator(String inPath,String[] arrPrefix,StanfordLemmatizer lemm) {
-		this.inPath = inPath;
-		this.arrPrefix=arrPrefix;
-		this.lemm=lemm;
-		// ss
-	}
-	
-	public OnlySourceSequenceGenerator(String inPath,String[] arrPrefix, boolean testing,StanfordLemmatizer lemm) {
-		this(inPath,arrPrefix,lemm);
-		this.testing = testing;
-		
-	}
-	
-	public int  generateSequences(String outPath) {
-		return generateSequences(true, null, outPath);
-	}
-	
-	
+  	public void setMapIDAppear(LinkedHashMap<String, Integer> mapIDAppear) {
+ 		this.mapIDAppear = mapIDAppear;
+ 	}
 
-	public LinkedHashMap<String, String> getMapIDAndIden() {
-		return mapIDAndIden;
-	}
+  	// end
+ 	/**
+ 	 * Internal synonym for {@link AST#JLS2}. Use to alleviate deprecation
+ 	 * warnings.
+ 	 * 
+ 	 * @deprecated
+ 	 * @since 3.4
+ 	 */
+ 	private static final int JLS2 = AST.JLS2;
 
-	public void setMapIDAndIden(LinkedHashMap<String, String> mapIDAndIden) {
-		this.mapIDAndIden = mapIDAndIden;
-	}
+  	/**
+ 	 * Internal synonym for {@link AST#JLS3}. Use to alleviate deprecation
+ 	 * warnings.
+ 	 * 
+ 	 * @deprecated
+ 	 * @since 3.4
+ 	 */
+ 	private static final int JLS3 = AST.JLS3;
 
-	public LinkedHashMap<String, String> getMapIdenAndID() {
-		return mapIdenAndID;
-	}
+  	/**
+ 	 * Internal synonym for {@link AST#JLS4}. Use to alleviate deprecation
+ 	 * warnings.
+ 	 * 
+ 	 * @deprecated
+ 	 * @since 3.10
+ 	 */
+ 	private static final int JLS4 = AST.JLS4;
+ 	/**
+ 	 * The string buffer into which the serialized representation of the AST is
+ 	 * written.
+ 	 */
 
-	public void setMapIdenAndID(LinkedHashMap<String, String> mapIdenAndID) {
-		this.mapIdenAndID = mapIdenAndID;
-	}
+  	protected StringBuffer buffer = new StringBuffer();
+ 	private HashMap<String, String> setSequencesOfMethods, setOfUnResolvedType;
+ 	private LinkedHashSet<LocalEntity> setFields, setArguments,
+ 			setLocalVariables;
+ 	// private LinkedHashSet<String> setRequiredAPIsForMI = new
+ 	// LinkedHashSet<String>();;
+ 	private String strSplitCharacter = " ";
 
-	public int generateSequences(final boolean keepUnresolvables, final String lib, final String outPath) {
-		this.outPath = outPath;
-		String[] jarPaths = getJarPaths();
-		ArrayList<String> rootPaths = getRootPaths();
-		
-		new File(outPath).mkdirs();
-		String hashIdenPath=outPath+"/hash/";
-		this.idenHashPath=hashIdenPath;
-		new File(hashIdenPath).mkdirs();
-		try {
-			stLocations = new PrintStream(new FileOutputStream(outPath + "/locations.txt"));
-			stSourceSequences = new PrintStream(new FileOutputStream(outPath + "/source.txt"));
-			stTargetSequences = new PrintStream(new FileOutputStream(outPath + "/target.txt"));
-			stLog = new PrintStream(new FileOutputStream(outPath + "/log.txt"));
-		} catch (FileNotFoundException e) {
-			if (testing)
-				System.err.println(e.getMessage());
-			return 0;
-		}
-		int numOfSequences = 0;
-		for (String rootPath : rootPaths) {
-			String[] sourcePaths = getSourcePaths(rootPath, new String[]{".java"});
-			
-			@SuppressWarnings("rawtypes")
-			Map options = JavaCore.getOptions();
-			options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
-			options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
-			options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
-			ASTParser parser = ASTParser.newParser(AST.JLS8);
-			parser.setCompilerOptions(options);
-			parser.setEnvironment(jarPaths, new String[]{}, new String[]{}, true);
-			parser.setResolveBindings(true);
-			parser.setBindingsRecovery(false);
-			
-			OnlySourceInvocationInformationASTRequestor r = new OnlySourceInvocationInformationASTRequestor(keepUnresolvables, lib,hashIdenPath,lemm);
-			mapIDAndIden=new LinkedHashMap<String, String>();
-			mapIdenAndID=new LinkedHashMap<String, String>();
-			mapIDAppear=new LinkedHashMap<String, Integer>();
-			r.setMapIDAndIden(mapIDAndIden);
-			r.setMapIdenAndID(mapIdenAndID);
-			r.setMapIDAppear(mapIDAppear);
-			r.setArrLibNames(this.arrPrefix);
-			try {
-				parser.createASTs(sourcePaths, null, new String[0], r, null);
-			} catch (Throwable t) {
-				t.printStackTrace(stLog);
-				if (testing) {
-					System.err.println(t.getMessage());
-					t.printStackTrace();
-				}
-			}
-			saveMapToFile(mapIDAndIden, hashIdenPath+"/mapIDAndIden.txt");
-			saveMapToFile(mapIdenAndID, hashIdenPath+"/mapIdenAndID.txt");
-			saveMapIntToFile(mapIDAppear, hashIdenPath+"/mapIDAppear.txt");
+  	private int indent = 0;
+ 	private boolean isVisitMethod = false;
+ 	private int typeOfTraverse = 0;
+ 	private boolean isParsingType;
+ 	private boolean isVisitInsideMethodDeclaration = false,
+ 			isSimpleNameMethod = false;
+ 	private StringBuffer unresolvedBuffer;
 
-			numOfSequences += r.numOfSequences;
-		}
-		return numOfSequences;
-	}
-	
-	public void saveMapToFile(LinkedHashMap<String,String> map,String fpFile){
-		StringBuilder sb=new StringBuilder();
-		for(String item:map.keySet()){
-			sb.append(item+"\t"+map.get(item)+"\n");
-		}
-		FileIO.writeStringToFile(sb.toString(), fpFile);
-	}
-	public void saveMapIntToFile(LinkedHashMap<String,Integer> map,String fpFile){
-		StringBuilder sb=new StringBuilder();
-		for(String item:map.keySet()){
-			sb.append(item+"\t"+map.get(item)+"\n");
-		}
-		FileIO.writeStringToFile(sb.toString(), fpFile);
-	}
-	
-	private class OnlySourceInvocationInformationASTRequestor extends FileASTRequestor {
-		int numOfSequences = 0;
-		private boolean keepUnresolvables;
-		private String lib;
-		private String idenPath;
-		private LinkedHashMap<String,String> mapIDAndIden;
-		private LinkedHashMap<String,String> mapIdenAndID;
-		private LinkedHashMap<String,Integer> mapIDAppear;
-		private String[] arrLibNames;
-		private StanfordLemmatizer lemm;
-		
-		
-		
-		
-		
-		
-		public String[] getArrLibNames() {
-			return arrLibNames;
-		}
+  	ASTParser parser = ASTParser.newParser(AST.JLS4);
+ 	String[] classpath = { PathConstanct.PATH_JAVA_CLASSPATH };
+ 	HashMap<String, CompilationUnit> mapCU;
+ 	LinkedHashMap<String, LocalForMethod> mapLocalcontextForMethod = new LinkedHashMap<String, LocalForMethod>();
+ 	private boolean isAbstractMethod = false;
+ 	// private StringBuilder sbAbstractInformation = new StringBuilder();
+ 	// private ArrayList<String> listAbstractTypeQuestionMark = new
+ 	// ArrayList<String>();
+ 	private StringBuilder sbTotalBuilder = new StringBuilder();
+ 	private LocalForMethod currentLocalMethod = null;
+ 	private MethodDeclaration currentMethodDecl = null;
+ 	private int levelOfTraverMD = 0;
+ 	private String fopInvocationObject;
+ 	private String hashIdenPath;
+ 	private StanfordLemmatizer lemm;
 
-		public void setArrLibNames(String[] arrLibNames) {
-			this.arrLibNames = arrLibNames;
-		}
+ 
+ 
+  	public StanfordLemmatizer getLemm() {
+ 		return lemm;
+ 	}
 
-		public LinkedHashMap<String, Integer> getMapIDAppear() {
-			return mapIDAppear;
-		}
+  	public void setLemm(StanfordLemmatizer lemm) {
+ 		this.lemm = lemm;
+ 	}
 
-		public void setMapIDAppear(LinkedHashMap<String, Integer> mapIDAppear) {
-			this.mapIDAppear = mapIDAppear;
-		}
+  	public String[] getArrLibrariesPrefix() {
+ 		return arrLibrariesPrefix;
+ 	}
 
-		public LinkedHashMap<String, String> getMapIDAndIden() {
-			return mapIDAndIden;
-		}
+  	public void setArrLibrariesPrefix(String[] arrLibrariesPrefix) {
+ 		this.arrLibrariesPrefix = arrLibrariesPrefix;
+ 	}
 
-		public void setMapIDAndIden(LinkedHashMap<String, String> mapIDAndIden) {
-			this.mapIDAndIden = mapIDAndIden;
-		}
+  	public String getHashIdenPath() {
+ 		return hashIdenPath;
+ 	}
 
-		public LinkedHashMap<String, String> getMapIdenAndID() {
-			return mapIdenAndID;
-		}
+  	public void setHashIdenPath(String hashIdenPath) {
+ 		this.hashIdenPath = hashIdenPath;
+ 	}
 
-		public void setMapIdenAndID(LinkedHashMap<String, String> mapIdenAndID) {
-			this.mapIdenAndID = mapIdenAndID;
-		}
+  	/**
+ 	 * Internal synonym for
+ 	 * {@link TypeDeclarationStatement#getTypeDeclaration()}. Use to alleviate
+ 	 * deprecation warnings.
+ 	 * 
+ 	 * @deprecated
+ 	 * @since 3.4
+ 	 */
+ 	private static TypeDeclaration getTypeDeclaration(
+ 			TypeDeclarationStatement node) {
+ 		return node.getTypeDeclaration();
+ 	}
 
-		public OnlySourceInvocationInformationASTRequestor(boolean keepUnresolvables, String lib,String idenPath, StanfordLemmatizer lemm) {
-			this.keepUnresolvables = keepUnresolvables;
-			this.lib = lib;
-			this.idenPath=idenPath;
-			this.lemm=lemm;
-		}
+  	/**
+ 	 * Internal synonym for {@link MethodDeclaration#thrownExceptions()}. Use to
+ 	 * alleviate deprecation warnings.
+ 	 * 
+ 	 * @deprecated
+ 	 * @since 3.10
+ 	 */
+ 	private static List thrownExceptions(MethodDeclaration node) {
+ 		return node.thrownExceptions();
+ 	}
 
-		@Override
-		public void acceptAST(String sourceFilePath, CompilationUnit ast) {
-			if (ast.getPackage() == null)
-				return;
-			if (lib != null) {
-				boolean hasLib = false;
-				if (ast.getPackage().getName().getFullyQualifiedName().startsWith(lib))
-					hasLib = true;
-				if (!hasLib && ast.imports() != null) {
-					for (int i = 0; i < ast.imports().size(); i++) {
-						ImportDeclaration ic = (ImportDeclaration) ast.imports().get(i);
-						if (ic.getName().getFullyQualifiedName().startsWith(lib)) {
-							hasLib = true;
-							break;
-						}
-					}
-				}
-				if (!hasLib)
-					return;
-			}
-			if (testing)
-				System.out.println(sourceFilePath);
-			stLog.println(sourceFilePath);
-		
-			for (int i = 0; i < ast.types().size(); i++) {
-				if (ast.types().get(i) instanceof TypeDeclaration) {
-					TypeDeclaration td = (TypeDeclaration) ast.types().get(i);
-					numOfSequences += generateSequence(keepUnresolvables, lib, td, sourceFilePath, ast.getPackage().getName().getFullyQualifiedName(), "");
-				}
-			}
-		}
-	}
+  	public LinkedHashMap<String, String> getMapIdenAndID() {
+ 		return mapIdenAndID;
+ 	}
 
-	private ArrayList<String> getRootPaths() {
-		ArrayList<String> rootPaths = new ArrayList<>();
-		if (PARSE_INDIVIDUAL_SRC)
-			getRootPaths(new File(inPath), rootPaths);
-		else {
-			if (SCAN_FILES_FRIST)
-				getRootPaths(new File(inPath), rootPaths);
-			rootPaths = new ArrayList<>();
-			rootPaths.add(inPath);
-		}
-		return rootPaths;
-	}
+  	public void setMapIdenAndID(LinkedHashMap<String, String> mapIdenAndID) {
+ 		this.mapIdenAndID = mapIdenAndID;
+ 	}
 
-	private void getRootPaths(File file, ArrayList<String> rootPaths) {
-		if (file.isDirectory()) {
-			System.out.println(rootPaths);
-			for (File sub : file.listFiles())
-				getRootPaths(sub, rootPaths);
-		} else if (file.getName().endsWith(".java")) {
-			Map options = JavaCore.getOptions();
-			options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
-			options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
-			options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
-			ASTParser parser = ASTParser.newParser(AST.JLS8);
-			parser.setCompilerOptions(options);
-			parser.setSource(FileUtil.getFileContent(file.getAbsolutePath()).toCharArray());
-			try {
-				CompilationUnit ast = (CompilationUnit) parser.createAST(null);
-				if (ast.getPackage() != null && !ast.types().isEmpty() && ast.types().get(0) instanceof TypeDeclaration) {
-					String name = ast.getPackage().getName().getFullyQualifiedName();
-					name = name.replace('.', '\\');
-					String p = file.getParentFile().getAbsolutePath();
-					if (p.endsWith(name))
-						add(p.substring(0, p.length() - name.length() - 1), rootPaths);
-				} /*else 
-					badFiles.add(file.getAbsolutePath());*/
-			} catch (Throwable t) {
-				badFiles.add(file.getAbsolutePath());
-			}
-		}
-	}
+  	public LinkedHashMap<String, String> getMapIDAndIden() {
+ 		return mapIDAndIden;
+ 	}
 
-	private void add(String path, ArrayList<String> rootPaths) {
-		int index = Collections.binarySearch(rootPaths, path);
-		if (index < 0) {
-			index = - index - 1;
-			int i = rootPaths.size() - 1;
-			while (i > index) {
-				if (rootPaths.get(i).startsWith(path))
-					rootPaths.remove(i);
-				i--;
-			}
-			i = index - 1;
-			while (i >= 0) {
-				if (path.startsWith(rootPaths.get(i)))
-					return;
-				i--;
-			}
-			rootPaths.add(index, path);
-		}
-	}
+  	public void setMapIDAndIden(LinkedHashMap<String, String> mapIDAndIden) {
+ 		this.mapIDAndIden = mapIDAndIden;
+ 	}
 
-	private int generateSequence(boolean keepUnresolvables, String lib, TypeDeclaration td, String path, String packageName, String outer) {
-		int numOfSequences = 0;
-		String name = outer.isEmpty() ? td.getName().getIdentifier() : outer + "." + td.getName().getIdentifier();
-		String className = td.getName().getIdentifier(), superClassName = null;
-		LinkedHashSet<LocalEntity> setFieldsForTD=OnlySourceEncoderVisitor.setInfoOfFieldDeclaration(td);
-		if (td.getSuperclassType() != null)
-			superClassName = OnlySourceEncoderVisitor.getUnresolvedType(td.getSuperclassType());
-		
-//		System.out.println("size "+td.getMethods().length);
-		for (MethodDeclaration method : td.getMethods()) {
-			stLog.println(path + "\t" + name + "\t" + method.getName().getIdentifier() + "\t" + getParameters(method));
-			OnlySourceEncoderVisitor sg = new OnlySourceEncoderVisitor(className, superClassName);
-			sg.setSetFields(setFieldsForTD);
-			sg.setArrLibrariesPrefix(this.arrPrefix);
-			sg.setFopInvocationObject(fopInvocationObject);
-			sg.setHashIdenPath(this.idenHashPath);
-			sg.setMapIDAndIden(mapIDAndIden);
-			sg.setMapIdenAndID(mapIdenAndID);
-			sg.setMapIDAppear(mapIDAppear);
-			sg.setLemm(lemm);
-//			System.out.println("here "+method.toString());
-			method.accept(sg);
-			int numofExpressions = sg.getNumOfExpressions(), numOfResolvedExpressions = sg.getNumOfResolvedExpressions();
-			String source = sg.getPartialSequence();
-			String[] sTokens = sg.getPartialSequenceTokens();
-			
-				boolean hasLib = true;
-				if (lib != null && !lib.isEmpty()) {
-					hasLib = false;
-			
-				}
-				if (hasLib) {
-//					this.locations.add(path + "\t" + name + "\t" + method.getName().getIdentifier() + "\t" + getParameters(method) + "\t" + numofExpressions + "\t" + numOfResolvedExpressions + "\t" + (numOfResolvedExpressions * 100 / numofExpressions) + "%");
-//					this.sourceSequences.add(source);
-//					this.targetSequences.add(target);
-//					this.sourceSequenceTokens.add(sTokens);
-//					this.targetSequenceTokens.add(tTokens);
-					stLocations.print(path + "\t" + packageName + "\t" + name + "\t" + method.getName().getIdentifier() + "\t" + getParameters(method) + "\t" + numofExpressions + "\t" + numOfResolvedExpressions + "\t" + (numOfResolvedExpressions * 100 / numofExpressions) + "%" + "\n");
-					stSourceSequences.print(source + "\n");
-					numOfSequences++;
-				}
-			
-			
-		}
-		for (TypeDeclaration inner : td.getTypes())
-			numOfSequences += generateSequence(keepUnresolvables, lib, inner, path, packageName, name);
-		return numOfSequences;
-	}
+  	public LinkedHashSet<LocalEntity> getSetFields() {
+ 		return setFields;
+ 	}
 
-	private String getParameters(MethodDeclaration method) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("(");
-		for (int i = 0; i < method.parameters().size(); i++) {
-			SingleVariableDeclaration d = (SingleVariableDeclaration) (method.parameters().get(i));
-			String type = OnlySourceEncoderVisitor.getUnresolvedType(d.getType());
-			sb.append("\t" + type);
-		}
-		sb.append("\t)");
-		return sb.toString();
-	}
+  	public void setSetFields(LinkedHashSet<LocalEntity> setFields) {
+ 		this.setFields = setFields;
+ 	}
 
-	private String[] getSourcePaths(String path, String[] extensions) {
-		HashSet<String> exts = new HashSet<>();
-		for (String e : extensions)
-			exts.add(e);
-		HashSet<String> paths = new HashSet<>();
-		getSourcePaths(new File(path), paths, exts);
-		paths.removeAll(badFiles);
-		return (String[]) paths.toArray(new String[0]);
-	}
+  	public boolean isParsingType() {
+ 		return isParsingType;
+ 	}
 
-	private void getSourcePaths(File file, HashSet<String> paths, HashSet<String> exts) {
-		if (file.isDirectory()) {
-			for (File sub : file.listFiles())
-				getSourcePaths(sub, paths, exts);
-		} else if (exts.contains(getExtension(file.getName())))
-			paths.add(file.getAbsolutePath());
-	}
+  	public void setParsingType(boolean isParsingType) {
+ 		this.isParsingType = isParsingType;
+ 	}
 
-	private Object getExtension(String name) {
-		int index = name.lastIndexOf('.');
-		if (index < 0)
-			index = 0;
-		return name.substring(index);
-	}
+  	public HashMap<String, String> getSetSequencesOfMethods() {
+ 		return setSequencesOfMethods;
+ 	}
 
-	private String[] getJarPaths() {
-		HashMap<String, File> jarFiles = new HashMap<>();
-		HashSet<String> globalRepoLinks = new HashSet<>();
-		globalRepoLinks.add("http://central.maven.org/maven2/");
-		HashMap<String, String> globalProperties = new HashMap<>();
-		HashMap<String, String> globalManagedDependencies = new HashMap<>();
-		Stack<ClassPathUtil.PomFile> parentPomFiles = new Stack<>();
-		getJarFiles(new File(inPath), jarFiles, globalRepoLinks, globalProperties, globalManagedDependencies, parentPomFiles);
-		String[] paths = new String[jarFiles.size()];
-		int i = 0;
-		for (File file : jarFiles.values())
-			paths[i++] = file.getAbsolutePath();
-		return paths;
-	}
+  	public void setSetSequencesOfMethods(
+ 			HashMap<String, String> setSequencesOfMethods) {
+ 		this.setSequencesOfMethods = setSequencesOfMethods;
+ 	}
 
-	private void getJarFiles(File file, HashMap<String, File> jarFiles, 
-			HashSet<String> globalRepoLinks, HashMap<String, String> globalProperties, HashMap<String, String> globalManagedDependencies,
-			Stack<PomFile> parentPomFiles) {
-		if (file.isDirectory()) {
-			int size = parentPomFiles.size();
-			ArrayList<File> dirs = new ArrayList<>();
-			for (File sub : file.listFiles()) {
-				if (sub.isDirectory())
-					dirs.add(sub);
-				else
-					getJarFiles(sub, jarFiles, globalRepoLinks, globalProperties, globalManagedDependencies, parentPomFiles);
-			}
-			for (File dir : dirs)
-				getJarFiles(dir, jarFiles, globalRepoLinks, globalProperties, globalManagedDependencies, parentPomFiles);
-			if (parentPomFiles.size() > size)
-				parentPomFiles.pop();
-		} else if (file.getName().endsWith(".jar")) {
-			File f = jarFiles.get(file.getName());
-			if (f == null || file.lastModified() > f.lastModified())
-				jarFiles.put(file.getName(), file);
-		} else if (file.getName().equals("build.gradle")) {
-			try {
-				ClassPathUtil.getGradleDependencies(file, this.inPath + "/lib");
-			} catch (Throwable t) {
-				t.printStackTrace();
-			}
-		} else if (file.getName().equals("pom.xml")) {
-			try {
-				ClassPathUtil.getPomDependencies(file, this.inPath + "/lib", globalRepoLinks, globalProperties, globalManagedDependencies, parentPomFiles);
-			} catch (Throwable t) {
-				t.printStackTrace();
-			}
-		}
-	}
-	
-	/**
-	 * 
-	 * @param inPath
-	 * @param doVerify
-	 * @return 	numbers[0]: 0-same number of sequences, 1-different numbers of sequences;
-	 * 			numbers[1]: number of sequences with different lengths;
-	 * 			numbers[2]: number of sequences with non-aligned tokens;
-	 * 			numbers[3]: number of non-aligned tokens 
-	 */
-	
-	public int[] generateAlignment(boolean doVerify) {
-		return generateAlignment(outPath, doVerify);
-	}
-	
-	/**
-	 * 
-	 * @param inPath
-	 * @param doVerify
-	 * @return 	numbers[0]: 0-same number of sequences, 1-different numbers of sequences;
-	 * 			numbers[1]: number of sequences with different lengths;
-	 * 			numbers[2]: number of sequences with non-aligned tokens;
-	 * 			numbers[3]: number of non-aligned tokens 
-	 */
-	public static int[] generateAlignment(String inPath, boolean doVerify) {
-		int[] numbers = new int[]{0, 0, 0, 0};
-		ArrayList<String> sourceSequences = FileUtil.getFileStringArray(inPath + "/source.txt"), 
-				targetSequences = FileUtil.getFileStringArray(inPath + "/target.txt");
-		if (doVerify)
-			if (sourceSequences.size() != targetSequences.size()) {
-				numbers[0]++;
-//				throw new AssertionError("Numbers of source and target sequences are not the same!!!");
-			}
-		File dir = new File(inPath + "-alignment");
-		if (!dir.exists())
-			dir.mkdirs();
-		PrintStream psS2T = null, psT2S = null;
-		try {
-			psS2T = new PrintStream(new FileOutputStream(dir.getAbsolutePath() + "/training.s-t.A3"));
-			psT2S = new PrintStream(new FileOutputStream(dir.getAbsolutePath() + "/training.t-s.A3"));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			if (psS2T != null)
-				psS2T.close();
-			if (psT2S != null)
-				psT2S.close();
-			e.printStackTrace();
-			return null;
-		}
-		for (int i = 0; i < sourceSequences.size(); i++) {
-			String source = sourceSequences.get(i), target = targetSequences.get(i);
-			String[] sTokens = source.trim().split(" "), tTokens = target.trim().split(" ");
-			if (doVerify) {
-				if (sTokens.length != tTokens.length) {
-					numbers[1]++;
-//					throw new AssertionError("Lengths of source and target sequences are not the same!!!");
-				}
-				boolean aligned = true;
-				for (int j = 0; j < sTokens.length; j++) {
-					String s = sTokens[j], t = tTokens[j];
-					if ((t.contains(".") && !t.substring(t.lastIndexOf('.')+1).equals(s.substring(s.lastIndexOf('.')+1))) || (!t.contains(".") && !t.equals(s))) {
-						numbers[3]++;
-						aligned = false;
-//						throw new AssertionError("Source and target are not aligned!!!");
-					}
-				}
-				if (!aligned)
-					numbers[2]++;
-			}
-			String headerS2T = generateHeader(sTokens, tTokens, i), headerT2S = generateHeader(tTokens, sTokens, i);
-			psS2T.println(headerS2T);
-			psT2S.println(headerT2S);
-			psS2T.println(target);
-			psT2S.println(source);
-			String alignmentS2T = generateAlignment(sTokens), alignmentT2S = generateAlignment(tTokens);
-			psS2T.println(alignmentS2T);
-			psT2S.println(alignmentT2S);
-		}
-		psS2T.flush();
-		psT2S.flush();
-		psS2T.close();
-		psT2S.close();
-		if (doVerify) {
-			if (sourceSequences.size()*3 != FileUtil.countNumberOfLines(dir.getAbsolutePath() + "/training.s-t.A3")
-					|| targetSequences.size()*3 != FileUtil.countNumberOfLines(dir.getAbsolutePath() + "/training.t-s.A3"))
-				numbers[0]++;
-		}
-		return numbers;
-	}
-	
-	/**
-	 * 
-	 * @param inPath
-	 * @param doVerify
-	 * @return 	numbers[0]: 0-same number of sequences, 1-different numbers of sequences;
-	 * 			numbers[1]: number of sequences with different lengths;
-	 * 			numbers[2]: number of sequences with non-aligned tokens;
-	 * 			numbers[3]: number of non-aligned tokens 
-	 */
-	public static int[] generateAlignmentForCrossValidation(String inPath, boolean doVerify) {
-		int[] numbers = new int[]{0, 0, 0, 0};
-		ArrayList<String> sourceSequences = FileUtil.getFileStringArray(inPath + "/train.s"), 
-				targetSequences = FileUtil.getFileStringArray(inPath + "/train.t");
-		if (doVerify)
-			if (sourceSequences.size() != targetSequences.size()) {
-				numbers[0]++;
-//				throw new AssertionError("Numbers of source and target sequences are not the same!!!");
-			}
-		File dir = new File(inPath + "-alignment");
-		if (!dir.exists())
-			dir.mkdirs();
-		PrintStream psS2T = null, psT2S = null;
-		try {
-			psS2T = new PrintStream(new FileOutputStream(dir.getAbsolutePath() + "/training.s-t.A3"));
-			psT2S = new PrintStream(new FileOutputStream(dir.getAbsolutePath() + "/training.t-s.A3"));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			if (psS2T != null)
-				psS2T.close();
-			if (psT2S != null)
-				psT2S.close();
-			e.printStackTrace();
-			return null;
-		}
-		for (int i = 0; i < sourceSequences.size(); i++) {
-			String source = sourceSequences.get(i), target = targetSequences.get(i);
-			String[] sTokens = source.trim().split(" "), tTokens = target.trim().split(" ");
-			if (doVerify) {
-				if (sTokens.length != tTokens.length) {
-					numbers[1]++;
-//					throw new AssertionError("Lengths of source and target sequences are not the same!!!");
-				}
-				boolean aligned = true;
-				for (int j = 0; j < sTokens.length; j++) {
-					String s = sTokens[j], t = tTokens[j];
-					if ((t.contains(".") && !t.substring(t.lastIndexOf('.')+1).equals(s.substring(s.lastIndexOf('.')+1))) || (!t.contains(".") && !t.equals(s))) {
-						numbers[3]++;
-						aligned = false;
-//						throw new AssertionError("Source and target are not aligned!!!");
-					}
-				}
-				if (!aligned)
-					numbers[2]++;
-			}
-			String headerS2T = generateHeader(sTokens, tTokens, i), headerT2S = generateHeader(tTokens, sTokens, i);
-			psS2T.println(headerS2T);
-			psT2S.println(headerT2S);
-			psS2T.println(target);
-			psT2S.println(source);
-			String alignmentS2T = generateAlignment(sTokens), alignmentT2S = generateAlignment(tTokens);
-			psS2T.println(alignmentS2T);
-			psT2S.println(alignmentT2S);
-		}
-		psS2T.flush();
-		psT2S.flush();
-		psS2T.close();
-		psT2S.close();
-		if (doVerify) {
-			if (sourceSequences.size()*3 != FileUtil.countNumberOfLines(dir.getAbsolutePath() + "/training.s-t.A3")
-					|| targetSequences.size()*3 != FileUtil.countNumberOfLines(dir.getAbsolutePath() + "/training.t-s.A3"))
-				numbers[0]++;
-		}
-		sourceSequences.clear();
-		targetSequences.clear();
-		return numbers;
-	}
-	
-	private static String generateAlignment(String[] tokens) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("NULL ({  })");
-		for (int i = 0; i < tokens.length; i++) {
-			String t = tokens[i];
-			sb.append(" " + t + " ({ " + (i+1) + " })");
-		}
-		return sb.toString();
-	}
+  	public HashMap<String, String> getSetOfUnResolvedType() {
+ 		return setOfUnResolvedType;
+ 	}
 
-	private static String generateHeader(String[] sTokens, String[] tTokens, int i) {
-		return "# sentence pair (" + i + ") source length " + sTokens.length + " target length " + tTokens.length + " alignment score : 0";
-	}
+  	public void setSetOfUnResolvedType(
+ 			HashMap<String, String> setOfUnResolvedType) {
+ 		this.setOfUnResolvedType = setOfUnResolvedType;
+ 	}
 
+  	public OnlySourceEncoderVisitor(String className, String superClassName) {
+ 		super(false);
+ 		this.className = className;
+ 		this.superClassName = superClassName;
+ 	}
 
-	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+  	public void parseProject(String projectLocation,
+ 			String fopInvocationObject, String jdkPath) {
+ 		this.fopInvocationObject = fopInvocationObject;
+ 		setSequencesOfMethods = new LinkedHashMap<String, String>();
+ 		Map<String, String> options = JavaCore.getOptions();
+ 		String[] arrChildJars = utils.FileIO.findAllJarFiles(projectLocation);
+ 		String[] jarPaths = utils.FileIO.combineFilesToArray(jdkPath,
+ 				arrChildJars);
+ 		// String[] jarPaths = { jdkPath };
+ 		// File f = new File(fileLocation);
+ 		String[] filePaths = utils.FileIO.findAllJavaFiles(projectLocation);
+ 		String[] sources = { projectLocation + File.separator };
+ 		// System.out.println(f.getParentFile().getAbsolutePath());
+ 		// System.out.println("jdk :" +this.jdkPath);
+ 		ASTParser parser = ASTParser.newParser(AST.JLS8);
+ 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
+ 		JavaCore.setComplianceOptions(JavaCore.VERSION_1_8, options);
+ 		parser.setCompilerOptions(options);
+ 		parser.setResolveBindings(true);
+ 		parser.setBindingsRecovery(true);
+ 		parser.setEnvironment(jarPaths, sources, null, true);
 
-	}
+  		// String strCode=FileIO.readStringFromFile(fileLocation );
+ 		// parser.setSource(strCode.toCharArray());
+ 		mapCU = new LinkedHashMap<String, CompilationUnit>();
+ 		setArguments = new LinkedHashSet<>();
+ 		setLocalVariables = new LinkedHashSet<LocalEntity>();
+ 		setFields = new LinkedHashSet<LocalEntity>();
+ 		final OnlySourceEncoderVisitor visitor = this;
+ 		parser.createASTs(filePaths, null, new String[] {},
+ 				new FileASTRequestor() {
+ 					@Override
+ 					public void acceptAST(String sourceFilePath,
+ 							CompilationUnit javaUnit) {
+ 						// javaUnit.accept(visitor);
+ 						mapCU.put(sourceFilePath, javaUnit);
+ 					}
+ 				}, null);
 
+  	}
 
-}
+  	public void parseFile(String fileLocation) {
+ 		try {
+ 			typeOfTraverse = 1;
+ 			mapLocalcontextForMethod.clear();
+ 			CompilationUnit cu = mapCU.get(fileLocation);
+ 			cu.accept(this);
+ 			typeOfTraverse = 0;
+ 		} catch (Exception ex) {
+ 			ex.printStackTrace();
+ 		}
+ 	}
+
+  	public void parseForAbstractingMethodInvocation(String fileLocation) {
+ 		try {
+ 			typeOfTraverse = 3;
+ 			isParsingType = true;
+ 			CompilationUnit cu = mapCU.get(fileLocation);
+ 			cu.accept(this);
+ 			typeOfTraverse = 0;
+ 			isParsingType = false;
+ 		} catch (Exception ex) {
+ 			ex.printStackTrace();
+ 		}
+ 	}
+
+  	public StringBuilder viewAllLocalInformation() {
+ 		StringBuilder sb = new StringBuilder();
+ 		sb.append("setLocalVariable " + setLocalVariables.size() + ": ");
+ 		for (LocalEntity ent : setLocalVariables) {
+ 			sb.append(ent.getStrCodeReprensent() + " - "
+ 					+ ent.getStrTypeOfEntity() + ",");
+ 		}
+ 		sb.append("\n");
+ 		sb.append("setArgument " + setArguments.size() + ": ");
+ 		for (LocalEntity ent : setArguments) {
+ 			sb.append(ent.getStrCodeReprensent() + " - "
+ 					+ ent.getStrTypeOfEntity() + ",");
+ 		}
+ 		sb.append("\n");
+ 		sb.append("setField " + setFields.size() + ": ");
+ 		for (LocalEntity ent : setFields) {
+ 			sb.append(ent.getStrCodeReprensent() + " - "
+ 					+ ent.getStrTypeOfEntity() + ",");
+ 		}
+ 		sb.append("\n");
+
+  		return sb;
+ 	}
+
+  	public String getFopInvocationObject() {
+ 		return fopInvocationObject;
+ 	}
+
+  	public void setFopInvocationObject(String fopInvocationObject) {
+ 		this.fopInvocationObject = fopInvocationObject;
+ 	}
+
+  	public String[] getFullSequenceTokens() {
+ 		if (fullSequenceTokens == null)
+ 			buildFullSequence();
+ 		return fullSequenceTokens;
+ 	}
+
+  	public String[] getPartialSequenceTokens() {
+ 		if (partialSequenceTokens == null)
+ 			buildPartialSequence();
+ 		return partialSequenceTokens;
+ 	}
+
+  	public String getFullSequence() {
+ 		if (fullSequence == null)
+ 			buildFullSequence();
+ 		return fullSequence;
+ 	}
+
+  	public String getPartialSequence() {
+ 		if (partialSequence == null)
+ 			buildPartialSequence();
+ 		return partialSequence;
+ 	}
+
+  	private void buildFullSequence() {
+ 		ArrayList<String> parts = buildSequence(fullTokens);
+ 		this.fullSequence = parts.get(0);
+ 		this.fullSequenceTokens = new String[parts.size() - 1];
+ 		for (int i = 1; i < parts.size(); i++)
+ 			this.fullSequenceTokens[i - 1] = parts.get(i);
+ 	}
+
+  	private void buildPartialSequence() {
+ 		ArrayList<String> parts = buildSequence(partialTokens);
+ 		this.partialSequence = parts.get(0);
+ 		this.partialSequenceTokens = new String[parts.size() - 1];
+ 		for (int i = 1; i < parts.size(); i++)
+ 			this.partialSequenceTokens[i - 1] = parts.get(i);
+ 	}
+
+  	private ArrayList<String> buildSequence(StringBuilder tokens) {
+ 		tokens.append(" ");
+ 		ArrayList<String> l = new ArrayList<>();
+ 		StringBuilder sequence = new StringBuilder(), token = null;
+ 		for (int i = 0; i < tokens.length(); i++) {
+ 			char ch = tokens.charAt(i);
+ 			if (ch == ' ') {
+ 				if (token != null) {
+ 					String t = token.toString();
+ 					l.add(t);
+ 					sequence.append(t + " ");
+ 					token = null;
+ 				}
+ 			} else {
+ 				if (token == null)
+ 					token = new StringBuilder();
+ 				token.append(ch);
+ 			}
+ 		}
+ 		l.add(0, sequence.toString());
+ 		return l;
+ 	}
+
+  	public static LinkedHashSet<LocalEntity> setInfoOfFieldDeclaration(
+ 			TypeDeclaration node) {
+ 		LinkedHashSet<LocalEntity> setFields = new LinkedHashSet<LocalEntity>();
+ 		setFields.clear();
+ 		FieldDeclaration[] arrFields = node.getFields();
+ 		for (int i = 0; i < arrFields.length; i++) {
+ 			List<VariableDeclarationFragment> arrDeclaration = arrFields[i]
+ 					.fragments();
+ 			for (int j = 0; j < arrDeclaration.size(); j++) {
+ 				VariableDeclarationFragment item = arrDeclaration.get(j);
+ 				IVariableBinding varBind = item.resolveBinding();
+ 				SimpleName varName = item.getName();
+ 				if (varBind != null && varName != null) {
+ 					ITypeBinding typeBind = varBind.getType();
+ 					if (typeBind != null) {
+ 						LocalEntity le = new LocalEntity();
+ 						le.setStrCodeReprensent(varName.getIdentifier());
+ 						le.setStrTypeOfEntity(typeBind.getQualifiedName());
+ 						setFields.add(le);
+ 					}
+
+  				}
+ 			}
+
+  		}
+ 		return setFields;
+ 	}
+
+  	public boolean visit(TypeDeclaration node) {
+ 		if (typeOfTraverse == 1) {
+ 			setFields.clear();
+ 			FieldDeclaration[] arrFields = node.getFields();
+ 			for (int i = 0; i < arrFields.length; i++) {
+ 				List<VariableDeclarationFragment> arrDeclaration = arrFields[i]
+ 						.fragments();
+ 				for (int j = 0; j < arrDeclaration.size(); j++) {
+ 					VariableDeclarationFragment item = arrDeclaration.get(j);
+ 					IVariableBinding varBind = item.resolveBinding();
+ 					SimpleName varName = item.getName();
+ 					if (varBind != null && varName != null) {
+ 						ITypeBinding typeBind = varBind.getType();
+ 						if (typeBind != null) {
+ 							LocalEntity le = new LocalEntity();
+ 							le.setStrCodeReprensent(varName.getIdentifier());
+ 							le.setStrTypeOfEntity(typeBind.getQualifiedName());
+ 							setFields.add(le);
+ 						}
+
+  					}
+ 				}
+
+  			}
+ 		}
+ 		// if (node.getAST().apiLevel() == JLS2) {
+ 		// getTypeDeclaration(node).accept(this);
+ 		// }
+ 		// if (node.getAST().apiLevel() >= JLS3) {
+ 		// node.getDeclaration().accept(this);
+ 		// }
+
+  		return false;
+ 	}
+
+  	// public boolean visit(FieldDeclaration node) {
+ 	// // node.fragments();
+ 	// return false;
+ 	// }
+
+  	// @Override
+ 	// public boolean visit(MethodDeclaration node) {
+ 	// if (node.getBody() != null && !node.getBody().statements().isEmpty())
+ 	// node.getBody().accept(this);
+ 	// return false;
+ 	// }
+
+  	private String currentMethodDeclaration = "";
+ 	private String currentClassDeclaration = "";
+
+  	public boolean visit(MethodDeclaration node) {
+ 		if (setArguments == null) {
+ 			setArguments = new LinkedHashSet<LocalEntity>();
+ 		}
+ 		if (setLocalVariables == null) {
+ 			setLocalVariables = new LinkedHashSet<LocalEntity>();
+ 		}
+ 		setArguments.clear();
+ 		setLocalVariables.clear();
+ 		Iterator<SingleVariableDeclaration> parameters = node.parameters()
+ 				.iterator();
+ 		while (parameters.hasNext()) {
+ 			SingleVariableDeclaration parameter = parameters.next();
+ 			IVariableBinding parameterType = parameter.resolveBinding();
+ 			SimpleName varName = parameter.getName();
+ 			if (parameterType != null && varName != null) {
+ 				ITypeBinding typeBind = parameterType.getType();
+ 				if (typeBind != null) {
+ 					LocalEntity le = new LocalEntity();
+ 					le.setStrCodeReprensent(varName.getIdentifier());
+ 					le.setStrTypeOfEntity(typeBind.getQualifiedName());
+ 					setArguments.add(le);
+ 				}
+ 			}
+ 		}
+ 		String strSignature = JavaASTUtil.buildAllSigIngo(node);
+ 		String strInformation = viewAllLocalInformation().toString();
+ 		// System.out.println(strSignature + "\n" + strInformation);
+ 		LocalForMethod lfm = new LocalForMethod();
+ 		lfm.setMethod(node);
+ 		lfm.setSetArguments((LinkedHashSet<LocalEntity>) setArguments.clone());
+ 		lfm.setSetLocalVariables((LinkedHashSet<LocalEntity>) setLocalVariables
+ 				.clone());
+ 		lfm.setSetFields((LinkedHashSet<LocalEntity>) setFields.clone());
+ 		// currentLcalMethod = lfm;
+ 		mapLocalcontextForMethod.put(strSignature, lfm);
+
+  		sbTotalBuilder = new StringBuilder();
+ 		currentMethodDecl = node;
+ 		levelOfTraverMD = 0;
+ 		currentLocalMethod = mapLocalcontextForMethod.get(strSignature);
+ 		isVisitInsideMethodDeclaration = true;
+ 		IMethodBinding bindM = node.resolveBinding();
+ 		if (bindM != null) {
+ 			currentMethodDeclaration = bindM.getKey();
+ 			ITypeBinding bindT = bindM.getDeclaringClass();
+
+  			if (bindT != null) {
+ 				currentClassDeclaration = bindT.getQualifiedName();
+ 				if (currentClassDeclaration.isEmpty()) {
+ 					IBinding bindMethod = bindT.getDeclaringMember();
+ 					if (bindMethod instanceof IMethodBinding) {
+ 						IMethodBinding bind2M = (IMethodBinding) bindMethod;
+ 						currentClassDeclaration = bind2M.getDeclaringClass() != null ? bind2M
+ 								.getDeclaringClass().getQualifiedName() : "";
+ 					}
+
+  				}
+ 				// System.out.println("null class "+currentClassDeclaration);
+ 			}
+ 			// System.out.println("current class "+currentClassDeclaration+" and "+currentMethodDeclaration);
+ 		}
+ 		if (iaVisitor == null) {
+ 			iaVisitor = new InvocationAbstractorVisitor();
+ 		}
+ 		iaVisitor.setCurrentClassDeclaration(currentClassDeclaration);
+ 		iaVisitor.setCurrentMethodDeclaration(currentMethodDeclaration);
+ 		iaVisitor.setLemm(lemm);
+
+  		if (node.getBody() != null) {
+ 			node.getBody().accept(this);
+ 		}
+ 		// System.out.println(this.partialTokens.toString());
+ 		// System.out.println(this.fullTokens.toString());
+ 		// String methodSig = JavaASTUtil.buildAllSigIngo(node);
+ 		// System.out.println("Method " + methodSig);
+ 		// System.out.println("Content " + this.buffer.toString());
+ 		// setSequencesOfMethods.put(methodSig, this.buffer.toString());
+
+  		return false;
+ 	}
+
+  	// @Override
+ 	// public boolean visit(VariableDeclarationStatement node) {
+ 	// ITypeBinding tb = node.getType().resolveBinding();
+ 	// if (tb != null && tb.getTypeDeclaration().isLocal())
+ 	// return false;
+ 	// String utype = getUnresolvedType(node.getType()), rtype =
+ 	// getResolvedType(node.getType());
+ 	// this.partialTokens.append(" " + utype + " ");
+ 	// this.fullTokens.append(" " + rtype + " ");
+ 	// for (int i = 0; i < node.fragments().size(); i++)
+ 	// ((ASTNode) node.fragments().get(i)).accept(this);
+ 	// return false;
+ 	// }
+
+  	// public boolean visit(VariableDeclarationStatement node) {
+ 	// if (isVisitMethod) {
+ 	// List<VariableDeclarationFragment> listFrags =
+ 	// (List<VariableDeclarationFragment>) node
+ 	// .fragments();
+ 	// for (int i = 0; i < listFrags.size(); i++) {
+ 	// VariableDeclarationFragment item = listFrags.get(i);
+ 	// IVariableBinding varBind = item.resolveBinding();
+ 	// SimpleName varName = item.getName();
+ 	// if (varBind != null && varName != null) {
+ 	// ITypeBinding typeBind = varBind.getType();
+ 	// if (typeBind != null) {
+ 	// LocalEntity le = new LocalEntity();
+ 	// le.setStrCodeReprensent(varName.getIdentifier());
+ 	// le.setStrTypeOfEntity(typeBind.getQualifiedName());
+ 	// setLocalVariables.add(le);
+ 	// }
+ 	//
+ 	// }
+ 	// }
+ 	// }
+ 	// return false;
+ 	// }
+
+  	public String viewSelectedTypeReceiver(IMethodBinding iMethod) {
+
+  		String strType = iMethod != null ? (iMethod.getDeclaringClass() != null ? iMethod
+ 				.getDeclaringClass().getQualifiedName() : "")
+ 				: ":";
+ 		return strType;
+ 	}
+
+  	public String viewReceiverOfExpression(Expression node) {
+
+  		String strType = "";
+ 		try {
+ 			strType = node.resolveTypeBinding().getQualifiedName();
+ 		} catch (Exception ex) {
+
+  		}
+ 		return strType;
+ 	}
+
+  	public String viewSelectedTypeParam(IMethodBinding iMethod, int i) {
+ 		if (iMethod == null) {
+ 			return "";
+ 		}
+ 		ITypeBinding[] arrBindArgs = iMethod.getParameterTypes();
+ 		if (arrBindArgs == null) {
+ 			return "";
+ 		}
+ 		if (arrBindArgs.length < i + 1) {
+ 			return "";
+ 		}
+ 		String strType = arrBindArgs[i] != null ? arrBindArgs[i]
+ 				.getQualifiedName() : "";
+ 		return strType;
+ 	}
+
+  	public int getNumOfExpressions() {
+ 		return numOfExpressions;
+ 	}
+
+  	public int getNumOfResolvedExpressions() {
+ 		return numOfResolvedExpressions;
+ 	}
+
+  	private Type getType(VariableDeclarationFragment node) {
+ 		ASTNode p = node.getParent();
+ 		if (p instanceof VariableDeclarationExpression)
+ 			return ((VariableDeclarationExpression) p).getType();
+ 		if (p instanceof VariableDeclarationStatement)
+ 			return ((VariableDeclarationStatement) p).getType();
+ 		return null;
+ 	}
+
+  	private String getSignature(IMethodBinding method) {
+ 		StringBuilder sb = new StringBuilder();
+ 		sb.append(method.getDeclaringClass().getTypeDeclaration()
+ 				.getQualifiedName());
+ 		sb.append("." + method.getName());
+ 		sb.append("(");
+ 		sb.append(SEPARATOR);
+ 		for (ITypeBinding tb : method.getParameterTypes())
+ 			sb.append(tb.getTypeDeclaration().getName() + "#");
+ 		sb.append(")");
+ 		return sb.toString();
+ 	}
+
+  	public static String getUnresolvedType(Type type) {
+ 		if (type.isArrayType()) {
+ 			ArrayType t = (ArrayType) type;
+ 			return getUnresolvedType(t.getElementType())
+ 					+ getDimensions(t.getDimensions());
+ 		} else if (type.isIntersectionType()) {
+ 			IntersectionType it = (IntersectionType) type;
+ 			@SuppressWarnings("unchecked")
+ 			ArrayList<Type> types = new ArrayList<>(it.types());
+ 			String s = getUnresolvedType(types.get(0));
+ 			for (int i = 1; i < types.size(); i++)
+ 				s += " & " + getUnresolvedType(types.get(i));
+ 			return s;
+ 		} else if (type.isParameterizedType()) {
+ 			ParameterizedType t = (ParameterizedType) type;
+ 			return getUnresolvedType(t.getType());
+ 		} else if (type.isUnionType()) {
+ 			UnionType it = (UnionType) type;
+ 			@SuppressWarnings("unchecked")
+ 			ArrayList<Type> types = new ArrayList<>(it.types());
+ 			String s = getUnresolvedType(types.get(0));
+ 			for (int i = 1; i < types.size(); i++)
+ 				s += " | " + getUnresolvedType(types.get(i));
+ 			return s;
+ 		} else if (type.isNameQualifiedType()) {
+ 			NameQualifiedType qt = (NameQualifiedType) type;
+ 			return qt.getQualifier().getFullyQualifiedName() + "."
+ 					+ qt.getName().getIdentifier();
+ 		} else if (type.isPrimitiveType()) {
+ 			return type.toString();
+ 		} else if (type.isQualifiedType()) {
+ 			QualifiedType qt = (QualifiedType) type;
+ 			return getUnresolvedType(qt.getQualifier()) + "."
+ 					+ qt.getName().getIdentifier();
+ 		} else if (type.isSimpleType()) {
+ 			return type.toString();
+ 		} else if (type.isWildcardType()) {
+ 			WildcardType wt = (WildcardType) type;
+ 			String s = "?";
+ 			if (wt.getBound() != null) {
+ 				if (wt.isUpperBound())
+ 					s += "extends ";
+ 				else
+ 					s += "super ";
+ 				s += getUnresolvedType(wt.getBound());
+ 			}
+ 			return s;
+ 		}
+
+  		return null;
+ 	}
+
+  	private static String getDimensions(int dimensions) {
+ 		String s = "";
+ 		for (int i = 0; i < dimensions; i++)
+ 			s += "[]";
+ 		return s;
+ 	}
+
+  	static String getResolvedType(Type type) {
+ 		ITypeBinding tb = type.resolveBinding();
+ 		if (tb == null || tb.isRecovered())
+ 			return getUnresolvedType(type);
+ 		tb = tb.getTypeDeclaration();
+ 		if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+ 			return getUnresolvedType(type);
+ 		if (type.isArrayType()) {
+ 			ArrayType t = (ArrayType) type;
+ 			return getResolvedType(t.getElementType())
+ 					+ getDimensions(t.getDimensions());
+ 		} else if (type.isIntersectionType()) {
+ 			IntersectionType it = (IntersectionType) type;
+ 			@SuppressWarnings("unchecked")
+ 			ArrayList<Type> types = new ArrayList<>(it.types());
+ 			String s = getResolvedType(types.get(0));
+ 			for (int i = 1; i < types.size(); i++)
+ 				s += " & " + getResolvedType(types.get(i));
+ 			return s;
+ 		} else if (type.isParameterizedType()) {
+ 			ParameterizedType t = (ParameterizedType) type;
+ 			return getResolvedType(t.getType());
+ 		} else if (type.isUnionType()) {
+ 			UnionType it = (UnionType) type;
+ 			@SuppressWarnings("unchecked")
+ 			ArrayList<Type> types = new ArrayList<>(it.types());
+ 			String s = getResolvedType(types.get(0));
+ 			for (int i = 1; i < types.size(); i++)
+ 				s += " | " + getResolvedType(types.get(i));
+ 			return s;
+ 		} else if (type.isNameQualifiedType()) {
+ 			return tb.getQualifiedName();
+ 		} else if (type.isPrimitiveType()) {
+ 			return type.toString();
+ 		} else if (type.isQualifiedType()) {
+ 			return tb.getQualifiedName();
+ 		} else if (type.isSimpleType()) {
+ 			return tb.getQualifiedName();
+ 		} else if (type.isWildcardType()) {
+ 			WildcardType wt = (WildcardType) type;
+ 			String s = "?";
+ 			if (wt.getBound() != null) {
+ 				if (wt.isUpperBound())
+ 					s += "extends ";
+ 				else
+ 					s += "super ";
+ 				s += getResolvedType(wt.getBound());
+ 			}
+ 			return s;
+ 		}
+
+  		return null;
+ 	}
+
+  	public boolean checkPrefix(String type, String[] arrPrex) {
+ 		boolean result = false;
+
+  		for (int i = 0; i < arrPrex.length; i++) {
+ 			if (type.startsWith(arrPrex[i])) {
+ 				result = true;
+ 				break;
+ 			}
+ 		}
+
+  		if (type.contains("<")) {
+ 			result = false;
+ 			String[] arrTypeInside = type.split("<");
+ 			if (arrTypeInside.length >= 2) {
+ 				for (int i = 0; i < arrPrex.length; i++) {
+ 					if (arrTypeInside[1].startsWith(arrPrex[i])) {
+ 						result = true;
+ 						break;
+ 					}
+ 				}
+ 			}
+ 		}
+
+  		return result;
+ 	}
+
+  	@Override
+ 	public void preVisit(ASTNode node) {
+ 		if (node instanceof Expression) {
+ 			numOfExpressions++;
+ 			Expression e = (Expression) node;
+ 			if (e.resolveTypeBinding() != null
+ 					&& !e.resolveTypeBinding().isRecovered())
+ 				numOfResolvedExpressions++;
+ 		} else if (node instanceof Statement) {
+ 			if (node instanceof ConstructorInvocation) {
+ 				numOfExpressions++;
+ 				if (((ConstructorInvocation) node).resolveConstructorBinding() != null
+ 						&& !((ConstructorInvocation) node)
+ 								.resolveConstructorBinding().isRecovered())
+ 					numOfResolvedExpressions++;
+ 			} else if (node instanceof SuperConstructorInvocation) {
+ 				numOfExpressions++;
+ 				if (((SuperConstructorInvocation) node)
+ 						.resolveConstructorBinding() != null
+ 						&& !((SuperConstructorInvocation) node)
+ 								.resolveConstructorBinding().isRecovered())
+ 					numOfResolvedExpressions++;
+ 			}
+ 		} else if (node instanceof Type) {
+ 			numOfExpressions++;
+ 			Type t = (Type) node;
+ 			if (t.resolveBinding() != null && !t.resolveBinding().isRecovered())
+ 				numOfResolvedExpressions++;
+ 		}
+ 	}
+
+  	// @Override
+ 	// public boolean visit(MethodInvocation node) {
+ 	// if (node.getExpression() != null && node.getExpression() instanceof
+ 	// TypeLiteral) {
+ 	// TypeLiteral lit = (TypeLiteral) node.getExpression();
+ 	// String utype = getUnresolvedType(lit.getType()), rtype =
+ 	// getResolvedType(lit.getType());
+ 	// this.fullTokens.append(" " + rtype + ".class." +
+ 	// node.getName().getIdentifier() + "() ");
+ 	// this.partialTokens.append(" " + utype + ".class." +
+ 	// node.getName().getIdentifier() + "() ");
+ 	// } else {
+ 	// IMethodBinding b = node.resolveMethodBinding();
+ 	// ITypeBinding tb = null;
+ 	// if (b != null) {
+ 	// tb = b.getDeclaringClass();
+ 	// if (tb != null) {
+ 	// tb = tb.getTypeDeclaration();
+ 	// if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+ 	// return false;
+ 	// }
+ 	// }
+ 	// this.fullTokens.append(" ");
+ 	// this.partialTokens.append(" ");
+ 	// if (node.getExpression() != null) {
+ 	// node.getExpression().accept(this);
+ 	// } else {
+ 	// if (tb != null) {
+ 	// this.partialTokens.append(" " + getName(tb) + " ");
+ 	// this.fullTokens.append(" " + getQualifiedName(tb) + " ");
+ 	// } else {
+ 	// this.partialTokens.append(" this ");
+ 	// this.fullTokens.append(" this ");
+ 	// }
+ 	// }
+ 	// String name = "."+ node.getName().getIdentifier() + "()";
+ 	// this.partialTokens.append(" " + name + " ");
+ 	// if (!USE_SIMPLE_METHOD_NAME && tb != null
+ 	// // && !name.equals(".toString()")
+ 	// // && !name.equals(".equals()")
+ 	// // && !name.equals(".clone()")
+ 	// // && !name.equals(".getClass()")
+ 	// // && !name.equals(".hashCode()")
+ 	// // && !name.equals(".valueOf()")
+ 	// )
+ 	// name = getQualifiedName(tb) + name;
+ 	// this.fullTokens.append(" " + name + " ");
+ 	// }
+ 	// for (int i = 0; i < node.arguments().size(); i++)
+ 	// ((ASTNode) node.arguments().get(i)).accept(this);
+ 	// return false;
+ 	// }
+
+  	public boolean visit(MethodInvocation node) {
+ 		levelOfTraverMD++;
+ 		if (levelOfTraverMD == 1) {
+ 			iaVisitor.refreshInformation();
+ 		}
+
+  //		if (node.getExpression() != null
+ //				&& node.getExpression() instanceof TypeLiteral) {
+ //			TypeLiteral lit = (TypeLiteral) node.getExpression();
+ //			String utype = getUnresolvedType(lit.getType()), rtype = getResolvedType(lit
+ //					.getType());
+ //			this.fullTokens.append(" " + rtype + ".class."
+ //					+ node.getName().getIdentifier() + "() ");
+ //			this.partialTokens.append(" " + utype + ".class."
+ //					+ node.getName().getIdentifier() + "() ");
+ //		} else {
+ //			IMethodBinding b = node.resolveMethodBinding();
+ //			ITypeBinding tb = null;
+ //			if (b != null) {
+ //				tb = b.getDeclaringClass();
+ //				if (tb != null) {
+ //					tb = tb.getTypeDeclaration();
+ //					if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+ //						return false;
+ //				}
+ //			}
+ //			this.fullTokens.append(" ");
+ //			this.partialTokens.append(" ");
+ //			if (node.getExpression() != null) {
+ //				node.getExpression().accept(this);
+ //			} else {
+ //				if (tb != null) {
+ //					this.partialTokens.append(" " + getName(tb) + " ");
+ //					this.fullTokens.append(" " + getQualifiedName(tb) + " ");
+ //				} else {
+ //					this.partialTokens.append(" this ");
+ //					this.fullTokens.append(" this ");
+ //				}
+ //			}
+ //			String name = "." + node.getName().getIdentifier() + "()";
+ //			this.partialTokens.append(" " + name + " ");
+ //			if (!USE_SIMPLE_METHOD_NAME && tb != null
+ //			// && !name.equals(".toString()")
+ //			// && !name.equals(".equals()")
+ //			// && !name.equals(".clone()")
+ //			// && !name.equals(".getClass()")
+ //			// && !name.equals(".hashCode()")
+ //			// && !name.equals(".valueOf()")
+ //			)
+ //				name = getQualifiedName(tb) + name;
+ //			this.fullTokens.append(" " + name + " ");
+ //		}
+ //		for (int i = 0; i < node.arguments().size(); i++)
+ //			((ASTNode) node.arguments().get(i)).accept(this);
+
+  		//get abstract information
+ 		if (levelOfTraverMD == 1) {
+
+  			String receiverType = viewReceiverOfExpression(node.getExpression());
+ 			if (!receiverType.isEmpty()
+ 					&& checkPrefix(receiverType, arrLibrariesPrefix)) {
+ 				InvocationObject io = new InvocationObject();
+ 				String methodInfo = JavaASTUtil.buildAllSigIngo(node);
+ 				io.setStrMethodInfo(methodInfo);
+ 				if (iaVisitor != null) {
+ 					node.accept(iaVisitor);
+ 				}
+ 				if (!iaVisitor.getSbAbstractInformation().toString()
+ 						.equals("#")) {
+ 					String strIdentifier = node.getName().getIdentifier()
+ 							+ "#identifier";
+ 					iaVisitor.sortRequiredAPI();
+ 					io.setStrCodeRepresent(iaVisitor.getSbAbstractInformation()
+ 							.toString());
+ 					io.setListQuestionMarkTypes(iaVisitor
+ 							.getListAbstractTypeQuestionMark());
+ 					io.setSetImportedAPIs(iaVisitor.getSetRequiredAPIsForMI());
+ 					io.setStrIdentifier(strIdentifier);
+ 					io.setListOfRelatedWordsSource(iaVisitor.getListOfRelatedWordsSource());
+ 					io.setListOfRelatedWordsTarget(iaVisitor.getListOfRelatedWordsTarget());
+ 					String idenInfo = io.setIDRepresent();
+ 					String id = "";
+ 					if (!mapIdenAndID.containsKey(idenInfo)) {
+ 						id = "E-"
+ 								+ String.format("%09d", mapIDAndIden.size() + 1);
+ 						//
+ 						mapIdenAndID.put(idenInfo, id);
+ 						mapIDAndIden.put(id, idenInfo);
+ 						mapIDAppear.put(id, 1);
+ 						io.saveToFile(hashIdenPath + "/" + id + ".txt");
+ 					} else {
+ 						String existId = mapIdenAndID.get(idenInfo);
+ 						id = existId;
+ 						mapIDAppear.put(existId, mapIDAppear.get(existId) + 1);
+ 					}
+
+  					this.partialTokens.append(iaVisitor.getPartialParamSequence()+ " ");
+ 					this.fullTokens.append(iaVisitor.getFQNParamSequence()+" ");
+ 					this.partialTokens.append(strIdentifier + " ");
+ 					this.fullTokens.append(id + " ");
+
+  				}
+
+  				iaVisitor.refreshInformation();
+
+  			}
+ 		}
+ 		levelOfTraverMD--;
+
+  		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(ArrayAccess node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(ArrayCreation node) {
+ 		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
+ 				.getType());
+ 		this.partialTokens.append(" new " + utype + " ");
+ 		this.fullTokens.append(" new " + rtype + " ");
+ 		if (node.getInitializer() != null)
+ 			node.getInitializer().accept(this);
+ 		else
+ 			for (int i = 0; i < node.dimensions().size(); i++)
+ 				((Expression) (node.dimensions().get(i))).accept(this);
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(ArrayInitializer node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(AssertStatement node) {
+ 		this.fullTokens.append(" assert ");
+ 		this.partialTokens.append(" assert ");
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(Assignment node) {
+ 		node.getLeftHandSide().accept(this);
+ 		this.fullTokens.append(" = ");
+ 		this.partialTokens.append(" = ");
+ 		node.getRightHandSide().accept(this);
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(Block node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(BooleanLiteral node) {
+ 		this.fullTokens.append(" boolean ");
+ 		this.partialTokens.append(" boolean ");
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(BreakStatement node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(CastExpression node) {
+ 		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
+ 				.getType());
+ 		this.fullTokens.append(" " + rtype + " <cast> ");
+ 		this.partialTokens.append(" " + utype + " <cast> ");
+ 		node.getExpression().accept(this);
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(CatchClause node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(CharacterLiteral node) {
+ 		this.fullTokens.append(" char ");
+ 		this.partialTokens.append(" char ");
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(ClassInstanceCreation node) {
+ 		ITypeBinding tb = node.getType().resolveBinding();
+ 		if (tb != null && tb.getTypeDeclaration().isLocal())
+ 			return false;
+ 		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
+ 				.getType());
+ 		this.fullTokens.append(" new " + rtype + "() ");
+ 		this.partialTokens.append(" new " + utype + "() ");
+ 		for (Iterator it = node.arguments().iterator(); it.hasNext();) {
+ 			Expression e = (Expression) it.next();
+ 			e.accept(this);
+ 		}
+ 		if (node.getAnonymousClassDeclaration() != null)
+ 			node.getAnonymousClassDeclaration().accept(this);
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(ConditionalExpression node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(ConstructorInvocation node) {
+ 		IMethodBinding b = node.resolveConstructorBinding();
+ 		ITypeBinding tb = null;
+ 		if (b != null && b.getDeclaringClass() != null)
+ 			tb = b.getDeclaringClass().getTypeDeclaration();
+ 		if (tb != null) {
+ 			if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+ 				return false;
+ 		}
+ 		String name = "." + className + "()";
+ 		this.partialTokens.append(" " + name + " ");
+ 		if (tb != null)
+ 			name = getQualifiedName(tb) + name;
+ 		this.fullTokens.append(" " + name + " ");
+ 		for (int i = 0; i < node.arguments().size(); i++)
+ 			((ASTNode) node.arguments().get(i)).accept(this);
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(ContinueStatement node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(CreationReference node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(Dimension node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(DoStatement node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(EmptyStatement node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(EnhancedForStatement node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(EnumConstantDeclaration node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(EnumDeclaration node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(ExpressionMethodReference node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(ExpressionStatement node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(FieldAccess node) {
+ 		IVariableBinding b = node.resolveFieldBinding();
+ 		ITypeBinding tb = null;
+ 		if (b != null) {
+ 			tb = b.getDeclaringClass();
+ 			if (tb != null) {
+ 				tb = tb.getTypeDeclaration();
+ 				if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+ 					return false;
+ 			}
+ 		}
+ 		this.fullTokens.append(" ");
+ 		this.partialTokens.append(" ");
+ 		node.getExpression().accept(this);
+ 		String name = "." + node.getName().getIdentifier();
+ 		this.partialTokens.append(" " + name + " ");
+ 		if (b != null) {
+ 			if (tb != null)
+ 				name = getQualifiedName(tb.getTypeDeclaration()) + name;
+ 			/*
+ 			 * else name = "Array" + name;
+ 			 */
+ 		}
+ 		this.fullTokens.append(" " + name + " ");
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(FieldDeclaration node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(ForStatement node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(IfStatement node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(ImportDeclaration node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(InfixExpression node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(Initializer node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(InstanceofExpression node) {
+ 		this.fullTokens.append(" ");
+ 		this.partialTokens.append(" ");
+ 		node.getLeftOperand().accept(this);
+ 		this.fullTokens.append(" <instanceof> ");
+ 		this.partialTokens.append(" <instanceof> ");
+ 		String rtype = getResolvedType(node.getRightOperand()), utype = getUnresolvedType(node
+ 				.getRightOperand());
+ 		this.fullTokens.append(rtype + " ");
+ 		this.partialTokens.append(utype + " ");
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(LabeledStatement node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(LambdaExpression node) {
+ 		return false;
+ 	}
+
+  	// @Override
+ 	// public boolean visit(MethodDeclaration node) {
+ 	// if (node.getBody() != null && !node.getBody().statements().isEmpty())
+ 	// node.getBody().accept(this);
+ 	// return false;
+ 	// }
+
+  	@Override
+ 	public boolean visit(Modifier node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(NormalAnnotation node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(NullLiteral node) {
+ 		this.fullTokens.append(" null ");
+ 		this.partialTokens.append(" null ");
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(NumberLiteral node) {
+ 		this.fullTokens.append(" number ");
+ 		this.partialTokens.append(" number ");
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(PackageDeclaration node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(ParenthesizedExpression node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(PostfixExpression node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(PrefixExpression node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(QualifiedName node) {
+ 		IBinding b = node.resolveBinding();
+ 		IVariableBinding vb = null;
+ 		ITypeBinding tb = null;
+ 		if (b != null) {
+ 			if (b instanceof IVariableBinding) {
+ 				vb = (IVariableBinding) b;
+ 				tb = vb.getDeclaringClass();
+ 				if (tb != null) {
+ 					tb = tb.getTypeDeclaration();
+ 					if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+ 						return false;
+ 				}
+ 			} else if (b instanceof ITypeBinding) {
+ 				tb = ((ITypeBinding) b).getTypeDeclaration();
+ 				if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+ 					return false;
+ 				this.partialTokens.append(" " + node.getFullyQualifiedName()
+ 						+ " ");
+ 				this.fullTokens.append(" " + getQualifiedName(tb) + " ");
+ 				return false;
+ 			}
+ 		} else {
+ 			this.partialTokens.append(" " + node.getFullyQualifiedName() + " ");
+ 			this.fullTokens.append(" " + node.getFullyQualifiedName() + " ");
+ 			return false;
+ 		}
+ 		node.getQualifier().accept(this);
+ 		String name = "." + node.getName().getIdentifier();
+ 		this.partialTokens.append(" " + name + " ");
+ 		if (b != null) {
+ 			if (b instanceof IVariableBinding) {
+ 				if (tb != null)
+ 					name = getQualifiedName(tb.getTypeDeclaration()) + name;
+ 				/*
+ 				 * else name = "Array" + name;
+ 				 */
+ 			}
+ 		}
+ 		this.fullTokens.append(" " + name + " ");
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(ReturnStatement node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(SimpleName node) {
+ 		IBinding b = node.resolveBinding();
+ 		if (b != null) {
+ 			if (b instanceof IVariableBinding) {
+ 				IVariableBinding vb = (IVariableBinding) b;
+ 				ITypeBinding tb = vb.getType();
+ 				if (tb != null) {
+ 					tb = tb.getTypeDeclaration();
+ 					if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+ 						return false;
+ 					this.fullTokens.append(" " + getQualifiedName(tb) + "#var ");
+ 					this.partialTokens.append(" " + getName(tb) + "#var ");
+ 				}
+ 			} else if (b instanceof ITypeBinding) {
+ 				ITypeBinding tb = (ITypeBinding) b;
+ 				tb = tb.getTypeDeclaration();
+ 				if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+ 					return false;
+ 				this.fullTokens.append(" " + getQualifiedName(tb) + " ");
+ 				this.partialTokens.append(" " + getName(tb) + " ");
+ 			}
+ 		} else {
+ 			this.fullTokens.append(" " + node.getIdentifier() + " ");
+ 			this.partialTokens.append(" " + node.getIdentifier() + " ");
+ 		}
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(SingleMemberAnnotation node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(SingleVariableDeclaration node) {
+ 		ITypeBinding tb = node.getType().resolveBinding();
+ 		if (tb != null && tb.getTypeDeclaration().isLocal())
+ 			return false;
+ 		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
+ 				.getType());
+ 		this.partialTokens.append(" " + utype + " ");
+ 		this.fullTokens.append(" " + rtype + " ");
+ 		if (node.getInitializer() != null) {
+ 			this.partialTokens.append("= ");
+ 			this.fullTokens.append("= ");
+ 			node.getInitializer().accept(this);
+ 		}
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(StringLiteral node) {
+ 		this.fullTokens.append(" java.lang.String ");
+ 		this.partialTokens.append(" String ");
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(SuperConstructorInvocation node) {
+ 		IMethodBinding b = node.resolveConstructorBinding();
+ 		ITypeBinding tb = null;
+ 		if (b != null && b.getDeclaringClass() != null)
+ 			tb = b.getDeclaringClass().getTypeDeclaration();
+ 		if (tb != null) {
+ 			if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+ 				return false;
+ 		}
+ 		String name = "." + superClassName + "()";
+ 		this.partialTokens.append(" " + name + " ");
+ 		if (tb != null)
+ 			name = getQualifiedName(tb) + name;
+ 		this.fullTokens.append(" " + name + " ");
+ 		for (int i = 0; i < node.arguments().size(); i++)
+ 			((ASTNode) node.arguments().get(i)).accept(this);
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(SuperFieldAccess node) {
+ 		IVariableBinding b = node.resolveFieldBinding();
+ 		ITypeBinding tb = null;
+ 		if (b != null && b.getDeclaringClass() != null) {
+ 			tb = b.getDeclaringClass().getTypeDeclaration();
+ 			if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+ 				return false;
+ 			this.partialTokens.append(" " + getName(tb) + " ");
+ 			this.fullTokens.append(" " + getQualifiedName(tb) + " ");
+ 		} else {
+ 			this.partialTokens.append(" super ");
+ 			this.fullTokens.append(" super ");
+ 		}
+ 		String name = "." + node.getName().getIdentifier();
+ 		this.partialTokens.append(" " + name + " ");
+ 		if (tb != null)
+ 			name = getQualifiedName(tb) + name;
+ 		this.fullTokens.append(" " + name + " ");
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(SuperMethodInvocation node) {
+ 		IMethodBinding b = node.resolveMethodBinding();
+ 		ITypeBinding tb = null;
+ 		if (b != null && b.getDeclaringClass() != null)
+ 			tb = b.getDeclaringClass().getTypeDeclaration();
+ 		if (tb != null) {
+ 			if (tb.isLocal() || tb.getQualifiedName().isEmpty())
+ 				return false;
+ 			this.partialTokens.append(" " + getName(tb) + " ");
+ 			this.fullTokens.append(" " + getQualifiedName(tb) + " ");
+ 		} else {
+ 			this.partialTokens.append(" super ");
+ 			this.fullTokens.append(" super ");
+ 		}
+ 		String name = "." + node.getName().getIdentifier() + "()";
+ 		this.partialTokens.append(" " + name + " ");
+ 		if (!USE_SIMPLE_METHOD_NAME && tb != null
+ 		// && !name.equals(".toString()")
+ 		// && !name.equals(".equals()")
+ 		// && !name.equals(".clone()")
+ 		// && !name.equals(".getClass()")
+ 		// && !name.equals(".hashCode()")
+ 		// && !name.equals(".valueOf()")
+ 		)
+ 			name = getQualifiedName(tb) + name;
+ 		this.fullTokens.append(" " + name + " ");
+ 		for (int i = 0; i < node.arguments().size(); i++)
+ 			((ASTNode) node.arguments().get(i)).accept(this);
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(SuperMethodReference node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(SwitchCase node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(SwitchStatement node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(SynchronizedStatement node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(ThisExpression node) {
+ 		ITypeBinding b = node.resolveTypeBinding();
+ 		if (b != null) {
+ 			b = b.getTypeDeclaration();
+ 			if (b.isLocal() || b.getQualifiedName().isEmpty())
+ 				return false;
+ 			this.partialTokens.append(" " + getName(b) + " ");
+ 			this.fullTokens.append(" " + getQualifiedName(b) + " ");
+ 		} else {
+ 			this.partialTokens.append(" this ");
+ 			this.fullTokens.append(" this ");
+ 		}
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(ThrowStatement node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(TryStatement node) {
+ 		return super.visit(node);
+ 	}
+
+  	// @Override
+ 	// public boolean visit(TypeDeclaration node) {
+ 	// return false;
+ 	// }
+
+  	@Override
+ 	public boolean visit(TypeDeclarationStatement node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(TypeLiteral node) {
+ 		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
+ 				.getType());
+ 		this.fullTokens.append(" " + rtype + ".class ");
+ 		this.partialTokens.append(" " + utype + ".class ");
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(TypeMethodReference node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(TypeParameter node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(VariableDeclarationExpression node) {
+ 		ITypeBinding tb = node.getType().resolveBinding();
+ 		if (tb != null && tb.getTypeDeclaration().isLocal())
+ 			return false;
+ 		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
+ 				.getType());
+ 		this.partialTokens.append(" " + utype + " ");
+ 		this.fullTokens.append(" " + rtype + " ");
+ 		for (int i = 0; i < node.fragments().size(); i++)
+ 			((ASTNode) node.fragments().get(i)).accept(this);
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(VariableDeclarationStatement node) {
+ 		ITypeBinding tb = node.getType().resolveBinding();
+ 		if (tb != null && tb.getTypeDeclaration().isLocal())
+ 			return false;
+ 		String utype = getUnresolvedType(node.getType()), rtype = getResolvedType(node
+ 				.getType());
+ 		this.partialTokens.append(" " + utype + " ");
+ 		this.fullTokens.append(" " + rtype + " ");
+ 		for (int i = 0; i < node.fragments().size(); i++)
+ 			((ASTNode) node.fragments().get(i)).accept(this);
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(VariableDeclarationFragment node) {
+ 		Type type = getType(node);
+ 		String utype = getUnresolvedType(type), rtype = getResolvedType(type);
+ 		this.partialTokens.append(" " + utype + "#var ");
+ 		this.fullTokens.append(" " + rtype + "#var ");
+ 		if (node.getInitializer() != null) {
+ 			this.partialTokens.append("= ");
+ 			this.fullTokens.append("= ");
+ 			node.getInitializer().accept(this);
+ 		}
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(WhileStatement node) {
+ 		return super.visit(node);
+ 	}
+
+  	@Override
+ 	public boolean visit(ArrayType node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(IntersectionType node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(ParameterizedType node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(UnionType node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(NameQualifiedType node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(PrimitiveType node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(QualifiedType node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(SimpleType node) {
+ 		return false;
+ 	}
+
+  	@Override
+ 	public boolean visit(WildcardType node) {
+ 		return false;
+ 	}
+
+  	private String getQualifiedName(ITypeBinding tb) {
+ 		if (tb.isArray())
+ 			return getQualifiedName(tb.getComponentType().getTypeDeclaration())
+ 					+ getDimensions(tb.getDimensions());
+ 		return tb.getQualifiedName();
+ 	}
+
+  	private String getName(ITypeBinding tb) {
+ 		if (tb.isArray())
+ 			return getName(tb.getComponentType().getTypeDeclaration())
+ 					+ getDimensions(tb.getDimensions());
+ 		return tb.getName();
+ 	}
+
+  	public static void main(String[] args) {
+ 		String projectLocation = "/Users/hungphan/Documents/workspace/SampleMethodInvocationProject/";
+ 		String outputIdLocation = "/Users/hungphan/Documents/workspace/OutputMethodId/";
+ 		String jdkPath = "/Library/Java/JavaVirtualMachines/jdk1.8.0_141.jdk/Contents/Home/jre/lib/rt.jar";
+ 		String fileLocation = "/Users/hungphan/Documents/workspace/SampleMethodInvocationProject/src/examples/CalGetInstance.java";
+ 		MethodEncoderVisitor visitor = new MethodEncoderVisitor("", "");
+ 		visitor.parseProject(projectLocation, outputIdLocation, jdkPath);
+ 		visitor.parseFile(fileLocation);
+ 		visitor.parseForAbstractingMethodInvocation(fileLocation);
+ 	}
+
+  }

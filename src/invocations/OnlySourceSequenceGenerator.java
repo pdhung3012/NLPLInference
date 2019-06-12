@@ -52,6 +52,7 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 		this.inPath = inPath;
 		this.arrPrefix=arrPrefix;
 		this.lemm=lemm;
+		// ss
 	}
 	
 	public OnlySourceSequenceGenerator(String inPath,String[] arrPrefix, boolean testing,StanfordLemmatizer lemm) {

@@ -20,7 +20,7 @@ public class RunSingleQueryProject {
 		String fpOutputLog=outputProjectPath+File.separator+"alog.txt";
 		
 		ExtractQueryConfiguration config=new ExtractQueryConfiguration();
-		
+		config.setTypeOfMLModel(ExtractQueryConfiguration.TypeMLModel_Compact);
 		ExecutorService executor = Executors.newFixedThreadPool(MYTHREADS);
 		StanfordLemmatizer lemm=new StanfordLemmatizer();
 		if(!new File(fpOutputLog).isFile()){

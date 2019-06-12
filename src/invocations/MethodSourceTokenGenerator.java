@@ -344,14 +344,14 @@ public class MethodSourceTokenGenerator {
 			int numofExpressions = sg.getNumOfExpressions(),
 					numOfResolvedExpressions = sg.getNumOfResolvedExpressions();
 			String source = sg.getPartialSequence();
-//			String[] sTokens = sg.getPartialSequenceTokens();
+			String[] sTokens = sg.getPartialSequenceTokens();
 
 //					this.locations.add(path + "\t" + name + "\t" + method.getName().getIdentifier() + "\t" + getParameters(method) + "\t" + numofExpressions + "\t" + numOfResolvedExpressions + "\t" + (numOfResolvedExpressions * 100 / numofExpressions) + "%");
 //					this.sourceSequences.add(source);
 //					this.targetSequences.add(target);
 //					this.sourceSequenceTokens.add(sTokens);
 //					this.targetSequenceTokens.add(tTokens);
-			if(numofExpressions > 0) {
+			if(sTokens.length > 2 && numofExpressions > 0) {
 				stLocations.print(path + "\t" + packageName + "\t" + name + "\t" + method.getName().getIdentifier() + "\t"
 						+ getParameters(method) + "\t" + numofExpressions + "\t" + numOfResolvedExpressions + "\t"
 						+ (numOfResolvedExpressions * 100 / numofExpressions) + "%" + "\n");

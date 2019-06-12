@@ -343,10 +343,11 @@ public class MethodSourceTokenGenerator {
 		for (MethodDeclaration method : td.getMethods()) {
 			stLog.println(path + "\t" + name + "\t" + method.getName().getIdentifier() + "\t" + getParameters(method));
 			OnlySourceEncoderVisitor sg = new OnlySourceEncoderVisitor(className, superClassName);
+			sg.setConfig(config);
 			sg.setSetFields(setFieldsForTD);
 			sg.setArrLibrariesPrefix(this.arrPrefix);
 			sg.setFopInvocationObject(fopInvocationObject);
-			sg.setFopQueryPath(fopQueryObject);
+			sg.setFopQueryObject(fopQueryObject);			
 			sg.setHashIdenPath(this.idenHashPath);
 			sg.setMapIDAndIden(mapIDAndIden);
 			sg.setMapIdenAndID(mapIdenAndID);

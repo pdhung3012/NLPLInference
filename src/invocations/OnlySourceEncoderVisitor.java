@@ -190,9 +190,30 @@ public class OnlySourceEncoderVisitor extends ASTVisitor {
 	private MethodDeclaration currentMethodDecl = null;
 	private int levelOfTraverMD = 0;
 	private String fopInvocationObject;
-	private String fopDictionaryTextDescription;
+	private String fopQueryObject;
 	private String hashIdenPath;
 	private StanfordLemmatizer lemm;
+	private ExtractQueryConfiguration config;
+	
+	
+
+	
+	
+	public String getFopQueryObject() {
+		return fopQueryObject;
+	}
+
+	public void setFopQueryObject(String fopQueryObject) {
+		this.fopQueryObject = fopQueryObject;
+	}
+
+	public ExtractQueryConfiguration getConfig() {
+		return config;
+	}
+
+	public void setConfig(ExtractQueryConfiguration config) {
+		this.config = config;
+	}
 
 	public StanfordLemmatizer getLemm() {
 		return lemm;
@@ -290,14 +311,6 @@ public class OnlySourceEncoderVisitor extends ASTVisitor {
 	
 	
 
-	public String getFopDictionaryTextDescription() {
-		return fopDictionaryTextDescription;
-	}
-
-	public void setFopDictionaryTextDescription(String fopDictionaryTextDescription) {
-		this.fopDictionaryTextDescription = fopDictionaryTextDescription;
-	}
-
 	public OnlySourceEncoderVisitor(String className, String superClassName) {
 		super(false);
 		this.className = className;
@@ -306,7 +319,7 @@ public class OnlySourceEncoderVisitor extends ASTVisitor {
 
 	public void parseProject(String projectLocation, String fopInvocationObject,String fopDictionaryTextDescription, String jdkPath) {
 		this.fopInvocationObject = fopInvocationObject;
-		this.fopDictionaryTextDescription=fopDictionaryTextDescription;
+		this.fopQueryObject=fopDictionaryTextDescription;
 		setSequencesOfMethods = new LinkedHashMap<String, String>();
 		Map<String, String> options = JavaCore.getOptions();
 		String[] arrChildJars = utils.FileIO.findAllJarFiles(projectLocation);
@@ -1008,7 +1021,7 @@ public class OnlySourceEncoderVisitor extends ASTVisitor {
 
 			if (checkMIInTemplate(node)) {
 				String methodName=node.getName().getIdentifier();
-				File fTokens=new File(fopDictionaryTextDescription+File.separator+methodName+File.separator+"tokens.txt");
+				File fTokens=new File(fopQueryObject+File.separator+methodName+File.separator+"tokens.txt");
 				if(fTokens.exists()) {
 //					FileIO.appendStringToFile(methodName+"\n", fopDictionaryTextDescription+File.separator+"dictionaryQuery.txt");
 					String strNaturalTokens =FileIO.readStringFromFile(fTokens.getAbsolutePath());
@@ -1049,6 +1062,7 @@ public class OnlySourceEncoderVisitor extends ASTVisitor {
 //							id = existId;
 //							mapIDAppear.put(existId, mapIDAppear.get(existId) + 1);
 //						}
+
 
 						this.partialTokens.append(iaVisitor.getPartialParamSequence() + " ");
 //						this.fullTokens.append(iaVisitor.getFQNParamSequence()+" ");

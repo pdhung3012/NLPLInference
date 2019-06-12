@@ -39,7 +39,7 @@ public class RunSingleQueryProject {
 				String itemOutputPath = outputProjectPath + File.separator
 						+ arrFilesInput[i].getName() + File.separator;
 				ExtractSourceQueryRunnable thread = new ExtractSourceQueryRunnable(itemInputPath,
-						itemOutputPath, arrLibraryPrefix,i,fpOutputLog,lemm);
+						itemOutputPath, arrLibraryPrefix,i,fpOutputLog,lemm,config);
 //				thread.run();
 				executor.execute(thread);
 			}
@@ -59,7 +59,7 @@ class ExtractSourceQueryRunnable implements Runnable {
 	private ExtractQueryConfiguration config;
 	private StanfordLemmatizer lemm;
 
-	ExtractSourceQueryRunnable(String inputPath, String outputPath, String[] arrLibName, int index,String logPath,ExtractQueryConfiguration config,StanfordLemmatizer lemm) {
+	ExtractSourceQueryRunnable(String inputPath, String outputPath, String[] arrLibName, int index,String logPath,StanfordLemmatizer lemm,ExtractQueryConfiguration config) {
 		this.inputPath = inputPath;
 		this.outputPath = outputPath;
 		this.arrLibNames=arrLibName;

@@ -41,6 +41,7 @@ public class RunSingleQueryProject {
 				executor.execute(thread);
 			}
 		}
+		executor.shutdown();
 	}
 	
 	
@@ -70,11 +71,11 @@ class ExtractSourceQueryRunnable implements Runnable {
 			
 //			File fOut=new File(outputPath);
 //			File fSourceOut=new File(outputPath+"source.txt");
-			System.out.println(index+"\tFinish success for " + outputPath);
+			
 			MethodSourceTokenGenerator mcsg = new MethodSourceTokenGenerator(
 					inputPath,arrLibNames,lemm);
 			mcsg.generateSequences(outputPath);
-			
+			System.out.println(index+"\tFinish success for " + outputPath);
 //			FileIO.appendStringToFile(index+"\t"+fIn.getName()+"\tSuccess\n", logPath);
 			
 		} catch (Exception ex) {

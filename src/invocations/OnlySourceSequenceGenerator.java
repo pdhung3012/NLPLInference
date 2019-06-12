@@ -331,20 +331,13 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 //			System.out.println("here "+method.toString());
 			method.accept(sg);
 			int numofExpressions = sg.getNumOfExpressions(), numOfResolvedExpressions = sg.getNumOfResolvedExpressions();
-			String source = sg.getPartialSequence(), target = sg.getFullSequence();
-			String[] sTokens = sg.getPartialSequenceTokens(), tTokens = sg.getFullSequenceTokens();
-			if (sTokens.length == tTokens.length 
-					&& sTokens.length > 2 && numofExpressions > 0 
-					&& (keepUnresolvables || numofExpressions == numOfResolvedExpressions)) {
+			String source = sg.getPartialSequence();
+			String[] sTokens = sg.getPartialSequenceTokens();
+			
 				boolean hasLib = true;
 				if (lib != null && !lib.isEmpty()) {
 					hasLib = false;
-					for (String t : tTokens) {
-						if (t.startsWith(lib)) {
-							hasLib = true;
-							break;
-						}
-					}
+			
 				}
 				if (hasLib) {
 //					this.locations.add(path + "\t" + name + "\t" + method.getName().getIdentifier() + "\t" + getParameters(method) + "\t" + numofExpressions + "\t" + numOfResolvedExpressions + "\t" + (numOfResolvedExpressions * 100 / numofExpressions) + "%");
@@ -354,21 +347,10 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 //					this.targetSequenceTokens.add(tTokens);
 					stLocations.print(path + "\t" + packageName + "\t" + name + "\t" + method.getName().getIdentifier() + "\t" + getParameters(method) + "\t" + numofExpressions + "\t" + numOfResolvedExpressions + "\t" + (numOfResolvedExpressions * 100 / numofExpressions) + "%" + "\n");
 					stSourceSequences.print(source + "\n");
-					stTargetSequences.print(target + "\n");
 					numOfSequences++;
 				}
-			}
-			if (testing) {
-				if (sTokens.length != tTokens.length)
-					throw new AssertionError("Source and target sequences do not have the same length!");
-				for (int j = 0; j < sTokens.length; j++) {
-					String s = sTokens[j], t = tTokens[j];
-//					if (!t.equals(s) && !t.endsWith(s))
-//					if (t.length() < s.length())
-					if (!t.contains(".") && !s.contains(".") && !t.equals(s))
-						throw new AssertionError("Corresponding source and target tokens do not match!");
-				}
-			}
+			
+			
 		}
 		for (TypeDeclaration inner : td.getTypes())
 			numOfSequences += generateSequence(keepUnresolvables, lib, inner, path, packageName, name);

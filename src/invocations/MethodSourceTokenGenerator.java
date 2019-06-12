@@ -351,12 +351,15 @@ public class MethodSourceTokenGenerator {
 //					this.targetSequences.add(target);
 //					this.sourceSequenceTokens.add(sTokens);
 //					this.targetSequenceTokens.add(tTokens);
-			stLocations.print(path + "\t" + packageName + "\t" + name + "\t" + method.getName().getIdentifier() + "\t"
-					+ getParameters(method) + "\t" + numofExpressions + "\t" + numOfResolvedExpressions + "\t"
-					+ (numOfResolvedExpressions * 100 / numofExpressions) + "%" + "\n");
-			stSourceSequences.print(source + "\n");
-			numOfSequences++;
+			if(numofExpressions > 0) {
+				stLocations.print(path + "\t" + packageName + "\t" + name + "\t" + method.getName().getIdentifier() + "\t"
+						+ getParameters(method) + "\t" + numofExpressions + "\t" + numOfResolvedExpressions + "\t"
+						+ (numOfResolvedExpressions * 100 / numofExpressions) + "%" + "\n");
+				stSourceSequences.print(source + "\n");
+				numOfSequences++;
 
+			}
+			
 		}
 		for (TypeDeclaration inner : td.getTypes())
 			numOfSequences += generateSequence(keepUnresolvables, lib, inner, path, packageName, name);

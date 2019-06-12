@@ -1064,9 +1064,16 @@ public class OnlySourceEncoderVisitor extends ASTVisitor {
 //						}
 
 
-						this.partialTokens.append(iaVisitor.getPartialParamSequence() + " ");
+						if(config.getTypeOfMLModel()==ExtractQueryConfiguration.TypeMLModel_EmbedInfo) {
+							this.partialTokens.append(iaVisitor.getPartialParamSequence() + " ");
+						}						
 //						this.fullTokens.append(iaVisitor.getFQNParamSequence()+" ");
 						this.partialTokens.append(strIdentifier + " ");
+						if(config.getTypeOfMLModel()==ExtractQueryConfiguration.TypeMLModel_EmbedInfo) {
+							this.partialTokens.append(io.getHalfOfTermFromListSource() + " ");
+						}
+						
+						
 //						this.fullTokens.append(id + " ");
 
 					}

@@ -33,37 +33,35 @@ import utils.StanfordLemmatizer;
 
 public class MethodSourceTokenGenerator {
 
-private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = false;
-	
+	private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = false;
+
 	private String inPath, outPath;
 	private boolean testing = false;
 	private PrintStream stLocations, stSourceSequences, stLog;
 	private HashSet<String> badFiles = new HashSet<>();
-	private String fopInvocationObject,fopQueryObject;
+	private String fopInvocationObject, fopQueryObject;
 	private String idenHashPath;
-	private LinkedHashMap<String,String> mapIDAndIden;
-	private LinkedHashMap<String,Integer> mapIDAppear;
-	private LinkedHashMap<String,String> mapIdenAndID;
+	private LinkedHashMap<String, String> mapIDAndIden;
+	private LinkedHashMap<String, Integer> mapIDAppear;
+	private LinkedHashMap<String, String> mapIdenAndID;
 	private String[] arrPrefix;
 	private StanfordLemmatizer lemm;
-	
-	public MethodSourceTokenGenerator(String inPath,String[] arrPrefix,StanfordLemmatizer lemm) {
+
+	public MethodSourceTokenGenerator(String inPath, String[] arrPrefix, StanfordLemmatizer lemm) {
 		this.inPath = inPath;
-		this.arrPrefix=arrPrefix;
-		this.lemm=lemm;
+		this.arrPrefix = arrPrefix;
+		this.lemm = lemm;
 	}
-	
-	public MethodSourceTokenGenerator(String inPath,String[] arrPrefix, boolean testing,StanfordLemmatizer lemm) {
-		this(inPath,arrPrefix,lemm);
+
+	public MethodSourceTokenGenerator(String inPath, String[] arrPrefix, boolean testing, StanfordLemmatizer lemm) {
+		this(inPath, arrPrefix, lemm);
 		this.testing = testing;
-		
+
 	}
-	
-	public int  generateSequences(String outPath) {
+
+	public int generateSequences(String outPath) {
 		return generateSequences(true, null, outPath);
 	}
-	
-	
 
 	public LinkedHashMap<String, String> getMapIDAndIden() {
 		return mapIDAndIden;
@@ -85,21 +83,21 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 		this.outPath = outPath;
 		String[] jarPaths = getJarPaths();
 		ArrayList<String> rootPaths = getRootPaths();
-		
+
 		new File(outPath).mkdirs();
-		String hashIdenPath=outPath+"/hash/";
-		this.idenHashPath=hashIdenPath;
+		String hashIdenPath = outPath + "/hash/";
+		this.idenHashPath = hashIdenPath;
 		new File(hashIdenPath).mkdirs();
-		
-		String fopQueryPath=outPath+"/query/";
-		this.fopQueryObject=fopQueryPath;
+
+		String fopQueryPath = outPath + "/query/";
+		this.fopQueryObject = fopQueryPath;
 		new File(fopQueryPath).mkdirs();
-		
-		File fDictMethod=new File(fopQueryPath+File.separator+"dictionaryQuery.txt");
-		if(!fDictMethod.exists()) {
-			FileIO.writeStringToFile("",fDictMethod.getAbsolutePath());
+
+		File fDictMethod = new File(fopQueryPath + File.separator + "dictionaryQuery.txt");
+		if (!fDictMethod.exists()) {
+			FileIO.writeStringToFile("", fDictMethod.getAbsolutePath());
 		}
-		
+
 		try {
 			stLocations = new PrintStream(new FileOutputStream(outPath + "/locations.txt"));
 			stSourceSequences = new PrintStream(new FileOutputStream(outPath + "/source.txt"));
@@ -112,8 +110,8 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 		}
 		int numOfSequences = 0;
 		for (String rootPath : rootPaths) {
-			String[] sourcePaths = getSourcePaths(rootPath, new String[]{".java"});
-			
+			String[] sourcePaths = getSourcePaths(rootPath, new String[] { ".java" });
+
 			@SuppressWarnings("rawtypes")
 			Map options = JavaCore.getOptions();
 			options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
@@ -121,14 +119,15 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 			options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
 			ASTParser parser = ASTParser.newParser(AST.JLS8);
 			parser.setCompilerOptions(options);
-			parser.setEnvironment(jarPaths, new String[]{}, new String[]{}, true);
+			parser.setEnvironment(jarPaths, new String[] {}, new String[] {}, true);
 			parser.setResolveBindings(true);
 			parser.setBindingsRecovery(true);
-			
-			SourceTokenASTRequestor r = new SourceTokenASTRequestor(keepUnresolvables, lib,hashIdenPath,fopQueryPath,lemm);
-			mapIDAndIden=new LinkedHashMap<String, String>();
-			mapIdenAndID=new LinkedHashMap<String, String>();
-			mapIDAppear=new LinkedHashMap<String, Integer>();
+
+			SourceTokenASTRequestor r = new SourceTokenASTRequestor(keepUnresolvables, lib, hashIdenPath, fopQueryPath,
+					lemm);
+			mapIDAndIden = new LinkedHashMap<String, String>();
+			mapIdenAndID = new LinkedHashMap<String, String>();
+			mapIDAppear = new LinkedHashMap<String, Integer>();
 			r.setMapIDAndIden(mapIDAndIden);
 			r.setMapIdenAndID(mapIdenAndID);
 			r.setMapIDAppear(mapIDAppear);
@@ -142,47 +141,43 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 					t.printStackTrace();
 				}
 			}
-			saveMapToFile(mapIDAndIden, hashIdenPath+"/mapIDAndIden.txt");
-			saveMapToFile(mapIdenAndID, hashIdenPath+"/mapIdenAndID.txt");
-			saveMapIntToFile(mapIDAppear, hashIdenPath+"/mapIDAppear.txt");
+			saveMapToFile(mapIDAndIden, hashIdenPath + "/mapIDAndIden.txt");
+			saveMapToFile(mapIdenAndID, hashIdenPath + "/mapIdenAndID.txt");
+			saveMapIntToFile(mapIDAppear, hashIdenPath + "/mapIDAppear.txt");
 
 			numOfSequences += r.numOfSequences;
 		}
 		return numOfSequences;
 	}
-	
-	public void saveMapToFile(LinkedHashMap<String,String> map,String fpFile){
-		StringBuilder sb=new StringBuilder();
-		for(String item:map.keySet()){
-			sb.append(item+"\t"+map.get(item)+"\n");
+
+	public void saveMapToFile(LinkedHashMap<String, String> map, String fpFile) {
+		StringBuilder sb = new StringBuilder();
+		for (String item : map.keySet()) {
+			sb.append(item + "\t" + map.get(item) + "\n");
 		}
 		FileIO.writeStringToFile(sb.toString(), fpFile);
 	}
-	public void saveMapIntToFile(LinkedHashMap<String,Integer> map,String fpFile){
-		StringBuilder sb=new StringBuilder();
-		for(String item:map.keySet()){
-			sb.append(item+"\t"+map.get(item)+"\n");
+
+	public void saveMapIntToFile(LinkedHashMap<String, Integer> map, String fpFile) {
+		StringBuilder sb = new StringBuilder();
+		for (String item : map.keySet()) {
+			sb.append(item + "\t" + map.get(item) + "\n");
 		}
 		FileIO.writeStringToFile(sb.toString(), fpFile);
 	}
-	
+
 	private class SourceTokenASTRequestor extends FileASTRequestor {
 		int numOfSequences = 0;
 		private boolean keepUnresolvables;
 		private String lib;
 		private String idenPath;
 		private String fopQueryPath;
-		private LinkedHashMap<String,String> mapIDAndIden;
-		private LinkedHashMap<String,String> mapIdenAndID;
-		private LinkedHashMap<String,Integer> mapIDAppear;
+		private LinkedHashMap<String, String> mapIDAndIden;
+		private LinkedHashMap<String, String> mapIdenAndID;
+		private LinkedHashMap<String, Integer> mapIDAppear;
 		private String[] arrLibNames;
 		private StanfordLemmatizer lemm;
-		
-		
-		
-		
-		
-		
+
 		public String[] getArrLibNames() {
 			return arrLibNames;
 		}
@@ -215,12 +210,13 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 			this.mapIdenAndID = mapIdenAndID;
 		}
 
-		public SourceTokenASTRequestor(boolean keepUnresolvables, String lib,String idenPath,String fopQueryPath, StanfordLemmatizer lemm) {
+		public SourceTokenASTRequestor(boolean keepUnresolvables, String lib, String idenPath, String fopQueryPath,
+				StanfordLemmatizer lemm) {
 			this.keepUnresolvables = keepUnresolvables;
 			this.lib = lib;
-			this.idenPath=idenPath;
-			this.fopQueryPath=fopQueryPath;
-			this.lemm=lemm;
+			this.idenPath = idenPath;
+			this.fopQueryPath = fopQueryPath;
+			this.lemm = lemm;
 		}
 
 		@Override
@@ -246,11 +242,12 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 			if (testing)
 				System.out.println(sourceFilePath);
 			stLog.println(sourceFilePath);
-		
+
 			for (int i = 0; i < ast.types().size(); i++) {
 				if (ast.types().get(i) instanceof TypeDeclaration) {
 					TypeDeclaration td = (TypeDeclaration) ast.types().get(i);
-					numOfSequences += generateSequence(keepUnresolvables, lib, td, sourceFilePath, ast.getPackage().getName().getFullyQualifiedName(), "");
+					numOfSequences += generateSequence(keepUnresolvables, lib, td, sourceFilePath,
+							ast.getPackage().getName().getFullyQualifiedName(), "");
 				}
 			}
 		}
@@ -284,14 +281,16 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 			parser.setSource(FileUtil.getFileContent(file.getAbsolutePath()).toCharArray());
 			try {
 				CompilationUnit ast = (CompilationUnit) parser.createAST(null);
-				if (ast.getPackage() != null && !ast.types().isEmpty() && ast.types().get(0) instanceof TypeDeclaration) {
+				if (ast.getPackage() != null && !ast.types().isEmpty()
+						&& ast.types().get(0) instanceof TypeDeclaration) {
 					String name = ast.getPackage().getName().getFullyQualifiedName();
 					name = name.replace('.', '\\');
 					String p = file.getParentFile().getAbsolutePath();
 					if (p.endsWith(name))
 						add(p.substring(0, p.length() - name.length() - 1), rootPaths);
-				} /*else 
-					badFiles.add(file.getAbsolutePath());*/
+				} /*
+					 * else badFiles.add(file.getAbsolutePath());
+					 */
 			} catch (Throwable t) {
 				badFiles.add(file.getAbsolutePath());
 			}
@@ -301,7 +300,7 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 	private void add(String path, ArrayList<String> rootPaths) {
 		int index = Collections.binarySearch(rootPaths, path);
 		if (index < 0) {
-			index = - index - 1;
+			index = -index - 1;
 			int i = rootPaths.size() - 1;
 			while (i > index) {
 				if (rootPaths.get(i).startsWith(path))
@@ -318,14 +317,15 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 		}
 	}
 
-	private int generateSequence(boolean keepUnresolvables, String lib, TypeDeclaration td, String path, String packageName, String outer) {
+	private int generateSequence(boolean keepUnresolvables, String lib, TypeDeclaration td, String path,
+			String packageName, String outer) {
 		int numOfSequences = 0;
 		String name = outer.isEmpty() ? td.getName().getIdentifier() : outer + "." + td.getName().getIdentifier();
 		String className = td.getName().getIdentifier(), superClassName = null;
-		LinkedHashSet<LocalEntity> setFieldsForTD=MethodEncoderVisitor.setInfoOfFieldDeclaration(td);
+		LinkedHashSet<LocalEntity> setFieldsForTD = MethodEncoderVisitor.setInfoOfFieldDeclaration(td);
 		if (td.getSuperclassType() != null)
 			superClassName = MethodEncoderVisitor.getUnresolvedType(td.getSuperclassType());
-		
+
 //		System.out.println("size "+td.getMethods().length);
 		for (MethodDeclaration method : td.getMethods()) {
 			stLog.println(path + "\t" + name + "\t" + method.getName().getIdentifier() + "\t" + getParameters(method));
@@ -341,27 +341,22 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 			sg.setLemm(lemm);
 //			System.out.println("here "+method.toString());
 			method.accept(sg);
-			int numofExpressions = sg.getNumOfExpressions(), numOfResolvedExpressions = sg.getNumOfResolvedExpressions();
+			int numofExpressions = sg.getNumOfExpressions(),
+					numOfResolvedExpressions = sg.getNumOfResolvedExpressions();
 			String source = sg.getPartialSequence();
 //			String[] sTokens = sg.getPartialSequenceTokens();
-			
-				boolean hasLib = true;
-				if (lib != null && !lib.isEmpty()) {
-					hasLib = false;
-					
-				
-				if (hasLib) {
+
 //					this.locations.add(path + "\t" + name + "\t" + method.getName().getIdentifier() + "\t" + getParameters(method) + "\t" + numofExpressions + "\t" + numOfResolvedExpressions + "\t" + (numOfResolvedExpressions * 100 / numofExpressions) + "%");
 //					this.sourceSequences.add(source);
 //					this.targetSequences.add(target);
 //					this.sourceSequenceTokens.add(sTokens);
 //					this.targetSequenceTokens.add(tTokens);
-					stLocations.print(path + "\t" + packageName + "\t" + name + "\t" + method.getName().getIdentifier() + "\t" + getParameters(method) + "\t" + numofExpressions + "\t" + numOfResolvedExpressions + "\t" + (numOfResolvedExpressions * 100 / numofExpressions) + "%" + "\n");
-					stSourceSequences.print(source + "\n");
-					numOfSequences++;
-				}
-			}
-			
+			stLocations.print(path + "\t" + packageName + "\t" + name + "\t" + method.getName().getIdentifier() + "\t"
+					+ getParameters(method) + "\t" + numofExpressions + "\t" + numOfResolvedExpressions + "\t"
+					+ (numOfResolvedExpressions * 100 / numofExpressions) + "%" + "\n");
+			stSourceSequences.print(source + "\n");
+			numOfSequences++;
+
 		}
 		for (TypeDeclaration inner : td.getTypes())
 			numOfSequences += generateSequence(keepUnresolvables, lib, inner, path, packageName, name);
@@ -412,7 +407,8 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 		HashMap<String, String> globalProperties = new HashMap<>();
 		HashMap<String, String> globalManagedDependencies = new HashMap<>();
 		Stack<ClassPathUtil.PomFile> parentPomFiles = new Stack<>();
-		getJarFiles(new File(inPath), jarFiles, globalRepoLinks, globalProperties, globalManagedDependencies, parentPomFiles);
+		getJarFiles(new File(inPath), jarFiles, globalRepoLinks, globalProperties, globalManagedDependencies,
+				parentPomFiles);
 		String[] paths = new String[jarFiles.size()];
 		int i = 0;
 		for (File file : jarFiles.values())
@@ -420,8 +416,8 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 		return paths;
 	}
 
-	private void getJarFiles(File file, HashMap<String, File> jarFiles, 
-			HashSet<String> globalRepoLinks, HashMap<String, String> globalProperties, HashMap<String, String> globalManagedDependencies,
+	private void getJarFiles(File file, HashMap<String, File> jarFiles, HashSet<String> globalRepoLinks,
+			HashMap<String, String> globalProperties, HashMap<String, String> globalManagedDependencies,
 			Stack<PomFile> parentPomFiles) {
 		if (file.isDirectory()) {
 			int size = parentPomFiles.size();
@@ -430,10 +426,12 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 				if (sub.isDirectory())
 					dirs.add(sub);
 				else
-					getJarFiles(sub, jarFiles, globalRepoLinks, globalProperties, globalManagedDependencies, parentPomFiles);
+					getJarFiles(sub, jarFiles, globalRepoLinks, globalProperties, globalManagedDependencies,
+							parentPomFiles);
 			}
 			for (File dir : dirs)
-				getJarFiles(dir, jarFiles, globalRepoLinks, globalProperties, globalManagedDependencies, parentPomFiles);
+				getJarFiles(dir, jarFiles, globalRepoLinks, globalProperties, globalManagedDependencies,
+						parentPomFiles);
 			if (parentPomFiles.size() > size)
 				parentPomFiles.pop();
 		} else if (file.getName().endsWith(".jar")) {
@@ -448,17 +446,14 @@ private static final boolean PARSE_INDIVIDUAL_SRC = false, SCAN_FILES_FRIST = fa
 			}
 		} else if (file.getName().equals("pom.xml")) {
 			try {
-				ClassPathUtil.getPomDependencies(file, this.inPath + "/lib", globalRepoLinks, globalProperties, globalManagedDependencies, parentPomFiles);
+				ClassPathUtil.getPomDependencies(file, this.inPath + "/lib", globalRepoLinks, globalProperties,
+						globalManagedDependencies, parentPomFiles);
 			} catch (Throwable t) {
 				t.printStackTrace();
 			}
 		}
 	}
-	
-	
 
-
-	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 

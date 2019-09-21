@@ -948,7 +948,7 @@ public class OnlySourceEncoderVisitor extends ASTVisitor {
 	public boolean checkMIInTemplate(MethodInvocation node) {
 		boolean result = false;
 		String receiverType = node.getExpression() != null ? node.getExpression().toString() : "";
-		if (receiverType.equals("MICAliasMethod")) {
+		if (receiverType.equals("MICAlias")) {
 			result = true;
 		}
 		return result;

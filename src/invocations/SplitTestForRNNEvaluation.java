@@ -61,8 +61,8 @@ public class SplitTestForRNNEvaluation {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String fopIn=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"outCombine"+File.separator;
-		String fopOut=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"outSplit"+File.separator;
+		String fopIn=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"outputCombine"+File.separator;
+		String fopOut=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"outputSplit"+File.separator;
 		new File(fopOut).mkdir();
 		int numLine=50;
 //		getSplitData(fopIn+"train.s", fopOut+"train.s", fopOut+"train.s.line.txt",numLine);

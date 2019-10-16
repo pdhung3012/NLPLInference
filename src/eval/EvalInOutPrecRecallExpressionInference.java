@@ -288,6 +288,11 @@ public class EvalInOutPrecRecallExpressionInference {
 			
 			int numCSourceLine=0,numCTargetLine=0,numIncorrect=0,numCorrect=0;
 			System.out.println("Line "+i);
+			
+			if(itemSource.length>itemTrans.length) {
+				continue;
+			}
+			
 			for(int j=0;j<itemSource.length;j++){
 				
 				//&&(!itemTrans[j].startsWith("."))

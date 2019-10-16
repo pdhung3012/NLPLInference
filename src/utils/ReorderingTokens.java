@@ -36,21 +36,24 @@ public class ReorderingTokens {
 			String[] arrItemTrans = arrInputTrans[i].trim().split("\\s+");
 			String[] arrItemReordered = new String[arrInputTrans.length];
 			for (int j = 0; j < arrItemSource.length; j++) {
-				if (isEndWith(arrItemSource[j],arrItemTrans[j],mapTotalId)) {
-					arrItemReordered[j] = arrInputTrans[j];
-				} else {
-					// find first occurence of ordered and change position
-					for (int k = j + 1; k < arrItemTrans.length; k++) {
-						if (isEndWith(arrItemSource[j], arrItemTrans[k], mapTotalId)) {
-							String temp = arrItemTrans[j];
-							arrItemTrans[j] = arrItemTrans[k];
-							arrItemTrans[k] = temp;
-							arrItemReordered[j] = arrInputTrans[j];
-							break;
+				if(j<arrItemTrans.length) {
+					if (isEndWith(arrItemSource[j],arrItemTrans[j],mapTotalId)) {
+						arrItemReordered[j] = arrInputTrans[j];
+					} else {
+						// find first occurence of ordered and change position
+						for (int k = j + 1; k < arrItemTrans.length; k++) {
+							if (isEndWith(arrItemSource[j], arrItemTrans[k], mapTotalId)) {
+								String temp = arrItemTrans[j];
+								arrItemTrans[j] = arrItemTrans[k];
+								arrItemTrans[k] = temp;
+								arrItemReordered[j] = arrInputTrans[j];
+								break;
+							}
 						}
-					}
 
-				}
+					}
+				} 
+				
 			}
 
 			String strItemOrdered = "";

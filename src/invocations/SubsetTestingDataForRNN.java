@@ -43,6 +43,8 @@ public class SubsetTestingDataForRNN {
 //					FileIO.appendStringToFile(sbLine.toString(),fpLine);
 //					sbResult=new StringBuilder();
 //					sbLine=new StringBuilder();
+				} else {
+					break;
 				}
 //				prevLine=line;
 		    }

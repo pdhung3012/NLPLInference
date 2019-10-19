@@ -48,6 +48,9 @@ public class FileUtil {
 						lstResults.add(line.trim());
 					}
 				}
+			} catch(Exception ex) {
+				System.out.println("annoy err: "+ex.getMessage());
+				ex.printStackTrace();
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();

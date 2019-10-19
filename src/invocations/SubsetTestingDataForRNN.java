@@ -22,7 +22,7 @@ public class SubsetTestingDataForRNN {
 		try (BufferedReader br = Files.newBufferedReader(Paths.get(fpIn), StandardCharsets.ISO_8859_1)) {
 		    
 			for (String line = null; (line = br.readLine()) != null;) {
-		    	String[] arrItems=line.trim().split("\\s+");
+//		    	String[] arrItems=line.trim().split("\\s+");
 				numLine++;
 //		    	StringBuilder sbPerLine=new StringBuilder();
 //		    	for(int j=0;j<arrItems.length;j++){
@@ -39,7 +39,7 @@ public class SubsetTestingDataForRNN {
 //				}
 		    	
 		    	if(numLine<=numberSubset){
-					FileIO.appendStringToFile(line.trim(),fpOut);
+					FileIO.appendStringToFile(line.trim()+"\n",fpOut);
 //					FileIO.appendStringToFile(sbLine.toString(),fpLine);
 //					sbResult=new StringBuilder();
 //					sbLine=new StringBuilder();

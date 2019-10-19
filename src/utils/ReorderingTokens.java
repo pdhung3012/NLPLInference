@@ -36,7 +36,7 @@ public class ReorderingTokens {
 			String[] arrItemTrans = arrInputTrans[i].trim().split("\\s+");
 			String[] arrItemReordered = new String[arrInputTrans.length];
 			for (int j = 0; j < arrItemSource.length; j++) {
-//				if(j<arrItemTrans.length) {
+				if(j<arrItemTrans.length) {
 					if (isEndWith(arrItemSource[j],arrItemTrans[j],mapTotalId)) {
 						arrItemReordered[j] = arrInputTrans[j];
 					} else {
@@ -52,7 +52,7 @@ public class ReorderingTokens {
 						}
 
 					}
-//				} 
+				} 
 				
 			}
 
@@ -60,6 +60,7 @@ public class ReorderingTokens {
 			for (int j = 0; j < arrItemTrans.length; j++) {
 				strItemOrdered += arrItemTrans[j] + " ";
 			}
+			System.out.println(i+" reorder: "+strItemOrdered);
 			sbResult.append(strItemOrdered.trim() + "\n");
 
 		}

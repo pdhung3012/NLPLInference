@@ -50,7 +50,7 @@ public class FileUtil {
 				}
 			}
 		} catch (Exception ex) {
-			// ex.printStackTrace();
+			ex.printStackTrace();
 		}
 		return lstResults;
 

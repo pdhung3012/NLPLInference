@@ -60,7 +60,7 @@ public class ReorderingTokens {
 			for (int j = 0; j < arrItemTrans.length; j++) {
 				strItemOrdered += arrItemTrans[j] + " ";
 			}
-			System.out.println(i+" reorder: "+strItemOrdered);
+//			System.out.println(i+" reorder: "+strItemOrdered);
 			sbResult.append(strItemOrdered.trim() + "\n");
 
 		}

@@ -307,8 +307,8 @@ public class EvalRNNExprInference {
 							int currentNumber = mapCountPerLibrary.get(strPackageName).get("Incorrect");
 							mapCountPerLibrary.get(strPackageName).put("Incorrect", currentNumber + 1);
 							// if(!setIncorrect.contains(itemTrans[j]+"(Correct: "+itemTarget[j]+") ")){
-							strIncorrectLog += itemTrans[j] + "(Correct: " + itemTarget[j] + ") ";
-							setIncorrect.add(itemTrans[j] + "(Correct: " + itemTarget[j] + ") ");
+							strIncorrectLog +=  "Unknown (Correct: " + itemTarget[j] + ") ";
+							setIncorrect.add("Unknown (Correct: " + itemTarget[j] + ") ");
 							// }
 //							if(itemSource[j].equals("OnPreDrawListener()")){
 //								System.out.println("line "+i);
@@ -316,8 +316,8 @@ public class EvalRNNExprInference {
 //								sc.next();
 //							}
 							//
-							ptIncorrect_map.print((i + 1) + "\t" + itemSource[j] + "\t" + itemTrans[j] + "\t"
-									+ itemTarget[j] + "\t" + strTransAPIInfo + "\t" + strTargetAPIInfo + "\n");
+							ptIncorrect_map.print((i + 1) + "\t" + itemSource[j] + "\tUnknown\t"
+									+ itemTarget[j] + "\tUnknown\t" + strTargetAPIInfo + "\n");
 //							mapIncorrectPrintScreen.get(strPackageName).print(itemSource[j]+","+mapVocabTraining.get(itemSource[j])+","+itemTarget[j]+"\n");
 						}
 					} else {

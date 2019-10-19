@@ -67,8 +67,8 @@ public class SplitTestForRNNEvaluation {
 		int numLine=50;
 //		getSplitData(fopIn+"train.s", fopOut+"train.s", fopOut+"train.s.line.txt",numLine);
 //		getSplitData(fopIn+"train.t", fopOut+"train.t", fopOut+"train.t.line.txt",numLine);
-//		getSplitData(fopIn+"tune.s", fopOut+"tune.s", fopOut+"tune.s.line.txt",numLine);
-//		getSplitData(fopIn+"tune.t", fopOut+"tune.t", fopOut+"tune.t.line.txt",numLine);
+		getSplitData(fopIn+"tune.s", fopOut+"tune.s", fopOut+"tune.s.line.txt",numLine);
+		getSplitData(fopIn+"tune.t", fopOut+"tune.t", fopOut+"tune.t.line.txt",numLine);
 		getSplitData(fopIn+"test.s", fopOut+"test.s", fopOut+"test.s.line.txt",numLine);
 		getSplitData(fopIn+"test.t", fopOut+"test.t", fopOut+"test.t.line.txt",numLine);
 		

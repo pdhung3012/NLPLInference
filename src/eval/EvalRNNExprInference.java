@@ -106,7 +106,7 @@ public class EvalRNNExprInference {
 		ArrayList<String> arrTrainSource = FileUtil.getFileStringArray(fop_input + fn_trainSource);
 		ArrayList<String> arrTestSource = FileUtil.getFileStringArray(fop_input + fn_testSource);
 		ArrayList<String> arrTestTarget = FileUtil.getFileStringArray(fop_input + fn_testTarget);
-		ArrayList<String> arrTestTranslation = FileUtil.getFileStringArray(fop_input + fn_correctOrderTranslated);
+		ArrayList<String> arrTestTranslation = FileUtil.getFileStringArrayAvoidAnnoyError(fop_input + fn_correctOrderTranslated);
 //		ArrayList<String> arrEvaluatedTypes=FileUtil.getFileStringArray(fop_input+"evaluatedResults.txt");
 //		ArrayList<String> arrVocabFromTraining=FileUtil.getFileStringArray(fop_input+fn_vocabulary);
 

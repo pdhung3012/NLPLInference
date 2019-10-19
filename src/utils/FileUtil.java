@@ -58,6 +58,16 @@ public class FileUtil {
 		return lstResults;
 
 	}
+	
+	public static ArrayList<String> getFileStringArrayAvoidAnnoyError(String fp) {
+		ArrayList<String> lstResults = new ArrayList<String>();
+		String[] arrContent=FileUtil.getFileContent(fp).split("\n");
+		for(int i=0;i<arrContent.length;i++) {
+			lstResults.add(arrContent[i]);
+		}
+		return lstResults;
+
+	}
 
 	public static int countNumberOfLines(String fp) {
 		int count = 0;

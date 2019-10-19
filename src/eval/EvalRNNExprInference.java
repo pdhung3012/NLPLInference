@@ -240,6 +240,7 @@ public class EvalRNNExprInference {
 			HashSet<String> setOutTarget = new HashSet<String>();
 			String[] itemSource = arrTestSource.get(i).trim().split("\\s+");
 			String[] itemTarget = arrTestTarget.get(i).trim().split("\\s+");
+			System.out.println("size "+arrTestTranslation.size());
 			String[] itemTrans = arrTestTranslation.get(i).trim().split("\\s+");
 			String strIncorrectLog = "", strOutSource = "", strOutTarget = "";
 			/*

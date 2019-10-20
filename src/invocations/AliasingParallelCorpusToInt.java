@@ -43,10 +43,10 @@ public class AliasingParallelCorpusToInt {
 	}
 	
 	public static void main(String[] args) {
-		String folderInput=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA;
+		String folderInput=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"outputCombine"+File.separator;
 		String folderNormalize=folderInput+"alias"+File.separator;
 		new File(folderNormalize).mkdir();
-		int numRestricted=40000;
+//		int numRestricted=40000;
 		
 
 		String fpInTrainSource=folderInput+"train.s";

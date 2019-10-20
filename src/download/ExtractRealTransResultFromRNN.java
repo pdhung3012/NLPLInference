@@ -11,11 +11,11 @@ public class ExtractRealTransResultFromRNN {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String folderOrigin=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"outputCombine/alias/smallTestTune/real"+File.separator;
-		String folderInput=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"outputCombine/alias/smallTestTune"+File.separator;
+		String folderOrigin=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"outputCombine/alias/real"+File.separator;
+		String folderInput=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"outputCombine/alias"+File.separator;
 		String fpTestSourceNumber=folderInput+"test.s";
 		String fpTranslatedResult=folderInput+"pred.txt";
-		String fpMixOutput=folderOrigin+"test.tune.baseline.trans";
+		String fpMixOutput=folderOrigin+"pred.txt";
 		String fpMapAlias=folderInput+"alias.txt";
 		
 //		String[] arrNumber=FileIO.readStringFromFile(fpTranslatedNumber).trim().split("\n");

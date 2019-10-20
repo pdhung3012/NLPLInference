@@ -63,10 +63,10 @@ public class SubsetTestingDataForRNN {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String fopIn=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"outputCombine"+File.separator;
-		String fopOut=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"outputSubsetTest"+File.separator;
+		String fopIn=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"outputCombine/alias/"+File.separator;
+		String fopOut=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"outputCombine/alias/smallTune"+File.separator;
 		new File(fopOut).mkdir();
-		int numTest=100;
+		int numTest=1000;
 //		getSplitData(fopIn+"train.s", fopOut+"train.s", fopOut+"train.s.line.txt",numLine);
 //		getSplitData(fopIn+"train.t", fopOut+"train.t", fopOut+"train.t.line.txt",numLine);
 //		getSplitData(fopIn+"tune.s", fopOut+"tune.s", fopOut+"tune.s.line.txt",numLine);

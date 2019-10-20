@@ -69,10 +69,10 @@ public class SubsetTestingDataForRNN {
 		int numTest=1000;
 //		getSplitData(fopIn+"train.s", fopOut+"train.s", fopOut+"train.s.line.txt",numLine);
 //		getSplitData(fopIn+"train.t", fopOut+"train.t", fopOut+"train.t.line.txt",numLine);
-//		getSplitData(fopIn+"tune.s", fopOut+"tune.s", fopOut+"tune.s.line.txt",numLine);
-//		getSplitData(fopIn+"tune.t", fopOut+"tune.t", fopOut+"tune.t.line.txt",numLine);
-		getSubSetTest(fopIn+"test.s", fopOut+"test.s", fopOut+"test.s.line.txt",numTest);
-		getSubSetTest(fopIn+"test.t", fopOut+"test.t", fopOut+"test.t.line.txt",numTest);
+		getSubSetTest(fopIn+"tune.s", fopOut+"tune.s", fopOut+"tune.s.line.txt",numTest);
+		getSubSetTest(fopIn+"tune.t", fopOut+"tune.t", fopOut+"tune.t.line.txt",numTest);
+//		getSubSetTest(fopIn+"test.s", fopOut+"test.s", fopOut+"test.s.line.txt",numTest);
+//		getSubSetTest(fopIn+"test.t", fopOut+"test.t", fopOut+"test.t.line.txt",numTest);
 		
 	}
 

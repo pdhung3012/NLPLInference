@@ -47,7 +47,7 @@ public class ExtractRealTransResultFromRNN {
 //		}
 		
 		StringBuilder sbResult=new StringBuilder();
-		for(int i=1;i<=arrTestS.length;i++){
+		for(int i=0;i<100;i++){
 			String itemArrayNumber=arrResult[i].trim();
 			String itemArraySource=arrTestS[i].trim();
 			String[] arrItemNum=itemArrayNumber.split("\\s+");

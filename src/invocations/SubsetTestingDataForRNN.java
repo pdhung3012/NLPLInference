@@ -64,15 +64,15 @@ public class SubsetTestingDataForRNN {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String fopIn=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"outputCombine/alias/"+File.separator;
-		String fopOut=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"outputCombine/alias/smallTune"+File.separator;
+		String fopOut=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"outputCombine/alias/smallTestTune"+File.separator;
 		new File(fopOut).mkdir();
 		int numTest=1000;
 //		getSplitData(fopIn+"train.s", fopOut+"train.s", fopOut+"train.s.line.txt",numLine);
 //		getSplitData(fopIn+"train.t", fopOut+"train.t", fopOut+"train.t.line.txt",numLine);
 		getSubSetTest(fopIn+"tune.s", fopOut+"tune.s", fopOut+"tune.s.line.txt",numTest);
 		getSubSetTest(fopIn+"tune.t", fopOut+"tune.t", fopOut+"tune.t.line.txt",numTest);
-//		getSubSetTest(fopIn+"test.s", fopOut+"test.s", fopOut+"test.s.line.txt",numTest);
-//		getSubSetTest(fopIn+"test.t", fopOut+"test.t", fopOut+"test.t.line.txt",numTest);
+		getSubSetTest(fopIn+"test.s", fopOut+"test.s", fopOut+"test.s.line.txt",numTest);
+		getSubSetTest(fopIn+"test.t", fopOut+"test.t", fopOut+"test.t.line.txt",numTest);
 		
 	}
 

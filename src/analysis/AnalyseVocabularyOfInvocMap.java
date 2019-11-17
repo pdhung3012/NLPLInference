@@ -10,9 +10,9 @@ import utils.SortUtil;
 public class AnalyseVocabularyOfInvocMap {
 
 	public static void collectWordsForVocabulary(String fpText,HashMap<String,Integer> mapVocabulary) {
-		ArrayList<String> lstLines=FileIO.readFromLargeFile(fpText);
-		for(int i=0;i<lstLines.size();i++) {
-			String strItem=lstLines.get(i).trim();
+		String[] lstLines=FileIO.readFromLargeFile(fpText).split("\n");
+		for(int i=0;i<lstLines.length;i++) {
+			String strItem=lstLines[i].trim();
 			String[] arrTokens=strItem.split("\\s+");
 			for (int j=0;j<arrTokens.length;j++) {
 				String token=arrTokens[j];

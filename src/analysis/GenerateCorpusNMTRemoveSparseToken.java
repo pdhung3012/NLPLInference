@@ -32,6 +32,7 @@ public class GenerateCorpusNMTRemoveSparseToken {
 		
 		FileIO.writeStringToFile("",fpOutputSource);
 		FileIO.writeStringToFile("",fpOutputTarget);
+		System.out.println(lstInSource.length+" "+lstInTarget.length);
 		
 		for(int i=0;i<lstInSource.length;i++) {
 			String[] arrSource=lstInSource[i].trim().split("\\s+");

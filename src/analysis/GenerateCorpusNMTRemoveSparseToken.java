@@ -84,8 +84,8 @@ public class GenerateCorpusNMTRemoveSparseToken {
 			}
 		}
 		
-		removeSparseTokens(fopInput+"train.s",fopInput+"train.t",fopOutput+"train.s",fopOutput+"train.t",mapVocabs);
-		removeSparseTokens(fopInput+"tune.s",fopInput+"tune.t",fopOutput+"tune.s",fopOutput+"tune.t",mapVocabs);
+		removeSparseTokens(fopInput+"train.s",fopOutput+"train.s",fopInput+"train.t",fopOutput+"train.t",mapVocabs);
+		removeSparseTokens(fopInput+"tune.s",fopOutput+"tune.s",fopInput+"tune.t",fopOutput+"tune.t",mapVocabs);
 		
 		
 		

@@ -79,6 +79,7 @@ public class GenerateCorpusNMTRemoveSparseToken {
 				int numItem=Integer.parseInt(itemVocab[1]);
 				if((!itemVocab[0].isEmpty()) && numItem>=numAppearInCorpus){
 					mapVocabs.put(itemVocab[0], numItem);
+					
 				}				
 			}
 		}

@@ -52,7 +52,7 @@ public class GenerateCorpusNMTRemoveSparseToken {
 			sbResultSource.append(sbItemSource.toString()+"\n");
 			sbResultTarget.append(sbItemTarget.toString()+"\n");
 			
-			if(i+1%10000 ==0 || i==lstInSource.length-1){
+			if((i+1)%100000 ==0 || i==lstInSource.length-1){
 				FileIO.appendStringToFile(sbResultSource.toString().trim()+"\n",fpOutputSource);
 				FileIO.appendStringToFile(sbResultTarget.toString().trim()+"\n",fpOutputTarget);
 				sbResultSource=new StringBuilder();

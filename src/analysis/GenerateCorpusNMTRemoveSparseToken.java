@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import consts.PathConstanct;
 import utils.FileIO;
@@ -23,7 +24,7 @@ public class GenerateCorpusNMTRemoveSparseToken {
 		return line;
 	}
 	
-	public static void removeSparseTokens(String fpInputSource,String fpOutputSource,String fpInputTarget,String fpOutputTarget,HashMap<String,Integer> mapVocabMoreTokens){
+	public static void removeSparseTokens(String fpInputSource,String fpOutputSource,String fpInputTarget,String fpOutputTarget,HashMap<String,Integer> mapVocabMoreTokens,HashSet<String> setVocabSource,HashSet<String> setVocabTarget){
 		StringBuilder sbResultSource=new StringBuilder();
 		StringBuilder sbResultTarget=new StringBuilder();
 		String[] lstInSource=FileIO.readFromLargeFile(fpInputSource).split("\n");
@@ -34,6 +35,9 @@ public class GenerateCorpusNMTRemoveSparseToken {
 		FileIO.writeStringToFile("",fpOutputTarget);
 		System.out.println(lstInSource.length+" "+lstInTarget.length);
 		
+		setVocabSource.add(tokenUnknown);
+		setVocabTarget.add(tokenUnknown);
+		
 		for(int i=0;i<lstInSource.length;i++) {
 			String[] arrSource=lstInSource[i].trim().split("\\s+");
 			String[] arrTarget=lstInTarget[i].trim().split("\\s+");
@@ -43,6 +47,12 @@ public class GenerateCorpusNMTRemoveSparseToken {
 				if(mapVocabMoreTokens.containsKey(arrSource[j]) && mapVocabMoreTokens.containsKey(arrTarget[j]) ) {
 					sbItemSource.append(arrSource[j]+" ");
 					sbItemTarget.append(arrTarget[j]+" ");
+					if(!setVocabSource.contains(arrSource[j])) {
+						setVocabSource.add(arrSource[j]);
+					}
+					if(!setVocabTarget.contains(arrTarget[j])) {
+						setVocabTarget.add(arrTarget[j]);
+					}
 				} else {
 					sbItemSource.append(tokenUnknown+" ");
 					sbItemTarget.append(tokenUnknown+" ");
@@ -85,9 +95,26 @@ public class GenerateCorpusNMTRemoveSparseToken {
 			}
 		}
 		
-		removeSparseTokens(fopInput+"train.s",fopOutput+"train.s",fopInput+"train.t",fopOutput+"train.t",mapVocabs);
-		removeSparseTokens(fopInput+"tune.s",fopOutput+"tune.s",fopInput+"tune.t",fopOutput+"tune.t",mapVocabs);
+		HashSet<String> setVocabSource=new HashSet<String>();
+		HashSet<String> setVocabTarget=new HashSet<String>();
 		
+		
+		removeSparseTokens(fopInput+"train.s",fopOutput+"train.s",fopInput+"train.t",fopOutput+"train.t",mapVocabs,setVocabSource,setVocabTarget);
+		removeSparseTokens(fopInput+"tune.s",fopOutput+"tune.s",fopInput+"tune.t",fopOutput+"tune.t",mapVocabs,setVocabSource,setVocabTarget);
+		
+		StringBuilder sbVocabSource=new StringBuilder();
+		sbVocabSource.append("<unk>\n<s>\n</s>\n");
+		for(String str:setVocabSource) {
+			sbVocabSource.append(str+"\n");
+		}
+		FileIO.writeStringToFile(sbVocabSource.toString()+"\n", fopOutput+"vocab.s");
+		
+		StringBuilder sbVocabTarget=new StringBuilder();
+		sbVocabTarget.append("<unk>\n<s>\n</s>\n");
+		for(String str:setVocabTarget) {
+			sbVocabTarget.append(str+"\n");
+		}
+		FileIO.writeStringToFile(sbVocabTarget.toString()+"\n", fopOutput+"vocab.t");
 		
 		
 		

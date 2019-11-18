@@ -108,6 +108,7 @@ public class GenerateCorpusNMTRemoveSparseToken {
 			sbVocabSource.append(str+"\n");
 		}
 		FileIO.writeStringToFile(sbVocabSource.toString()+"\n", fopOutput+"vocab.s");
+
 		
 		StringBuilder sbVocabTarget=new StringBuilder();
 		sbVocabTarget.append("<unk>\n<s>\n</s>\n");

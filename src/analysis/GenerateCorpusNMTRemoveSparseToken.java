@@ -107,7 +107,7 @@ public class GenerateCorpusNMTRemoveSparseToken {
 		for(String str:setVocabSource) {
 			sbVocabSource.append(str+"\n");
 		}
-		FileIO.writeStringToFile(sbVocabSource.toString()+"\n", fopOutput+"vocab.s");
+		FileIO.writeStringToFile(sbVocabSource.toString(), fopOutput+"vocab.s");
 
 		
 		StringBuilder sbVocabTarget=new StringBuilder();
@@ -115,7 +115,7 @@ public class GenerateCorpusNMTRemoveSparseToken {
 		for(String str:setVocabTarget) {
 			sbVocabTarget.append(str+"\n");
 		}
-		FileIO.writeStringToFile(sbVocabTarget.toString()+"\n", fopOutput+"vocab.t");
+		FileIO.writeStringToFile(sbVocabTarget.toString(), fopOutput+"vocab.t");
 		
 		
 		

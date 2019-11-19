@@ -30,7 +30,7 @@ public class CombineTestOutputFromSplit {
 //			String[] arrItemAlias=arrAlias[i].trim().split("\t");
 //			mapAlias.put(Integer.parseInt(arrItemAlias[1]), arrItemAlias[0]);
 //		}
-		
+		90153	76516	16113	88970	105083	
 		HashMap<Integer,StringBuilder> mapResult=new LinkedHashMap<Integer, StringBuilder>();
 		HashMap<Integer,StringBuilder> mapSource=new LinkedHashMap<Integer, StringBuilder>();
 		for(int i=0;i<arrResult.length;i++){

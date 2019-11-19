@@ -1,5 +1,6 @@
 package analysis;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -11,7 +12,7 @@ public class CombineTestOutputFromSplit {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 //		String folderOrigin=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA;
-		String folderInput=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA;
+		String folderInput=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"removeSparseTokens_split"+File.separator;
 //		String folderTemp=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA;
 		String fpTranslatedNumber=folderInput+"test.s.line.txt";
 		String fpTestSourceNumber=folderInput+"test.s";

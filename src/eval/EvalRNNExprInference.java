@@ -86,7 +86,7 @@ public class EvalRNNExprInference {
 		String fn_trainTarget = "train.t";
 		String fn_testSource = "test.s";
 		String fn_testTarget = "test.t";
-		String fn_testTranslation = "test.tune.baselines.trans";
+		String fn_testTranslation = "test.tune.baseline.trans";
 //		String fn_OrderTranslation="ordered.baseline.trans";
 		String fn_result = "result_all.txt";
 		String fn_log_incorrect = "log_incorrect.txt";

@@ -26,7 +26,10 @@ public class ExtractRealTransResultFromRNN {
 		HashMap<Integer,String> mapAlias=new HashMap<Integer, String>();
 		for(int i=0;i<arrAlias.length;i++){
 			String[] arrItemAlias=arrAlias[i].trim().split("\t");
-			mapAlias.put(Integer.parseInt(arrItemAlias[1]), arrItemAlias[0]);
+			if(arrItemAlias.length>=2) {
+				mapAlias.put(Integer.parseInt(arrItemAlias[1]), arrItemAlias[0]);
+			}
+			
 		}
 		
 //		HashMap<Integer,StringBuilder> mapResult=new LinkedHashMap<Integer, StringBuilder>();

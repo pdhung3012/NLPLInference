@@ -61,8 +61,9 @@ public class GenerateSpllitTestOnly {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String fopIn=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"removeSparseTokens"+File.separator+"c2"+File.separator;
-		String fopOut=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"removeSparseTokens_split"+File.separator+"c2"+File.separator;
+		String configuration="c3";
+		String fopIn=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"removeSparseTokens"+File.separator+configuration+File.separator;
+		String fopOut=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"removeSparseTokens_split_context"+File.separator+configuration+File.separator;
 		new File(fopOut).mkdir();
 		int numLine=50;
 //		getSplitData(fopIn+"train.s", fopOut+"train.s", fopOut+"train.s.line.txt",numLine);

@@ -61,7 +61,7 @@ public class GenerateSpllitTestOnly {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String configuration="c3";
+		String configuration="c4";
 		String fopIn=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"removeSparseTokens"+File.separator+configuration+File.separator;
 		String fopOut=PathConstanct.PATH_PROJECT_TTT_CUR_EVAL_DATA+"removeSparseTokens_split_context"+File.separator+configuration+File.separator;
 		new File(fopOut).mkdir();

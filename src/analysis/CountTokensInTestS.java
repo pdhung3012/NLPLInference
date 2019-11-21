@@ -20,6 +20,7 @@ public class CountTokensInTestS {
 				}
 			}
 		}
+		
 		System.out.println("Num tokens: "+countTokens);
 
 	}

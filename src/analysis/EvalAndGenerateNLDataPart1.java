@@ -255,7 +255,7 @@ public class EvalAndGenerateNLDataPart1 {
 //				continue;
 //			}
 			int numberOfMethodPredicted=0,numCorrectMethodPerLine=0,numIncorrectMethodPerLine=0;
-			int numberOfJavaExpressions=0;
+//			int numberOfJavaExpressions=0;
 			StringBuilder sbCorrectIncorrectForJavaPerLine=new StringBuilder();
 			
 			HashSet<String> setIncorrect=new HashSet<String>();

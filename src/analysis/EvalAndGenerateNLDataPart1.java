@@ -128,6 +128,7 @@ public class EvalAndGenerateNLDataPart1 {
 		
 		HashMap<String,String> mapTotalId=MapUtil.getHashMapFromFile(fop_mapTotalId+"a_mapTotalIdAndContent.txt");
 		HashMap<String,String> mapIdLibrary=getLibraryInfo(mapTotalId);
+		HashMap<String,String> mapCodeTemplateInfo=getCodeTemplateInfo(mapTotalId);
 		System.out.println(mapTotalId.size()+" Map total ID loaded!");
 		ReorderingTokens.reorderingTokens(fop_input+fn_testSource,fop_input+fn_testTarget, fop_input+fn_testTranslation, fop_input+fn_correctOrderTranslated, mapTotalId);
 		System.out.println("Finish reorder!");
@@ -342,7 +343,8 @@ public class EvalAndGenerateNLDataPart1 {
 //						mapCorrectPrintScreen.get(strPackageName).print(itemSource[j]+","+mapVocabTraining.get(itemSource[j])+"\n");
 						numCorrectMethodPerLine++;
 						if(strPackageName.equals("java")) {
-							sbCorrectIncorrectForJavaPerLine.append(itemSource[j]+"_"+itemTarget[j]+"_correct\t");
+							String codeTemplateItem=mapCodeTemplateInfo.get(itemTarget[j]);
+							sbCorrectIncorrectForJavaPerLine.append(itemSource[j]+"_"+itemTarget[j]+"_"+codeTemplateItem+"_correct\t");
 							numberOfJavaExpressions++;
 						}
 						
@@ -365,7 +367,8 @@ public class EvalAndGenerateNLDataPart1 {
 						
 							numIncorrectMethodPerLine++;
 							if(strPackageName.equals("java")) {
-								sbCorrectIncorrectForJavaPerLine.append(itemSource[j]+"_"+itemTarget[j]+"_wrong\t");
+								String codeTemplateItem=mapCodeTemplateInfo.get(itemTarget[j]);
+								sbCorrectIncorrectForJavaPerLine.append(itemSource[j]+"_"+itemTarget[j]+"_"+codeTemplateItem+"_wrong\t");
 								numberOfJavaExpressions++;
 							}
 					

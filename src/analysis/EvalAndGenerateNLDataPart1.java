@@ -368,7 +368,7 @@ public class EvalAndGenerateNLDataPart1 {
 							numIncorrectMethodPerLine++;
 							if(strPackageName.equals("java")) {
 								String codeTemplateItem=mapCodeTemplateInfo.get(itemTarget[j]);
-								sbCorrectIncorrectForJavaPerLine.append(itemSource[j]+"_"+itemTarget[j]+"_"+codeTemplateItem+"_wrong\t");
+//								sbCorrectIncorrectForJavaPerLine.append(itemSource[j]+"_"+itemTarget[j]+"_"+codeTemplateItem+"_wrong\t");
 								numberOfJavaExpressions++;
 							}
 					
@@ -393,7 +393,7 @@ public class EvalAndGenerateNLDataPart1 {
 			objJMethodLine.setNumberOfJavaMIs(numberOfJavaExpressions);
 			double precPerLine=((numCorrectMethodPerLine+numIncorrectMethodPerLine)!=0)?(numCorrectMethodPerLine*1.0/(numCorrectMethodPerLine+numIncorrectMethodPerLine)):0;
 			objJMethodLine.setPrecisionPerLine(precPerLine);
-			String strContentAnaPerLine=(i+1)+"\t"+numberOfMethodPredicted+"\t"+numberOfJavaExpressions+"\t"+precPerLine+"\t"+sbCorrectIncorrectForJavaPerLine.toString().trim();
+			String strContentAnaPerLine=(i+1)+"\t"+numCorrectMethodPerLine+"/"+numberOfJavaExpressions+"\t"+numberOfMethodPredicted+"\t"+numberOfJavaExpressions+"\t"+precPerLine+"\t"+sbCorrectIncorrectForJavaPerLine.toString().trim();
 			objJMethodLine.setStrContentInLine(strContentAnaPerLine);
 			if(numberOfMethodPredicted>=thresholdMethodsPerLine) {
 				listAnalysisPerLine.add(objJMethodLine);

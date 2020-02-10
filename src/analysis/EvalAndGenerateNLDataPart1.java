@@ -255,7 +255,7 @@ public class EvalAndGenerateNLDataPart1 {
 //				continue;
 //			}
 			int numberOfMethodPredicted=0,numCorrectMethodPerLine=0,numIncorrectMethodPerLine=0;
-//			int numberOfJavaExpressions=0;
+			int numberOfJavaExpressions=0;
 			StringBuilder sbCorrectIncorrectForJavaPerLine=new StringBuilder();
 			
 			HashSet<String> setIncorrect=new HashSet<String>();
@@ -322,6 +322,7 @@ public class EvalAndGenerateNLDataPart1 {
 						numCorrectMethodPerLine++;
 						if(strPackageName.equals("java")) {
 							sbCorrectIncorrectForJavaPerLine.append(itemSource[j]+"_"+itemTarget[j]+"_correct\t");
+							numberOfJavaExpressions++;
 						}
 						
 					} else{
@@ -344,6 +345,7 @@ public class EvalAndGenerateNLDataPart1 {
 							numIncorrectMethodPerLine++;
 							if(strPackageName.equals("java")) {
 								sbCorrectIncorrectForJavaPerLine.append(itemSource[j]+"_"+itemTarget[j]+"_wrong\t");
+								numberOfJavaExpressions++;
 							}
 					
 					}
@@ -364,6 +366,7 @@ public class EvalAndGenerateNLDataPart1 {
 			ObjectOfJavaMethodName objJMethodLine=new ObjectOfJavaMethodName();
 			objJMethodLine.setLineNumber((i+1));
 			objJMethodLine.setNumberOfMethodTokens(numberOfMethodPredicted);
+			objJMethodLine.setNumberOfJavaMIs(numberOfJavaExpressions);
 			double precPerLine=((numCorrectMethodPerLine+numIncorrectMethodPerLine)!=0)?(numCorrectMethodPerLine*1.0/(numCorrectMethodPerLine+numIncorrectMethodPerLine)):0;
 			objJMethodLine.setPrecisionPerLine(precPerLine);
 			String strContentAnaPerLine=(i+1)+"\t"+numberOfMethodPredicted+"\t"+precPerLine+"\t"+sbCorrectIncorrectForJavaPerLine.toString().trim();
@@ -373,7 +376,7 @@ public class EvalAndGenerateNLDataPart1 {
 			}			
 		}
 		
-		Collections.sort(listAnalysisPerLine, ObjectOfJavaMethodName.NumberMethodTokensComparator.reversed());
+		Collections.sort(listAnalysisPerLine, ObjectOfJavaMethodName.NumberJavaExprsComparator.reversed());
 		
 		for(ObjectOfJavaMethodName item:listAnalysisPerLine) {
 			ptAnalysisPerLine.print(item.getStrContentInLine()+"\n");

@@ -8,6 +8,7 @@ public class ObjectOfJavaMethodName {
 	private String strContentInLine;
 	private double precisionPerLine;
 	private int numberOfMethodTokens;
+	private int numberOfJavaMIs;
 	
 	public ObjectOfJavaMethodName() {
 		precisionPerLine=0;
@@ -29,7 +30,32 @@ public class ObjectOfJavaMethodName {
 			return result;
 	       }};
 
-	
+   public static Comparator<ObjectOfJavaMethodName> NumberJavaExprsComparator = new Comparator<ObjectOfJavaMethodName>() {
+
+		public int compare(ObjectOfJavaMethodName s1, ObjectOfJavaMethodName s2) {
+				int result=0;
+				if(s1.numberOfJavaMIs!=s2.numberOfJavaMIs) {
+					result=new Integer(s1.numberOfJavaMIs).compareTo(new Integer(s2.numberOfJavaMIs));
+				} else {
+					result=new Double(s1.precisionPerLine).compareTo(new Double(s2.precisionPerLine));
+				}
+				return result;
+		       }};
+
+	       
+	       
+	public int getNumberOfJavaMIs() {
+		return numberOfJavaMIs;
+	}
+
+
+
+	public void setNumberOfJavaMIs(int numberOfJavaMIs) {
+		this.numberOfJavaMIs = numberOfJavaMIs;
+	}
+
+
+
 	public double getPrecisionPerLine() {
 		return precisionPerLine;
 	}

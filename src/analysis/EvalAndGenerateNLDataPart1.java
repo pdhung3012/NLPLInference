@@ -50,12 +50,33 @@ public class EvalAndGenerateNLDataPart1 {
 		return result;
 	}
 	
+	public static String getStrCodeOfMIs(String info){
+		String result="";
+		String[] arrLine=info.split(SplitInvocationCharacter);
+		//System.out.println(arrLine[0]);
+		if(arrLine.length>4){
+			result=arrLine[0];
+		}
+		
+		return result;
+	}
+	
 	public static HashMap<String,String> getLibraryInfo(HashMap<String,String> mapTotalId){
 		HashMap<String,String> map=new LinkedHashMap<String, String>();
 		for(String key:mapTotalId.keySet()){
 			String val=mapTotalId.get(key);
 			String fqn=getInvocationReceiverInLibrary(val);
 			map.put(key, fqn);
+		}
+		return map;
+	}
+	
+	public static HashMap<String,String> getCodeTemplateInfo(HashMap<String,String> mapTotalId){
+		HashMap<String,String> map=new LinkedHashMap<String, String>();
+		for(String key:mapTotalId.keySet()){
+			String val=mapTotalId.get(key);
+			String strCode=getStrCodeOfMIs(val);
+			map.put(key, strCode);
 		}
 		return map;
 	}

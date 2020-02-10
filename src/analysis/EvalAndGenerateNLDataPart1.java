@@ -344,7 +344,7 @@ public class EvalAndGenerateNLDataPart1 {
 						numCorrectMethodPerLine++;
 						if(strPackageName.equals("java")) {
 							String codeTemplateItem=mapCodeTemplateInfo.get(itemTarget[j]);
-							sbCorrectIncorrectForJavaPerLine.append(itemSource[j]+"_"+itemTarget[j]+"_"+codeTemplateItem+"_correct\t");
+							sbCorrectIncorrectForJavaPerLine.append(itemSource[j]+"_"+itemTarget[j]+"_"+codeTemplateItem+"\t");
 							numberOfJavaExpressions++;
 						}
 						

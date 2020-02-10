@@ -242,6 +242,7 @@ public class EvalAndGenerateNLDataPart1 {
 			ptOutVocab=new PrintStream(new FileOutputStream(fop_output+fn_log_outVocab));
 			ptCorrect_map=new PrintStream(new FileOutputStream(fop_output+fn_statisticCorrectMapping));
 			ptIncorrect_map=new PrintStream(new FileOutputStream(fop_output+fn_statisticIncorrectMapping));
+			ptAnalysisPerLine=new PrintStream(new FileOutputStream(fop_output+fn_analysisPerline));
 			
 		}catch(Exception ex){
 			ex.printStackTrace();

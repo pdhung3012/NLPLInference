@@ -31,7 +31,7 @@ public class ExtractLinkAndOnlineSite {
 			String repo=item.split("/")[0].replaceFirst(username+"-", "");
 			String otherPath=item.replaceFirst(username+"-"+repo+"/","");
 			String zipDir=otherPath.split("/")[0];
-			String branchPath="blob/"+zipDir.split("-")[1];
+			String branchPath="blob/"+zipDir.split("-")[zipDir.split("-").length-1];
 			String encodePath=otherPath.replaceFirst(zipDir+"/", "");
 			String url="https://github.com/"+username+"/"+repo+"/"+branchPath+"/"+encodePath;
 			sbLocal.append(url+"\n");

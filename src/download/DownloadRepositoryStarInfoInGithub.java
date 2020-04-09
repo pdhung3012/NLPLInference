@@ -115,7 +115,7 @@ public class DownloadRepositoryStarInfoInGithub {
 				if(arrItems.length>=2) {
 					String ownName=arrItems[0];
 					String projName=arrItems[1];
-					sbResult.append(ownName+"\t"+projName);
+					sbResult.append(ownName+"\t"+projName+"\n");
 				}
 			}
 		}

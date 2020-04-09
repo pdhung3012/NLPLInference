@@ -6,7 +6,7 @@ public class TestDownloadProjectInfo {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String inputUrl="https://api.github.com/repos/atinfo/at.info-knowledge-base";
+		String inputUrl=" https://api.github.com/repos/a466350665/smart";
 		String outputFile="/users/hungphan/Desktop/sampleProjectInfo.txt";
 		GithubClient gitClient = new GithubClient();
 		try {

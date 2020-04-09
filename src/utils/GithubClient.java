@@ -123,12 +123,14 @@ public class GithubClient {
 			throws Exception {
 		File destinationFile = new File(destinationDir);
 		boolean result = false;
-		try {
-			
+//		try {
+//			
 		URL url = new URL(githubRemoteUrl);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		String userCredentials = GithubConfig.username + ":" + GithubConfig.password;
-		String basicAuth = "Basic " + new String(Base64.getEncoder().encode(userCredentials.getBytes()));
+//		String userCredentials = GithubConfig.username + ":" + GithubConfig.password;
+		String tokenCredentials = "Authorization: token "+GithubConfig.accessTokens;
+//		String basicAuth = "Basic " + new String(Base64.getEncoder().encode(tokenCredentials.getBytes()));
+		String basicAuth = new String(Base64.getEncoder().encode(tokenCredentials.getBytes()));
 
 		connection.setRequestProperty("Authorization", basicAuth);
 		connection.setRequestMethod("GET");
@@ -149,11 +151,11 @@ public class GithubClient {
 		} else {
 			return false;
 		}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+//		} catch (Exception ex) {
+//			ex.printStackTrace();
+//		}
 
-		return result;
+//		return result;
 
 	}
 

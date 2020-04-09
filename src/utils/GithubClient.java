@@ -6,6 +6,11 @@ import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.junit.Test;
 
+import com.jcabi.github.Coordinates;
+import com.jcabi.github.Github;
+import com.jcabi.github.Repo;
+import com.jcabi.github.RtGithub;
+
 import consts.GithubConfig;
 
 import javax.validation.constraints.NotNull;
@@ -130,11 +135,11 @@ public class GithubClient {
 //		String userCredentials = GithubConfig.username + ":" + GithubConfig.password;
 //		String tokenCredentials = "Authorization: token "+GithubConfig.accessTokens;
 //		String basicAuth = "Basic " + new String(Base64.getEncoder().encode(tokenCredentials.getBytes()));
-		String basicAuth = "Authorization: "+GithubConfig.accessTokens;
+		String basicAuth = "Authorization: Bearer "+GithubConfig.accessTokens;
 
-		connection.setRequestProperty("Authorization", basicAuth);
-		connection.setRequestMethod("GET");
-		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+//		connection.setRequestProperty("Authorization", basicAuth);
+//		connection.setRequestMethod("GET");
+//		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 		// connection.setRequestProperty("Content-Length", "" +
 		// postData.getBytes().length);
 		// connection.setRequestProperty("Content-Language", "en-US");
@@ -158,6 +163,26 @@ public class GithubClient {
 //		return result;
 
 	}
+	
+	public boolean downloadJsonDataOfProjectUsingJcabi(@NotNull String githubRemoteUrl, @NotNull String destinationDir)
+			throws Exception {
+		boolean result = false;
+		Github github = new RtGithub(GithubConfig.accessTokens);
+	    Repo repo = github.repos().get(
+	        new Coordinates.Simple(githubRemoteUrl)
+	    );
+	    try {
+			String json=repo.json().toString();
+			FileIO.writeStringToFile(json, destinationDir);
+			result=true;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    return result;
+
+	}
+
 
 	public static boolean copy(InputStream input, OutputStream output, int bufferSize) {
 		byte[] buf = new byte[bufferSize];

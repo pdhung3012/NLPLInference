@@ -185,7 +185,7 @@ public class DownloadRepositoryStarInfoInGithub {
 								System.out.println("begin download " + username
 										+ "__" + repos);
 
-								String urlGithubRepo=urlAPI+username+"/"+repos;
+								String urlGithubRepo=username+"/"+repos;
 								String destinationJsonFile=fopOutputProjects+keyCheck+".txt";
 								// gotIt =
 								// gitClient.downloadRepoContent(GithubConfig.urlGithub+username+"/"+repos+".git",
@@ -193,7 +193,7 @@ public class DownloadRepositoryStarInfoInGithub {
 								// "master",
 								// PathConstanct.fopProjectLocation+File.separator+username+"_"+repos+"/");
 								gotIt=gitClient
-										.downloadJsonDataOfProject(
+										.downloadJsonDataOfProjectUsingJcabi(
 												urlGithubRepo,destinationJsonFile
 												);
 //								if (!branch.isEmpty()) {
@@ -259,9 +259,9 @@ public class DownloadRepositoryStarInfoInGithub {
 								ex.printStackTrace();
 							}
 							if (gotIt) {
-								System.out.println(" project " + username + "-"
+								System.out.println(" project " + username + "-_"
 										+ repos + " downloaded");
-								FileIO.appendStringToFile(username + "_"
+								FileIO.appendStringToFile(username + "__"
 										+ repos + "\n",
 										fopOutputLogs
 												+ "downloaded.txt");

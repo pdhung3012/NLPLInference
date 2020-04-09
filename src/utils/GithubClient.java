@@ -123,8 +123,8 @@ public class GithubClient {
 			throws Exception {
 		File destinationFile = new File(destinationDir);
 		boolean result = false;
-//		try {
-//			
+		try {
+			
 		URL url = new URL(githubRemoteUrl);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		String userCredentials = GithubConfig.username + ":" + GithubConfig.password;
@@ -149,11 +149,11 @@ public class GithubClient {
 		} else {
 			return false;
 		}
-//		} catch (Exception ex) {
-//			ex.printStackTrace();
-//		}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 
-//		return result;
+		return result;
 
 	}
 

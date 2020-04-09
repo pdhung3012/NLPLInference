@@ -123,6 +123,44 @@ public class GithubClient {
 		return result;
 
 	}
+	
+	public boolean downloadJsonDataOfProject(@NotNull String githubRemoteUrl,
+			 @NotNull String destinationDir) throws Exception {
+		File destinationFile = new File(destinationDir);
+		boolean result = false;
+		try {
+			
+			URL url = new URL(githubRemoteUrl);
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			String userCredentials = GithubConfig.username + ":" + GithubConfig.password;
+			String basicAuth = "Basic " + new String(Base64.getEncoder().encode(userCredentials.getBytes()));
+
+			connection.setRequestProperty("Authorization", basicAuth);
+			connection.setRequestMethod("GET");
+			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			// connection.setRequestProperty("Content-Length", "" +
+			// postData.getBytes().length);
+			// connection.setRequestProperty("Content-Language", "en-US");
+			connection.setUseCaches(false);
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+			connection.setRequestMethod("GET");
+			InputStream in = connection.getInputStream();
+			FileOutputStream out = new FileOutputStream(destinationDir);
+			result = copy(in, out, 1024);
+			out.close();
+			if (destinationFile.length() > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return result;
+
+	}
 
 	public static boolean copy(InputStream input, OutputStream output, int bufferSize) {
 		byte[] buf = new byte[bufferSize];

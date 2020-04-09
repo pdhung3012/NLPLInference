@@ -232,12 +232,12 @@ public class DownloadRepositoryStarInfoInGithub {
 							}
 							catch (IOException ex) {
 								ex.printStackTrace();
-								FileIO.appendStringToFile(username + "_"
-										+ repos + "\t" + ex.getMessage()
-										+ "\tjava.io.IOException\n",
-										fopOutputLogs
-												+ "unable.txt");
-								break;
+//								FileIO.appendStringToFile(username + "_"
+//										+ repos + "\t" + ex.getMessage()
+//										+ "\tjava.io.IOException\n",
+//										fopOutputLogs
+//												+ "unable.txt");
+//								break;
 							}
 
 							catch (org.eclipse.jgit.api.errors.TransportException ex) {

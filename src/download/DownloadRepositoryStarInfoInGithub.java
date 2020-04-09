@@ -107,6 +107,8 @@ public class DownloadRepositoryStarInfoInGithub {
 		String fopOutputLogs="G:\\gitAlon18Projects\\githubStarPredictProjects\\";
 		String fpAllRepoInfos="G:\\gitAlon18Projects\\githubStarPredictProjects\\repos.txt";
 		
+		new File(fopInputProjectFolder).mkdir();
+		
 		StringBuilder sbResult=new StringBuilder();
 		File[] arrFolders=new File(fopInputProjectFolder).listFiles();
 		for(int i=0;i<arrFolders.length;i++) {
@@ -189,7 +191,7 @@ public class DownloadRepositoryStarInfoInGithub {
 								// GithubConfig.accessTokens,
 								// "master",
 								// PathConstanct.fopProjectLocation+File.separator+username+"_"+repos+"/");
-								gitClient
+								gotIt=gitClient
 										.downloadJsonDataOfProject(
 												urlGithubRepo,destinationJsonFile
 												);

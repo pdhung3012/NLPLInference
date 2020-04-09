@@ -103,11 +103,11 @@ public class DownloadRepositoryStarInfoInGithub {
 		// TODO Auto-generated method stub
 		String urlAPI="https://api.github.com/repos/";
 		String fopInputProjectFolder = "G:\\gitAlon18Projects\\raw\\java-large\\training\\";
-		String fopOutputProjects="G:\\gitAlon18Projects\\githubStarPredictProjects\\sampleProjectInfo\\";
+		String fopOutputProjects="G:\\gitAlon18Projects\\githubStarPredictProjects\\projectInfos\\";
 		String fopOutputLogs="G:\\gitAlon18Projects\\githubStarPredictProjects\\";
 		String fpAllRepoInfos="G:\\gitAlon18Projects\\githubStarPredictProjects\\repos.txt";
 		
-		new File(fopInputProjectFolder).mkdir();
+		new File(fopOutputProjects).mkdir();
 		
 		StringBuilder sbResult=new StringBuilder();
 		File[] arrFolders=new File(fopInputProjectFolder).listFiles();

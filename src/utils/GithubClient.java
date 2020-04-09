@@ -22,15 +22,11 @@ import java.io.FileOutputStream;
 public class GithubClient {
 
 	/**
-	 * @param githubRemoteUrl
-	 *            Remote git http url which ends with .git.
-	 * @param accessToken
-	 *            Personal access token.
-	 * @param branchName
-	 *            Name of the branch which should be downloaded
-	 * @param destinationDir
-	 *            Destination directory where the downloaded files should be
-	 *            present.
+	 * @param githubRemoteUrl Remote git http url which ends with .git.
+	 * @param accessToken     Personal access token.
+	 * @param branchName      Name of the branch which should be downloaded
+	 * @param destinationDir  Destination directory where the downloaded files
+	 *                        should be present.
 	 * @return
 	 * @throws Exception
 	 */
@@ -68,7 +64,7 @@ public class GithubClient {
 			return false;
 		}
 	}
-	
+
 	public String downloadRepoContentCheck(@NotNull String githubRemoteUrl, @NotNull String accessToken,
 			@NotNull String branchName, @NotNull String destinationDir) throws Exception {
 		// String githubSourceUrl, String accessToken
@@ -80,18 +76,17 @@ public class GithubClient {
 //		System.out.println(githubRemoteUrl+" aaa "+Git.cloneRepository()
 //				.setCredentialsProvider(credentialsProvider).setURI(githubRemoteUrl)
 //				.setDirectory(destinationFile).setBare(true).call().getRepository().getBranch());
-		String branchDefault=Git.cloneRepository()
-				.setCredentialsProvider(credentialsProvider).setURI(githubRemoteUrl)
+		String branchDefault = Git.cloneRepository().setCredentialsProvider(credentialsProvider).setURI(githubRemoteUrl)
 				.setDirectory(destinationFile).setBare(true).call().getRepository().getBranch();
 		return branchDefault;
 	}
 
 	public boolean downloadRepoContentByArchiveDownload(@NotNull String githubRemoteUrl, @NotNull String accessToken,
-			 @NotNull String destinationDir) throws Exception {
+			@NotNull String destinationDir) throws Exception {
 		File destinationFile = new File(destinationDir);
 		boolean result = false;
 		try {
-			
+
 			URL url = new URL(githubRemoteUrl);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			String userCredentials = GithubConfig.username + ":" + GithubConfig.password;
@@ -123,40 +118,40 @@ public class GithubClient {
 		return result;
 
 	}
-	
-	public boolean downloadJsonDataOfProject(@NotNull String githubRemoteUrl,
-			 @NotNull String destinationDir) throws Exception {
+
+	public boolean downloadJsonDataOfProject(@NotNull String githubRemoteUrl, @NotNull String destinationDir)
+			throws Exception {
 		File destinationFile = new File(destinationDir);
 		boolean result = false;
-		try {
-			
-			URL url = new URL(githubRemoteUrl);
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			String userCredentials = GithubConfig.username + ":" + GithubConfig.password;
-			String basicAuth = "Basic " + new String(Base64.getEncoder().encode(userCredentials.getBytes()));
+//		try {
+//			
+		URL url = new URL(githubRemoteUrl);
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		String userCredentials = GithubConfig.username + ":" + GithubConfig.password;
+		String basicAuth = "Basic " + new String(Base64.getEncoder().encode(userCredentials.getBytes()));
 
-			connection.setRequestProperty("Authorization", basicAuth);
-			connection.setRequestMethod("GET");
-			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			// connection.setRequestProperty("Content-Length", "" +
-			// postData.getBytes().length);
-			// connection.setRequestProperty("Content-Language", "en-US");
-			connection.setUseCaches(false);
-			connection.setDoInput(true);
-			connection.setDoOutput(true);
-			connection.setRequestMethod("GET");
-			InputStream in = connection.getInputStream();
-			FileOutputStream out = new FileOutputStream(destinationDir);
-			result = copy(in, out, 1024);
-			out.close();
-			if (destinationFile.length() > 0) {
-				return true;
-			} else {
-				return false;
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		connection.setRequestProperty("Authorization", basicAuth);
+		connection.setRequestMethod("GET");
+		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		// connection.setRequestProperty("Content-Length", "" +
+		// postData.getBytes().length);
+		// connection.setRequestProperty("Content-Language", "en-US");
+		connection.setUseCaches(false);
+		connection.setDoInput(true);
+		connection.setDoOutput(true);
+		connection.setRequestMethod("GET");
+		InputStream in = connection.getInputStream();
+		FileOutputStream out = new FileOutputStream(destinationDir);
+		result = copy(in, out, 1024);
+		out.close();
+		if (destinationFile.length() > 0) {
+			return true;
+		} else {
+			return false;
 		}
+//		} catch (Exception ex) {
+//			ex.printStackTrace();
+//		}
 
 		return result;
 

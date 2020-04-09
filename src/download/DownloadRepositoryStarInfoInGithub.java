@@ -3,6 +3,7 @@ package download;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -214,7 +215,22 @@ public class DownloadRepositoryStarInfoInGithub {
 //															+ repos + ".zip");
 //								}
 
-							} catch (IOException ex) {
+							}
+							catch (FileNotFoundException ex) {
+								ex.printStackTrace();
+								System.out.println("exception here");
+								FileIO.appendStringToFile(
+										username
+												+ "_"
+												+ repos
+												+ "\t"
+												+ ex.getMessage()
+												+ "\tFileNotFoundException\n",
+												fopOutputLogs
+												+ "unable.txt");
+								break;
+							}
+							catch (IOException ex) {
 								ex.printStackTrace();
 								FileIO.appendStringToFile(username + "_"
 										+ repos + "\t" + ex.getMessage()
@@ -237,7 +253,9 @@ public class DownloadRepositoryStarInfoInGithub {
 												fopOutputLogs
 												+ "unable.txt");
 								break;
-							} catch (Exception ex) {
+							}
+							
+							 catch (Exception ex) {
 								ex.printStackTrace();
 							}
 							if (gotIt) {

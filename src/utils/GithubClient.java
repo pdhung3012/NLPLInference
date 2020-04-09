@@ -130,7 +130,7 @@ public class GithubClient {
 //		String userCredentials = GithubConfig.username + ":" + GithubConfig.password;
 		String tokenCredentials = "Authorization: token "+GithubConfig.accessTokens;
 //		String basicAuth = "Basic " + new String(Base64.getEncoder().encode(tokenCredentials.getBytes()));
-		String basicAuth = new String(Base64.getEncoder().encode(tokenCredentials.getBytes()));
+		String basicAuth = GithubConfig.accessTokens;
 
 		connection.setRequestProperty("Authorization", basicAuth);
 		connection.setRequestMethod("GET");

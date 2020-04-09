@@ -120,6 +120,18 @@ public class DownloadRepositoryStarInfoInGithub {
 			}
 		}
 		FileIO.writeStringToFile(sbResult.toString(), fpAllRepoInfos);
+		
+		if(!new File(fopOutputLogs + "downloaded" 
+						+ ".txt").exists()) {
+			FileIO.writeStringToFile("", fopOutputLogs + "downloaded" 
+						+ ".txt");
+		}
+		
+		if(!new File(fopOutputLogs + "unable" 
+				+ ".txt").exists()) {
+	FileIO.writeStringToFile("", fopOutputLogs + "unable" 
+				+ ".txt");
+}
 
 //		File destinationFile = new File(fopOutput);
 		final GithubClient gitClient = new GithubClient();

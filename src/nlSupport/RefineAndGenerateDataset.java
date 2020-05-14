@@ -1,5 +1,6 @@
 package nlSupport;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -29,6 +30,8 @@ public class RefineAndGenerateDataset {
 		ArrayList<String> listMNames=FileUtil.getFileStringArray(fpInputMethodName);
 		ArrayList<String> listPrefix=FileUtil.getFileStringArray(fpInputPrefix);
 		ArrayList<String> listPostfix=FileUtil.getFileStringArray(fpInputPostfix);
+		
+		new File(fopOutput).mkdir();
 		
 		String splitContent="AABBAA";
 		HashMap<Integer,String> mapKey=new HashMap<Integer, String>();

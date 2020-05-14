@@ -31,6 +31,7 @@ public class RefineAndGenerateDataset {
 		ArrayList<String> listPrefix=FileUtil.getFileStringArray(fpInputPrefix);
 		ArrayList<String> listPostfix=FileUtil.getFileStringArray(fpInputPostfix);
 		
+		System.out.println("done step loading ");
 		new File(fopOutput).mkdir();
 		
 		String splitContent="AABBAA";
@@ -68,6 +69,7 @@ public class RefineAndGenerateDataset {
 			sbTotalPrefix.append(arrVals[0]+"\n");
 			sbTotalPostfix.append(arrVals[1]+"\n");
 			sbTotalMName.append(arrVals[2]+"\n");
+			sbTotalCount.append(count+"\n");
 			if(countOfPrefixPostfix%countRefresh==0 || countOfPrefixPostfix==mapKey.size()) {
 				FileIO.appendStringToFile(sbTotalPrefix.toString(), fpOutputPrefix);
 				FileIO.appendStringToFile(sbTotalPostfix.toString(), fpOutputPostfix);

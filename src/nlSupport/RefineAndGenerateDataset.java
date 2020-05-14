@@ -15,7 +15,7 @@ public class RefineAndGenerateDataset {
 		// TODO Auto-generated method stub
 //		If triple duplicate then only one triple stored in db
 		String fopInput=PathConstanct.PATH_PROJECT_NL_SUPPORT+"nlSupport/";
-		String fopOutput=fopInput+"nlSupport/filter/";
+		String fopOutput=fopInput+"filter/";
 		String idenTag="#identifier";
 		
 		String fpInputPrefix=fopInput+"prefix.txt";
@@ -37,8 +37,8 @@ public class RefineAndGenerateDataset {
 		String splitContent="AABBAA";
 		HashMap<Integer,String> mapKey=new HashMap<Integer, String>();
 		HashMap<Integer,Integer> mapCount=new HashMap<Integer, Integer>();
-		
-		for(int i=0;i<listMNames.size();i++) {
+		System.out.println(listMNames.size()+"\t"+listPrefix.size()+"\t"+listPostfix.size());
+		for(int i=0;i<listPrefix.size();i++) {
 			String key=listMNames.get(i)+splitContent+listPrefix.get(i)+splitContent+listPostfix.get(i);
 			int valKey=key.hashCode();
 			if(!mapKey.containsKey(valKey)) {
@@ -66,9 +66,9 @@ public class RefineAndGenerateDataset {
 			countOfPrefixPostfix++;
 			String[] arrVals=mapKey.get(valKey).split(splitContent);
 			int count=mapCount.get(valKey);
-			sbTotalPrefix.append(arrVals[0]+"\n");
-			sbTotalPostfix.append(arrVals[1]+"\n");
-			sbTotalMName.append(arrVals[2]+"\n");
+			sbTotalPrefix.append(arrVals[1]+"\n");
+			sbTotalPostfix.append(arrVals[2]+"\n");
+			sbTotalMName.append(arrVals[0]+"\n");
 			sbTotalCount.append(count+"\n");
 			if(countOfPrefixPostfix%countRefresh==0 || countOfPrefixPostfix==mapKey.size()) {
 				FileIO.appendStringToFile(sbTotalPrefix.toString(), fpOutputPrefix);

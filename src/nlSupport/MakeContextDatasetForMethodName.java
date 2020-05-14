@@ -1,8 +1,10 @@
 package nlSupport;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 
+import consts.PathConstanct;
 import utils.FileIO;
 import utils.FileUtil;
 
@@ -32,8 +34,8 @@ public class MakeContextDatasetForMethodName {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String fopInput="";
-		String fopOutput="";
+		String fopInput=PathConstanct.PATH_PROJECT_NL_SUPPORT;
+		String fopOutput=fopInput+"nlSupport/";
 		String idenTag="#identifier";
 		
 		String fpTrainS=fopInput+"train.s";
@@ -75,6 +77,7 @@ public class MakeContextDatasetForMethodName {
 				}
 				
 			}
+			System.out.println("count at index "+i+" has num of tokens as "+countOfPrefixPostfix);
 			
 			if(i==listMethodSources.size()-1 && !sbTotalPrefix.toString().isEmpty()) {
 				FileIO.appendStringToFile(sbTotalPrefix.toString(), fpOutputPrefix);

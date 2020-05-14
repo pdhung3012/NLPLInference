@@ -82,6 +82,7 @@ public class MakeContextDatasetForMethodName {
 			if(i==listMethodSources.size()-1 && !sbTotalPrefix.toString().isEmpty()) {
 				FileIO.appendStringToFile(sbTotalPrefix.toString(), fpOutputPrefix);
 				FileIO.appendStringToFile(sbTotalPostfix.toString(), fpOutputPostfix);
+				FileIO.appendStringToFile(sbTotalMName.toString(), fpOutputMethodName);
 			}
 		}
 		System.out.println("total method extracted: "+countOfPrefixPostfix);

@@ -103,7 +103,7 @@ public class DownloadRepositoryStarInfoInGithub {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String urlAPI="https://api.github.com/repos/";
-		String fopInputProjectFolder = "G:\\gitAlon18Projects\\raw\\java-large\\training\\";
+		String fopInputProjectFolder = "G:\\gitAlon18Projects\\raw\\java-large\\validation\\";
 		String fopOutputProjects="G:\\gitAlon18Projects\\githubStarPredictProjects\\projectInfos\\";
 		String fopOutputLogs="G:\\gitAlon18Projects\\githubStarPredictProjects\\";
 		String fpAllRepoInfos="G:\\gitAlon18Projects\\githubStarPredictProjects\\repos.txt";

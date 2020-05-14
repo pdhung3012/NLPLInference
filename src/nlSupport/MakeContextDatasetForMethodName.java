@@ -66,7 +66,7 @@ public class MakeContextDatasetForMethodName {
 					if(countOfPrefixPostfix%countRefresh==0) {
 						FileIO.appendStringToFile(sbTotalPrefix.toString(), fpOutputPrefix);
 						FileIO.appendStringToFile(sbTotalPostfix.toString(), fpOutputPostfix);
-						FileIO.appendStringToFile(sbTotalPostfix.toString(), fpOutputMethodName);
+						FileIO.appendStringToFile(sbTotalMName.toString(), fpOutputMethodName);
 						sbTotalPrefix=new StringBuilder();
 						sbTotalPostfix=new StringBuilder();
 						sbTotalMName=new StringBuilder();

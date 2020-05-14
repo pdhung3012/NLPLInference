@@ -44,9 +44,9 @@ public class FileUtil {
 				while ((line = br.readLine()) != null) {
 					// process the line.
 					// strResult+=line+"\n";
-					if (!line.trim().isEmpty()) {
+//					if (!line.trim().isEmpty()) {
 						lstResults.add(line.trim());
-					}
+//					}
 				}
 			} catch(Exception ex) {
 				System.out.println("annoy err: "+ex.getMessage());

@@ -19,7 +19,7 @@ public class MakeContextDatasetForMethodName {
 		for(int i=0;i<arr.length;i++) {
 			if(i<j) {
 				sbPrefix.append(arr[i]+" ");
-			} else {
+			} else if(i>j){
 				sbPostfix.append(arr[i]+" ");
 			}
 		}

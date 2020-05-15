@@ -9,7 +9,7 @@ public class RunTestGetSourceOnly {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String inPath=PathConstanct.PATH_PROJECT_NL_SUPPORT+"nlSupport/ICV/";
+		String inPath=PathConstanct.PATH_PROJECT_NL_SUPPORT+"nlSupport/ICV/b_code-missingMIs/";
 		String outPath=PathConstanct.PATH_PROJECT_NL_SUPPORT+"nlSupport/step0_sequence/";
 		StanfordLemmatizer lemm=new StanfordLemmatizer();
 		OnlySourceSequenceGenerator mcsg=new OnlySourceSequenceGenerator(inPath,arrLibraryPrefix,lemm);

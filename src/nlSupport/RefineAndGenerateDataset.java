@@ -65,10 +65,16 @@ public class RefineAndGenerateDataset {
 		for(Integer valKey:mapKey.keySet()) {
 			countOfPrefixPostfix++;
 			String[] arrVals=mapKey.get(valKey).split(splitContent);
+//			System.out.println(mapKey.get(valKey));
 			int count=mapCount.get(valKey);
+			
 			sbTotalPrefix.append(arrVals[1]+"\n");
-			sbTotalPostfix.append(arrVals[2]+"\n");
 			sbTotalMName.append(arrVals[0]+"\n");
+			if(arrVals.length>2) {
+				sbTotalPostfix.append(arrVals[2]+"\n");
+			}else {
+				sbTotalPostfix.append("\n");
+			}
 			sbTotalCount.append(count+"\n");
 			if(countOfPrefixPostfix%countRefresh==0 || countOfPrefixPostfix==mapKey.size()) {
 				FileIO.appendStringToFile(sbTotalPrefix.toString(), fpOutputPrefix);

@@ -119,8 +119,8 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 			partialTokens = new StringBuilder();
 	private StringBuilder fullAddNLTokens = new StringBuilder(),
 			partialAddNLTokens = new StringBuilder();
-	private String fullSequence = null, partialSequence = null;
-	private String[] fullSequenceTokens, partialSequenceTokens;
+	private String  partialSequence = null;
+	private String[] partialSequenceTokens;
 	private LinkedHashMap<String, String> mapIdenAndID, mapIDAndIden;
 	private LinkedHashMap<String, Integer> mapIDAppear;
 //	private InvocationAbstractorVisitor iaVisitor;
@@ -404,11 +404,11 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 		this.fopInvocationObject = fopInvocationObject;
 	}
 
-	public String[] getFullSequenceTokens() {
-		if (fullSequenceTokens == null)
-			buildFullSequence();
-		return fullSequenceTokens;
-	}
+//	public String[] getFullSequenceTokens() {
+//		if (fullSequenceTokens == null)
+//			buildFullSequence();
+//		return fullSequenceTokens;
+//	}
 
 	public String[] getPartialSequenceTokens() {
 		if (partialSequenceTokens == null)
@@ -416,11 +416,11 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 		return partialSequenceTokens;
 	}
 
-	public String getFullSequence() {
-		if (fullSequence == null)
-			buildFullSequence();
-		return fullSequence;
-	}
+//	public String getFullSequence() {
+//		if (fullSequence == null)
+//			buildFullSequence();
+//		return fullSequence;
+//	}
 
 	public String getPartialSequence() {
 		if (partialSequence == null)
@@ -428,13 +428,13 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 		return partialSequence;
 	}
 
-	private void buildFullSequence() {
-		ArrayList<String> parts = buildSequence(fullTokens);
-		this.fullSequence = parts.get(0);
-		this.fullSequenceTokens = new String[parts.size() - 1];
-		for (int i = 1; i < parts.size(); i++)
-			this.fullSequenceTokens[i - 1] = parts.get(i);
-	}
+//	private void buildFullSequence() {
+//		ArrayList<String> parts = buildSequence(fullTokens);
+//		this.fullSequence = parts.get(0);
+//		this.fullSequenceTokens = new String[parts.size() - 1];
+//		for (int i = 1; i < parts.size(); i++)
+//			this.fullSequenceTokens[i - 1] = parts.get(i);
+//	}
 
 	private void buildPartialSequence() {
 		ArrayList<String> parts = buildSequence(partialTokens);

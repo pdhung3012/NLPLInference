@@ -842,61 +842,37 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 		return null;
 	}
 
-	public boolean checkPrefix(String type, String[] arrPrex) {
-		boolean result = false;
-
-		for (int i = 0; i < arrPrex.length; i++) {
-			if (type.startsWith(arrPrex[i])) {
-				result = true;
-				break;
-			}
-		}
-
-		if (type.contains("<")) {
-			result = false;
-			String[] arrTypeInside = type.split("<");
-			if (arrTypeInside.length >= 2) {
-				for (int i = 0; i < arrPrex.length; i++) {
-					if (arrTypeInside[1].startsWith(arrPrex[i])) {
-						result = true;
-						break;
-					}
-				}
-			}
-		}
-
-		return result;
-	}
+	
 
 	@Override
 	public void preVisit(ASTNode node) {
-		if (node instanceof Expression) {
-			numOfExpressions++;
-			Expression e = (Expression) node;
-			if (e.resolveTypeBinding() != null
-					&& !e.resolveTypeBinding().isRecovered())
-				numOfResolvedExpressions++;
-		} else if (node instanceof Statement) {
-			if (node instanceof ConstructorInvocation) {
-				numOfExpressions++;
-				if (((ConstructorInvocation) node).resolveConstructorBinding() != null
-						&& !((ConstructorInvocation) node)
-								.resolveConstructorBinding().isRecovered())
-					numOfResolvedExpressions++;
-			} else if (node instanceof SuperConstructorInvocation) {
-				numOfExpressions++;
-				if (((SuperConstructorInvocation) node)
-						.resolveConstructorBinding() != null
-						&& !((SuperConstructorInvocation) node)
-								.resolveConstructorBinding().isRecovered())
-					numOfResolvedExpressions++;
-			}
-		} else if (node instanceof Type) {
-			numOfExpressions++;
-			Type t = (Type) node;
-			if (t.resolveBinding() != null && !t.resolveBinding().isRecovered())
-				numOfResolvedExpressions++;
-		}
+//		if (node instanceof Expression) {
+//			numOfExpressions++;
+//			Expression e = (Expression) node;
+//			if (e.resolveTypeBinding() != null
+//					&& !e.resolveTypeBinding().isRecovered())
+//				numOfResolvedExpressions++;
+//		} else if (node instanceof Statement) {
+//			if (node instanceof ConstructorInvocation) {
+//				numOfExpressions++;
+//				if (((ConstructorInvocation) node).resolveConstructorBinding() != null
+//						&& !((ConstructorInvocation) node)
+//								.resolveConstructorBinding().isRecovered())
+//					numOfResolvedExpressions++;
+//			} else if (node instanceof SuperConstructorInvocation) {
+//				numOfExpressions++;
+//				if (((SuperConstructorInvocation) node)
+//						.resolveConstructorBinding() != null
+//						&& !((SuperConstructorInvocation) node)
+//								.resolveConstructorBinding().isRecovered())
+//					numOfResolvedExpressions++;
+//			}
+//		} else if (node instanceof Type) {
+//			numOfExpressions++;
+//			Type t = (Type) node;
+//			if (t.resolveBinding() != null && !t.resolveBinding().isRecovered())
+//				numOfResolvedExpressions++;
+//		}
 	}
 
 	// @Override
@@ -1011,11 +987,11 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 		if (levelOfTraverMD == 1) {
 
 			String receiverType = viewReceiverOfExpression(node.getExpression());
-			if (!receiverType.isEmpty()
-					&& checkPrefix(receiverType, arrLibrariesPrefix)) {
+//			if (!receiverType.isEmpty()
+//					&& checkPrefix(receiverType, arrLibrariesPrefix)) {
 				InvocationObject io = new InvocationObject();
 				String methodInfo = JavaASTUtil.buildAllSigIngo(node);
-				io.setStrMethodInfo(methodInfo);
+//				io.setStrMethodInfo(methodInfo);
 //				if (iaVisitor != null) {
 //					node.accept(iaVisitor);
 //				}
@@ -1029,11 +1005,11 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 //					io.setListQuestionMarkTypes(iaVisitor
 //							.getListAbstractTypeQuestionMark());
 //					io.setSetImportedAPIs(iaVisitor.getSetRequiredAPIsForMI());
-					io.setStrIdentifier(strIdentifier);
+//					io.setStrIdentifier(strIdentifier);
 //					io.setListOfRelatedWordsSource(iaVisitor.getListOfRelatedWordsSource());
 //					io.setListOfRelatedWordsTarget(iaVisitor.getListOfRelatedWordsTarget());
-					String idenInfo = io.setIDRepresent();
-					String id = "";
+//					String idenInfo = io.setIDRepresent();
+//					String id = "";
 //					if (!mapIdenAndID.containsKey(idenInfo)) {
 //						id = "E-"
 //								+ String.format("%09d", mapIDAndIden.size() + 1);
@@ -1050,14 +1026,14 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 
 //					this.partialTokens.append(iaVisitor.getPartialParamSequence()+ " ");
 //					this.fullTokens.append(iaVisitor.getFQNParamSequence()+" ");
-//					this.partialTokens.append(strIdentifier + " ");
+					this.partialTokens.append(strIdentifier + " ");
 //					this.fullTokens.append(id + " ");
 
 				}
 
 //				iaVisitor.refreshInformation();
 
-			}
+//			}
 //		}
 		levelOfTraverMD--;
 

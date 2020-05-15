@@ -43,17 +43,17 @@ public class OnlySourceSequenceGeneratorForNL {
 	private LinkedHashMap<String, String> mapIDAndIden;
 	private LinkedHashMap<String, Integer> mapIDAppear;
 	private LinkedHashMap<String, String> mapIdenAndID;
-	private String[] arrPrefix;
+//	private String[] arrPrefix;
 	private StanfordLemmatizer lemm;
 
-	public OnlySourceSequenceGeneratorForNL(String inPath, String[] arrPrefix, StanfordLemmatizer lemm) {
+	public OnlySourceSequenceGeneratorForNL(String inPath, StanfordLemmatizer lemm) {
 		this.inPath = inPath;
-		this.arrPrefix = arrPrefix;
+//		this.arrPrefix = arrPrefix;
 		this.lemm = lemm;
 	}
 
-	public OnlySourceSequenceGeneratorForNL(String inPath, String[] arrPrefix, boolean testing, StanfordLemmatizer lemm) {
-		this(inPath, arrPrefix, lemm);
+	public OnlySourceSequenceGeneratorForNL(String inPath, boolean testing, StanfordLemmatizer lemm) {
+		this(inPath, lemm);
 		this.testing = testing;
 
 	}
@@ -83,6 +83,7 @@ public class OnlySourceSequenceGeneratorForNL {
 		String[] jarPaths = getJarPaths();
 		ArrayList<String> rootPaths = getRootPaths();
 
+		System.out.println(rootPaths.toString());
 		new File(outPath).mkdirs();
 		String hashIdenPath = outPath + "/hash/";
 		this.idenHashPath = hashIdenPath;
@@ -90,7 +91,7 @@ public class OnlySourceSequenceGeneratorForNL {
 		try {
 			stLocations = new PrintStream(new FileOutputStream(outPath + "/locations.txt"));
 			stSourceSequences = new PrintStream(new FileOutputStream(outPath + "/source.txt"));
-			stTargetSequences = new PrintStream(new FileOutputStream(outPath + "/target.txt"));
+//			stTargetSequences = new PrintStream(new FileOutputStream(outPath + "/target.txt"));
 			stLog = new PrintStream(new FileOutputStream(outPath + "/log.txt"));
 		} catch (FileNotFoundException e) {
 			if (testing)
@@ -100,7 +101,7 @@ public class OnlySourceSequenceGeneratorForNL {
 		int numOfSequences = 0;
 		for (String rootPath : rootPaths) {
 			String[] sourcePaths = getSourcePaths(rootPath, new String[] { ".java" });
-
+			System.out.println(sourcePaths.length);
 			@SuppressWarnings("rawtypes")
 			Map options = JavaCore.getOptions();
 			options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
@@ -120,7 +121,7 @@ public class OnlySourceSequenceGeneratorForNL {
 			r.setMapIDAndIden(mapIDAndIden);
 			r.setMapIdenAndID(mapIdenAndID);
 			r.setMapIDAppear(mapIDAppear);
-			r.setArrLibNames(this.arrPrefix);
+//			r.setArrLibNames(this.arrPrefix);
 			try {
 				parser.createASTs(sourcePaths, null, new String[0], r, null);
 			} catch (Throwable t) {
@@ -158,21 +159,21 @@ public class OnlySourceSequenceGeneratorForNL {
 	private class OnlySourceInvocationInformationASTRequestor extends FileASTRequestor {
 		int numOfSequences = 0;
 		private boolean keepUnresolvables;
-		private String lib;
+//		private String lib;
 		private String idenPath;
 		private LinkedHashMap<String, String> mapIDAndIden;
 		private LinkedHashMap<String, String> mapIdenAndID;
 		private LinkedHashMap<String, Integer> mapIDAppear;
-		private String[] arrLibNames;
+//		private String[] arrLibNames;
 		private StanfordLemmatizer lemm;
 
-		public String[] getArrLibNames() {
-			return arrLibNames;
-		}
-
-		public void setArrLibNames(String[] arrLibNames) {
-			this.arrLibNames = arrLibNames;
-		}
+//		public String[] getArrLibNames() {
+//			return arrLibNames;
+//		}
+//
+//		public void setArrLibNames(String[] arrLibNames) {
+//			this.arrLibNames = arrLibNames;
+//		}
 
 		public LinkedHashMap<String, Integer> getMapIDAppear() {
 			return mapIDAppear;
@@ -201,7 +202,7 @@ public class OnlySourceSequenceGeneratorForNL {
 		public OnlySourceInvocationInformationASTRequestor(boolean keepUnresolvables, String lib, String idenPath,
 				StanfordLemmatizer lemm) {
 			this.keepUnresolvables = keepUnresolvables;
-			this.lib = lib;
+//			this.lib = lib;
 			this.idenPath = idenPath;
 			this.lemm = lemm;
 		}
@@ -210,30 +211,30 @@ public class OnlySourceSequenceGeneratorForNL {
 		public void acceptAST(String sourceFilePath, CompilationUnit ast) {
 			if (ast.getPackage() == null)
 				return;
-			if (lib != null) {
-				boolean hasLib = false;
-				if (ast.getPackage().getName().getFullyQualifiedName().startsWith(lib))
-					hasLib = true;
-				if (!hasLib && ast.imports() != null) {
-					for (int i = 0; i < ast.imports().size(); i++) {
-						ImportDeclaration ic = (ImportDeclaration) ast.imports().get(i);
-						if (ic.getName().getFullyQualifiedName().startsWith(lib)) {
-							hasLib = true;
-							break;
-						}
-					}
-				}
-				if (!hasLib)
-					return;
-			}
-			if (testing)
-				System.out.println(sourceFilePath);
+//			if (lib != null) {
+//				boolean hasLib = false;
+//				if (ast.getPackage().getName().getFullyQualifiedName().startsWith(lib))
+//					hasLib = true;
+//				if (!hasLib && ast.imports() != null) {
+//					for (int i = 0; i < ast.imports().size(); i++) {
+//						ImportDeclaration ic = (ImportDeclaration) ast.imports().get(i);
+//						if (ic.getName().getFullyQualifiedName().startsWith(lib)) {
+//							hasLib = true;
+//							break;
+//						}
+//					}
+//				}
+//				if (!hasLib)
+//					return;
+//			}
+////			if (testing)
+			System.out.println(sourceFilePath);
 			stLog.println(sourceFilePath);
 
 			for (int i = 0; i < ast.types().size(); i++) {
 				if (ast.types().get(i) instanceof TypeDeclaration) {
 					TypeDeclaration td = (TypeDeclaration) ast.types().get(i);
-					numOfSequences += generateSequence(keepUnresolvables, lib, td, sourceFilePath,
+					numOfSequences += generateSequence(keepUnresolvables,td, sourceFilePath,
 							ast.getPackage().getName().getFullyQualifiedName(), "");
 				}
 			}
@@ -260,6 +261,7 @@ public class OnlySourceSequenceGeneratorForNL {
 				getRootPaths(sub, rootPaths);
 		} else if (file.getName().endsWith(".java")) {
 			Map options = JavaCore.getOptions();
+			System.out.println(file.getAbsolutePath());
 			options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
 			options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
 			options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
@@ -304,7 +306,7 @@ public class OnlySourceSequenceGeneratorForNL {
 		}
 	}
 
-	private int generateSequence(boolean keepUnresolvables, String lib, TypeDeclaration td, String path,
+	private int generateSequence(boolean keepUnresolvables,  TypeDeclaration td, String path,
 			String packageName, String outer) {
 		int numOfSequences = 0;
 		String name = outer.isEmpty() ? td.getName().getIdentifier() : outer + "." + td.getName().getIdentifier();
@@ -318,7 +320,7 @@ public class OnlySourceSequenceGeneratorForNL {
 			stLog.println(path + "\t" + name + "\t" + method.getName().getIdentifier() + "\t" + getParameters(method));
 			IntrinsicTestGenVisitorForNL sg = new IntrinsicTestGenVisitorForNL(className, superClassName);
 			sg.setSetFields(setFieldsForTD);
-			sg.setArrLibrariesPrefix(this.arrPrefix);
+//			sg.setArrLibrariesPrefix(this.arrPrefix);
 			sg.setFopInvocationObject(fopInvocationObject);
 			sg.setHashIdenPath(this.idenHashPath);
 			sg.setMapIDAndIden(mapIDAndIden);
@@ -329,51 +331,20 @@ public class OnlySourceSequenceGeneratorForNL {
 			method.accept(sg);
 			int numofExpressions = sg.getNumOfExpressions(),
 					numOfResolvedExpressions = sg.getNumOfResolvedExpressions();
-			String source = sg.getPartialSequence(), target = sg.getFullSequence();
-			String[] sTokens = sg.getPartialSequenceTokens(), tTokens = sg.getFullSequenceTokens();
-			if (sTokens.length == tTokens.length && sTokens.length > 2 && numofExpressions > 0
-					&& (keepUnresolvables || numofExpressions == numOfResolvedExpressions)) {
-				boolean hasLib = true;
-				if (lib != null && !lib.isEmpty()) {
-					hasLib = false;
-					for (String t : tTokens) {
-						if (t.startsWith(lib)) {
-							hasLib = true;
-							break;
-						}
-					}
-				}
-				if (hasLib) {
-					// this.locations.add(path + "\t" + name + "\t" +
-					// method.getName().getIdentifier() + "\t" + getParameters(method) + "\t" +
-					// numofExpressions + "\t" + numOfResolvedExpressions + "\t" +
-					// (numOfResolvedExpressions * 100 / numofExpressions) + "%");
-					// this.sourceSequences.add(source);
-					// this.targetSequences.add(target);
-					// this.sourceSequenceTokens.add(sTokens);
-					// this.targetSequenceTokens.add(tTokens);
-					stLocations.print(path + "\t" + packageName + "\t" + name + "\t" + method.getName().getIdentifier()
-							+ "\t" + getParameters(method) + "\t" + numofExpressions + "\t" + numOfResolvedExpressions
-							+ "\t" + (numOfResolvedExpressions * 100 / numofExpressions) + "%" + "\n");
-					stSourceSequences.print(source + "\n");
-					stTargetSequences.print(target + "\n");
-					numOfSequences++;
-				}
-			}
-			if (testing) {
-				if (sTokens.length != tTokens.length)
-					throw new AssertionError("Source and target sequences do not have the same length!");
-				for (int j = 0; j < sTokens.length; j++) {
-					String s = sTokens[j], t = tTokens[j];
-					// if (!t.equals(s) && !t.endsWith(s))
-					// if (t.length() < s.length())
-					if (!t.contains(".") && !s.contains(".") && !t.equals(s))
-						throw new AssertionError("Corresponding source and target tokens do not match!");
-				}
-			}
+			String source = sg.getPartialSequence();
+//			String[] sTokens = sg.getPartialSequenceTokens();
+			
+			stLocations.print(path + "\t" + packageName + "\t" + name + "\t" + method.getName().getIdentifier()
+					+ "\t" + getParameters(method) + "\t" + numofExpressions  + "\n");
+			stSourceSequences.print(source + "\n");
+//					stTargetSequences.print(target + "\n");
+			numOfSequences++;
+				
+			
+			
 		}
 		for (TypeDeclaration inner : td.getTypes())
-			numOfSequences += generateSequence(keepUnresolvables, lib, inner, path, packageName, name);
+			numOfSequences += generateSequence(keepUnresolvables,  inner, path, packageName, name);
 		return numOfSequences;
 	}
 
@@ -478,10 +449,7 @@ public class OnlySourceSequenceGeneratorForNL {
 	 *         number of non-aligned tokens
 	 */
 
-	public int[] generateAlignment(boolean doVerify) {
-		return generateAlignment(outPath, doVerify);
-	}
-
+	
 	/**
 	 * 
 	 * @param inPath
@@ -491,159 +459,9 @@ public class OnlySourceSequenceGeneratorForNL {
 	 *         numbers[2]: number of sequences with non-aligned tokens; numbers[3]:
 	 *         number of non-aligned tokens
 	 */
-	public static int[] generateAlignment(String inPath, boolean doVerify) {
-		int[] numbers = new int[] { 0, 0, 0, 0 };
-		ArrayList<String> sourceSequences = FileUtil.getFileStringArray(inPath + "/source.txt"),
-				targetSequences = FileUtil.getFileStringArray(inPath + "/target.txt");
-		if (doVerify)
-			if (sourceSequences.size() != targetSequences.size()) {
-				numbers[0]++;
-				// throw new AssertionError("Numbers of source and target sequences are not the
-				// same!!!");
-			}
-		File dir = new File(inPath + "-alignment");
-		if (!dir.exists())
-			dir.mkdirs();
-		PrintStream psS2T = null, psT2S = null;
-		try {
-			psS2T = new PrintStream(new FileOutputStream(dir.getAbsolutePath() + "/training.s-t.A3"));
-			psT2S = new PrintStream(new FileOutputStream(dir.getAbsolutePath() + "/training.t-s.A3"));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			if (psS2T != null)
-				psS2T.close();
-			if (psT2S != null)
-				psT2S.close();
-			e.printStackTrace();
-			return null;
-		}
-		for (int i = 0; i < sourceSequences.size(); i++) {
-			String source = sourceSequences.get(i), target = targetSequences.get(i);
-			String[] sTokens = source.trim().split(" "), tTokens = target.trim().split(" ");
-			if (doVerify) {
-				if (sTokens.length != tTokens.length) {
-					numbers[1]++;
-					// throw new AssertionError("Lengths of source and target sequences are not the
-					// same!!!");
-				}
-				boolean aligned = true;
-				for (int j = 0; j < sTokens.length; j++) {
-					String s = sTokens[j], t = tTokens[j];
-					if ((t.contains(".")
-							&& !t.substring(t.lastIndexOf('.') + 1).equals(s.substring(s.lastIndexOf('.') + 1)))
-							|| (!t.contains(".") && !t.equals(s))) {
-						numbers[3]++;
-						aligned = false;
-						// throw new AssertionError("Source and target are not aligned!!!");
-					}
-				}
-				if (!aligned)
-					numbers[2]++;
-			}
-			String headerS2T = generateHeader(sTokens, tTokens, i), headerT2S = generateHeader(tTokens, sTokens, i);
-			psS2T.println(headerS2T);
-			psT2S.println(headerT2S);
-			psS2T.println(target);
-			psT2S.println(source);
-			String alignmentS2T = generateAlignment(sTokens), alignmentT2S = generateAlignment(tTokens);
-			psS2T.println(alignmentS2T);
-			psT2S.println(alignmentT2S);
-		}
-		psS2T.flush();
-		psT2S.flush();
-		psS2T.close();
-		psT2S.close();
-		if (doVerify) {
-			if (sourceSequences.size() * 3 != FileUtil.countNumberOfLines(dir.getAbsolutePath() + "/training.s-t.A3")
-					|| targetSequences.size() * 3 != FileUtil
-							.countNumberOfLines(dir.getAbsolutePath() + "/training.t-s.A3"))
-				numbers[0]++;
-		}
-		return numbers;
-	}
+	
 
-	/**
-	 * 
-	 * @param inPath
-	 * @param doVerify
-	 * @return numbers[0]: 0-same number of sequences, 1-different numbers of
-	 *         sequences; numbers[1]: number of sequences with different lengths;
-	 *         numbers[2]: number of sequences with non-aligned tokens; numbers[3]:
-	 *         number of non-aligned tokens
-	 */
-	public static int[] generateAlignmentForCrossValidation(String inPath, boolean doVerify) {
-		int[] numbers = new int[] { 0, 0, 0, 0 };
-		ArrayList<String> sourceSequences = FileUtil.getFileStringArray(inPath + "/train.s"),
-				targetSequences = FileUtil.getFileStringArray(inPath + "/train.t");
-		if (doVerify)
-			if (sourceSequences.size() != targetSequences.size()) {
-				numbers[0]++;
-				// throw new AssertionError("Numbers of source and target sequences are not the
-				// same!!!");
-			}
-		File dir = new File(inPath + "-alignment");
-		if (!dir.exists())
-			dir.mkdirs();
-		PrintStream psS2T = null, psT2S = null;
-		try {
-			psS2T = new PrintStream(new FileOutputStream(dir.getAbsolutePath() + "/training.s-t.A3"));
-			psT2S = new PrintStream(new FileOutputStream(dir.getAbsolutePath() + "/training.t-s.A3"));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			if (psS2T != null)
-				psS2T.close();
-			if (psT2S != null)
-				psT2S.close();
-			e.printStackTrace();
-			return null;
-		}
-		for (int i = 0; i < sourceSequences.size(); i++) {
-			String source = sourceSequences.get(i), target = targetSequences.get(i);
-			String[] sTokens = source.trim().split(" "), tTokens = target.trim().split(" ");
-			if (doVerify) {
-				if (sTokens.length != tTokens.length) {
-					numbers[1]++;
-					// throw new AssertionError("Lengths of source and target sequences are not the
-					// same!!!");
-				}
-				boolean aligned = true;
-				for (int j = 0; j < sTokens.length; j++) {
-					String s = sTokens[j], t = tTokens[j];
-					if ((t.contains(".")
-							&& !t.substring(t.lastIndexOf('.') + 1).equals(s.substring(s.lastIndexOf('.') + 1)))
-							|| (!t.contains(".") && !t.equals(s))) {
-						numbers[3]++;
-						aligned = false;
-						// throw new AssertionError("Source and target are not aligned!!!");
-					}
-				}
-				if (!aligned)
-					numbers[2]++;
-			}
-			String headerS2T = generateHeader(sTokens, tTokens, i), headerT2S = generateHeader(tTokens, sTokens, i);
-			psS2T.println(headerS2T);
-			psT2S.println(headerT2S);
-			psS2T.println(target);
-			psT2S.println(source);
-			String alignmentS2T = generateAlignment(sTokens), alignmentT2S = generateAlignment(tTokens);
-			psS2T.println(alignmentS2T);
-			psT2S.println(alignmentT2S);
-		}
-		psS2T.flush();
-		psT2S.flush();
-		psS2T.close();
-		psT2S.close();
-		if (doVerify) {
-			if (sourceSequences.size() * 3 != FileUtil.countNumberOfLines(dir.getAbsolutePath() + "/training.s-t.A3")
-					|| targetSequences.size() * 3 != FileUtil
-							.countNumberOfLines(dir.getAbsolutePath() + "/training.t-s.A3"))
-				numbers[0]++;
-		}
-		sourceSequences.clear();
-		targetSequences.clear();
-		return numbers;
-	}
-
+	
 	private static String generateAlignment(String[] tokens) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("NULL ({  })");
@@ -654,8 +472,8 @@ public class OnlySourceSequenceGeneratorForNL {
 		return sb.toString();
 	}
 
-	private static String generateHeader(String[] sTokens, String[] tTokens, int i) {
-		return "# sentence pair (" + i + ") source length " + sTokens.length + " target length " + tTokens.length
+	private static String generateHeader(String[] sTokens, int i) {
+		return "# sentence pair (" + i + ") source length " + sTokens.length
 				+ " alignment score : 0";
 	}
 

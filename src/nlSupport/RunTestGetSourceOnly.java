@@ -1,7 +1,6 @@
 package nlSupport;
 
 import consts.PathConstanct;
-import invocations.OnlySourceSequenceGenerator;
 import utils.StanfordLemmatizer;
 
 public class RunTestGetSourceOnly {
@@ -12,7 +11,7 @@ public class RunTestGetSourceOnly {
 		String inPath=PathConstanct.PATH_PROJECT_NL_SUPPORT+"nlSupport/ICV/b_code-missingMIs/";
 		String outPath=PathConstanct.PATH_PROJECT_NL_SUPPORT+"nlSupport/step0_sequence/";
 		StanfordLemmatizer lemm=new StanfordLemmatizer();
-		OnlySourceSequenceGenerator mcsg=new OnlySourceSequenceGenerator(inPath,arrLibraryPrefix,lemm);
+		OnlySourceSequenceGeneratorForNL mcsg=new OnlySourceSequenceGeneratorForNL(inPath,arrLibraryPrefix,lemm);
 		mcsg.generateSequences(outPath);
 		mcsg.generateAlignment(true);
 	}

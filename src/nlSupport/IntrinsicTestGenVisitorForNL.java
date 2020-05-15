@@ -123,7 +123,7 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 	private String[] fullSequenceTokens, partialSequenceTokens;
 	private LinkedHashMap<String, String> mapIdenAndID, mapIDAndIden;
 	private LinkedHashMap<String, Integer> mapIDAppear;
-	private InvocationAbstractorVisitor iaVisitor;
+//	private InvocationAbstractorVisitor iaVisitor;
 	private String[] arrLibrariesPrefix;
 	private static final boolean USE_SIMPLE_METHOD_NAME = false;
 
@@ -606,12 +606,12 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 			}
 			// System.out.println("current class "+currentClassDeclaration+" and "+currentMethodDeclaration);
 		}
-		if (iaVisitor == null) {
-			iaVisitor = new InvocationAbstractorVisitor();
-		}
-		iaVisitor.setCurrentClassDeclaration(currentClassDeclaration);
-		iaVisitor.setCurrentMethodDeclaration(currentMethodDeclaration);
-		iaVisitor.setLemm(lemm);
+//		if (iaVisitor == null) {
+//			iaVisitor = new InvocationAbstractorVisitor();
+//		}
+//		iaVisitor.setCurrentClassDeclaration(currentClassDeclaration);
+//		iaVisitor.setCurrentMethodDeclaration(currentMethodDeclaration);
+//		iaVisitor.setLemm(lemm);
 
 		if (node.getBody() != null) {
 			node.getBody().accept(this);
@@ -954,9 +954,9 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 
 	public boolean visit(MethodInvocation node) {
 		levelOfTraverMD++;
-		if (levelOfTraverMD == 1) {
-			iaVisitor.refreshInformation();
-		}
+//		if (levelOfTraverMD == 1) {
+//			iaVisitor.refreshInformation();
+//		}
 
 //		if (node.getExpression() != null
 //				&& node.getExpression() instanceof TypeLiteral) {
@@ -1016,49 +1016,49 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 				InvocationObject io = new InvocationObject();
 				String methodInfo = JavaASTUtil.buildAllSigIngo(node);
 				io.setStrMethodInfo(methodInfo);
-				if (iaVisitor != null) {
-					node.accept(iaVisitor);
-				}
-				if (!iaVisitor.getSbAbstractInformation().toString()
-						.equals("#")) {
+//				if (iaVisitor != null) {
+//					node.accept(iaVisitor);
+//				}
+//				if (!iaVisitor.getSbAbstractInformation().toString()
+//						.equals("#")) {
 					String strIdentifier = node.getName().getIdentifier()
 							+ "#identifier";
-					iaVisitor.sortRequiredAPI();
-					io.setStrCodeRepresent(iaVisitor.getSbAbstractInformation()
-							.toString());
-					io.setListQuestionMarkTypes(iaVisitor
-							.getListAbstractTypeQuestionMark());
-					io.setSetImportedAPIs(iaVisitor.getSetRequiredAPIsForMI());
+//					iaVisitor.sortRequiredAPI();
+//					io.setStrCodeRepresent(iaVisitor.getSbAbstractInformation()
+//							.toString());
+//					io.setListQuestionMarkTypes(iaVisitor
+//							.getListAbstractTypeQuestionMark());
+//					io.setSetImportedAPIs(iaVisitor.getSetRequiredAPIsForMI());
 					io.setStrIdentifier(strIdentifier);
-					io.setListOfRelatedWordsSource(iaVisitor.getListOfRelatedWordsSource());
-					io.setListOfRelatedWordsTarget(iaVisitor.getListOfRelatedWordsTarget());
+//					io.setListOfRelatedWordsSource(iaVisitor.getListOfRelatedWordsSource());
+//					io.setListOfRelatedWordsTarget(iaVisitor.getListOfRelatedWordsTarget());
 					String idenInfo = io.setIDRepresent();
 					String id = "";
-					if (!mapIdenAndID.containsKey(idenInfo)) {
-						id = "E-"
-								+ String.format("%09d", mapIDAndIden.size() + 1);
-						//
-						mapIdenAndID.put(idenInfo, id);
-						mapIDAndIden.put(id, idenInfo);
-						mapIDAppear.put(id, 1);
-						io.saveToFile(hashIdenPath + "/" + id + ".txt");
-					} else {
-						String existId = mapIdenAndID.get(idenInfo);
-						id = existId;
-						mapIDAppear.put(existId, mapIDAppear.get(existId) + 1);
-					}
+//					if (!mapIdenAndID.containsKey(idenInfo)) {
+//						id = "E-"
+//								+ String.format("%09d", mapIDAndIden.size() + 1);
+//						//
+//						mapIdenAndID.put(idenInfo, id);
+//						mapIDAndIden.put(id, idenInfo);
+//						mapIDAppear.put(id, 1);
+//						io.saveToFile(hashIdenPath + "/" + id + ".txt");
+//					} else {
+//						String existId = mapIdenAndID.get(idenInfo);
+//						id = existId;
+//						mapIDAppear.put(existId, mapIDAppear.get(existId) + 1);
+//					}
 
-					this.partialTokens.append(iaVisitor.getPartialParamSequence()+ " ");
-					this.fullTokens.append(iaVisitor.getFQNParamSequence()+" ");
-					this.partialTokens.append(strIdentifier + " ");
-					this.fullTokens.append(id + " ");
+//					this.partialTokens.append(iaVisitor.getPartialParamSequence()+ " ");
+//					this.fullTokens.append(iaVisitor.getFQNParamSequence()+" ");
+//					this.partialTokens.append(strIdentifier + " ");
+//					this.fullTokens.append(id + " ");
 
 				}
 
-				iaVisitor.refreshInformation();
+//				iaVisitor.refreshInformation();
 
 			}
-		}
+//		}
 		levelOfTraverMD--;
 
 		return false;
@@ -1736,10 +1736,10 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 		String outputIdLocation = "/Users/hungphan/Documents/workspace/OutputMethodId/";
 		String jdkPath = "/Library/Java/JavaVirtualMachines/jdk1.8.0_141.jdk/Contents/Home/jre/lib/rt.jar";
 		String fileLocation = "/Users/hungphan/Documents/workspace/SampleMethodInvocationProject/src/examples/CalGetInstance.java";
-		MethodEncoderVisitor visitor = new MethodEncoderVisitor("", "");
-		visitor.parseProject(projectLocation, outputIdLocation, jdkPath);
-		visitor.parseFile(fileLocation);
-		visitor.parseForAbstractingMethodInvocation(fileLocation);
+//		MethodEncoderVisitor visitor = new MethodEncoderVisitor("", "");
+//		visitor.parseProject(projectLocation, outputIdLocation, jdkPath);
+//		visitor.parseFile(fileLocation);
+//		visitor.parseForAbstractingMethodInvocation(fileLocation);
 	}
 
 }

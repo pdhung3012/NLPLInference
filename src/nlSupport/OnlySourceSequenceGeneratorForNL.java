@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,13 +37,13 @@ public class OnlySourceSequenceGeneratorForNL {
 
 	private String inPath, outPath;
 	private boolean testing = false;
-	private PrintStream stLocations, stSourceSequences, stTargetSequences, stLog;
+	private PrintStream stLocations, stSourceSequences, stLog;
 	private HashSet<String> badFiles = new HashSet<>();
 	private String fopInvocationObject;
 	private String idenHashPath;
-	private LinkedHashMap<String, String> mapIDAndIden;
-	private LinkedHashMap<String, Integer> mapIDAppear;
-	private LinkedHashMap<String, String> mapIdenAndID;
+//	private LinkedHashMap<String, String> mapIDAndIden;
+//	private LinkedHashMap<String, Integer> mapIDAppear;
+//	private LinkedHashMap<String, String> mapIdenAndID;
 //	private String[] arrPrefix;
 	private StanfordLemmatizer lemm;
 
@@ -62,21 +63,21 @@ public class OnlySourceSequenceGeneratorForNL {
 		return generateSequences(true, null, outPath);
 	}
 
-	public LinkedHashMap<String, String> getMapIDAndIden() {
-		return mapIDAndIden;
-	}
-
-	public void setMapIDAndIden(LinkedHashMap<String, String> mapIDAndIden) {
-		this.mapIDAndIden = mapIDAndIden;
-	}
-
-	public LinkedHashMap<String, String> getMapIdenAndID() {
-		return mapIdenAndID;
-	}
-
-	public void setMapIdenAndID(LinkedHashMap<String, String> mapIdenAndID) {
-		this.mapIdenAndID = mapIdenAndID;
-	}
+//	public LinkedHashMap<String, String> getMapIDAndIden() {
+//		return mapIDAndIden;
+//	}
+//
+//	public void setMapIDAndIden(LinkedHashMap<String, String> mapIDAndIden) {
+//		this.mapIDAndIden = mapIDAndIden;
+//	}
+//
+//	public LinkedHashMap<String, String> getMapIdenAndID() {
+//		return mapIdenAndID;
+//	}
+//
+//	public void setMapIdenAndID(LinkedHashMap<String, String> mapIdenAndID) {
+//		this.mapIdenAndID = mapIdenAndID;
+//	}
 
 	public int generateSequences(final boolean keepUnresolvables, final String lib, final String outPath) {
 		this.outPath = outPath;
@@ -101,6 +102,7 @@ public class OnlySourceSequenceGeneratorForNL {
 		int numOfSequences = 0;
 		for (String rootPath : rootPaths) {
 			String[] sourcePaths = getSourcePaths(rootPath, new String[] { ".java" });
+			Arrays.sort(sourcePaths);
 			System.out.println(sourcePaths.length);
 			@SuppressWarnings("rawtypes")
 			Map options = JavaCore.getOptions();
@@ -115,12 +117,12 @@ public class OnlySourceSequenceGeneratorForNL {
 
 			OnlySourceInvocationInformationASTRequestor r = new OnlySourceInvocationInformationASTRequestor(
 					keepUnresolvables, lib, hashIdenPath, lemm);
-			mapIDAndIden = new LinkedHashMap<String, String>();
-			mapIdenAndID = new LinkedHashMap<String, String>();
-			mapIDAppear = new LinkedHashMap<String, Integer>();
-			r.setMapIDAndIden(mapIDAndIden);
-			r.setMapIdenAndID(mapIdenAndID);
-			r.setMapIDAppear(mapIDAppear);
+//			mapIDAndIden = new LinkedHashMap<String, String>();
+//			mapIdenAndID = new LinkedHashMap<String, String>();
+//			mapIDAppear = new LinkedHashMap<String, Integer>();
+//			r.setMapIDAndIden(mapIDAndIden);
+//			r.setMapIdenAndID(mapIdenAndID);
+//			r.setMapIDAppear(mapIDAppear);
 //			r.setArrLibNames(this.arrPrefix);
 			try {
 				parser.createASTs(sourcePaths, null, new String[0], r, null);
@@ -131,9 +133,9 @@ public class OnlySourceSequenceGeneratorForNL {
 					t.printStackTrace();
 				}
 			}
-			saveMapToFile(mapIDAndIden, hashIdenPath + "/mapIDAndIden.txt");
-			saveMapToFile(mapIdenAndID, hashIdenPath + "/mapIdenAndID.txt");
-			saveMapIntToFile(mapIDAppear, hashIdenPath + "/mapIDAppear.txt");
+//			saveMapToFile(mapIDAndIden, hashIdenPath + "/mapIDAndIden.txt");
+//			saveMapToFile(mapIdenAndID, hashIdenPath + "/mapIdenAndID.txt");
+//			saveMapIntToFile(mapIDAppear, hashIdenPath + "/mapIDAppear.txt");
 
 			numOfSequences += r.numOfSequences;
 		}
@@ -317,15 +319,18 @@ public class OnlySourceSequenceGeneratorForNL {
 
 		// System.out.println("size "+td.getMethods().length);
 		for (MethodDeclaration method : td.getMethods()) {
+			if(!method.toString().contains("unknownMethod")) {
+				continue;
+			}
 			stLog.println(path + "\t" + name + "\t" + method.getName().getIdentifier() + "\t" + getParameters(method));
 			IntrinsicTestGenVisitorForNL sg = new IntrinsicTestGenVisitorForNL(className, superClassName);
 			sg.setSetFields(setFieldsForTD);
 //			sg.setArrLibrariesPrefix(this.arrPrefix);
 			sg.setFopInvocationObject(fopInvocationObject);
 			sg.setHashIdenPath(this.idenHashPath);
-			sg.setMapIDAndIden(mapIDAndIden);
-			sg.setMapIdenAndID(mapIdenAndID);
-			sg.setMapIDAppear(mapIDAppear);
+//			sg.setMapIDAndIden(mapIDAndIden);
+//			sg.setMapIdenAndID(mapIdenAndID);
+//			sg.setMapIDAppear(mapIDAppear);
 			sg.setLemm(lemm);
 			// System.out.println("here "+method.toString());
 			method.accept(sg);

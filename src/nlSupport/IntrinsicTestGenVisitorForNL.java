@@ -374,24 +374,24 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 
 	public StringBuilder viewAllLocalInformation() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("setLocalVariable " + setLocalVariables.size() + ": ");
+//		sb.append("setLocalVariable " + setLocalVariables.size() + ": ");
 		for (LocalEntity ent : setLocalVariables) {
-			sb.append(ent.getStrCodeReprensent() + " - "
+			sb.append(ent.getStrCodeReprensent() + "\t"
 					+ ent.getStrTypeOfEntity() + ",");
 		}
-		sb.append("\n");
-		sb.append("setArgument " + setArguments.size() + ": ");
+//		sb.append("\n");
+//		sb.append("setArgument " + setArguments.size() + ": ");
 		for (LocalEntity ent : setArguments) {
-			sb.append(ent.getStrCodeReprensent() + " - "
+			sb.append(ent.getStrCodeReprensent() + "\t"
 					+ ent.getStrTypeOfEntity() + ",");
 		}
-		sb.append("\n");
-		sb.append("setField " + setFields.size() + ": ");
+//		sb.append("\n");
+//		sb.append("setField " + setFields.size() + ": ");
 		for (LocalEntity ent : setFields) {
-			sb.append(ent.getStrCodeReprensent() + " - "
+			sb.append(ent.getStrCodeReprensent() + "\t"
 					+ ent.getStrTypeOfEntity() + ",");
 		}
-		sb.append("\n");
+//		sb.append("\n");
 
 		return sb;
 	}
@@ -437,11 +437,16 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 //	}
 
 	private void buildPartialSequence() {
+		StringBuilder varsInfo=viewAllLocalInformation();
+		String strVarsInfo=varsInfo.toString();
+		partialTokens.append(splitContent+" ");
+		partialTokens.append(strVarsInfo);
 		ArrayList<String> parts = buildSequence(partialTokens);
 		this.partialSequence = parts.get(0);
 		this.partialSequenceTokens = new String[parts.size() - 1];
 		for (int i = 1; i < parts.size(); i++)
 			this.partialSequenceTokens[i - 1] = parts.get(i);
+//		System.out.println("go here");
 	}
 
 	private ArrayList<String> buildSequence(StringBuilder tokens) {
@@ -484,7 +489,7 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 					if (typeBind != null) {
 						LocalEntity le = new LocalEntity();
 						le.setStrCodeReprensent(varName.getIdentifier());
-						le.setStrTypeOfEntity(typeBind.getQualifiedName());
+						le.setStrTypeOfEntity(typeBind.getName());
 						setFields.add(le);
 					}
 
@@ -508,12 +513,12 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 					SimpleName varName = item.getName();
 					if (varBind != null && varName != null) {
 						ITypeBinding typeBind = varBind.getType();
-						if (typeBind != null) {
-							LocalEntity le = new LocalEntity();
-							le.setStrCodeReprensent(varName.getIdentifier());
-							le.setStrTypeOfEntity(typeBind.getQualifiedName());
-							setFields.add(le);
-						}
+//						if (typeBind != null) {
+//							LocalEntity le = new LocalEntity();
+//							le.setStrCodeReprensent(varName.getIdentifier());
+//							le.setStrTypeOfEntity(typeBind.getName());
+//							setFields.add(le);
+//						}
 
 					}
 				}
@@ -567,9 +572,11 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 					le.setStrCodeReprensent(varName.getIdentifier());
 					le.setStrTypeOfEntity(typeBind.getQualifiedName());
 					setArguments.add(le);
+//					System.out.println(varName+"\t"+typeBind.getName());
 				}
 			}
 		}
+		
 		String strSignature = JavaASTUtil.buildAllSigIngo(node);
 		String strInformation = viewAllLocalInformation().toString();
 		// System.out.println(strSignature + "\n" + strInformation);
@@ -1634,6 +1641,10 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 	public boolean visit(VariableDeclarationFragment node) {
 		Type type = getType(node);
 		String utype = getUnresolvedType(type), rtype = getResolvedType(type);
+		LocalEntity le = new LocalEntity();
+		le.setStrCodeReprensent(node.getName().getIdentifier());
+		le.setStrTypeOfEntity(utype);
+		setLocalVariables.add(le);
 		this.partialTokens.append(" " + utype + "#var ");
 		this.fullTokens.append(" " + rtype + "#var ");
 		if (node.getInitializer() != null) {

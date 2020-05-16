@@ -7,20 +7,40 @@ import java.util.ArrayList;
 import consts.PathConstanct;
 import utils.FileIO;
 import utils.FileUtil;
+import utils.StanfordLemmatizer;
 
 public class MakeContextDatasetForMethodName {
 	
-	
+	public static String regexCamelCase="(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])";
 
-	public static PrePostFixObject getPrepostfix(String[] arr,int j) {
+	public static String getCamelCaseTokensInMethod(String methodToken,StanfordLemmatizer lemm) {
+		String strInput=methodToken.replaceAll("#identifier", "");
+		StringBuilder sbResult=new StringBuilder();
+		for(String item:strInput.split(regexCamelCase)) {
+//			item=lemm.lemmatizeToString(item);
+			sbResult.append(item+" ");
+		}
+		String strResult=lemm.lemmatizeToString(sbResult.toString());
+		String[] arr=strResult.split("\\s+");
+		sbResult=new StringBuilder();
+		for(int i=0;i<arr.length;i++) {
+			sbResult.append(arr[i].toLowerCase()+"#term ");
+		}
+		return sbResult.toString();
+	}
+	
+	public static PrePostFixObject getPrepostfix(String[] arr,int j,StanfordLemmatizer lemm) {
 		StringBuilder sbPrefix=new StringBuilder();
 		StringBuilder sbPostfix=new StringBuilder();
-		
+		String methodInfo=getCamelCaseTokensInMethod(arr[j],lemm);
 		for(int i=0;i<arr.length;i++) {
 			if(i<j) {
 				sbPrefix.append(arr[i]+" ");
 			} else if(i>j){
 				sbPostfix.append(arr[i]+" ");
+			} else {
+				sbPrefix.append(methodInfo+" ");
+				sbPostfix.append(methodInfo+" ");
 			}
 		}
 		
@@ -31,6 +51,8 @@ public class MakeContextDatasetForMethodName {
 		
 		
 	}
+	
+	
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -43,6 +65,7 @@ public class MakeContextDatasetForMethodName {
 		String fpOutputPostfix=fopOutput+"postfix.txt";
 		String fpOutputMethodName=fopOutput+"methods.txt";
 		
+		StanfordLemmatizer lemm=new StanfordLemmatizer();
 		new File(fopOutput).mkdir();
 		
 		ArrayList<String> listMethodSources=FileUtil.getFileStringArray(fpTrainS);
@@ -59,7 +82,7 @@ public class MakeContextDatasetForMethodName {
 			String[] arrTokens=listMethodSources.get(i).split("\\s+");
 			for(int j=0;j<arrTokens.length;j++) {
 				if(arrTokens[j].endsWith(idenTag)) {
-					PrePostFixObject object=getPrepostfix(arrTokens, j);
+					PrePostFixObject object=getPrepostfix(arrTokens, j,lemm);
 					sbTotalPrefix.append(object.getPrefix()+"\n");
 					sbTotalPostfix.append(object.getPostfix()+"\n");
 					sbTotalMName.append(arrTokens[j]+"\n");

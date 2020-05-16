@@ -79,6 +79,7 @@ public class AllocatingInformationFromNL {
 		String unknownMethodToken="unknownMethod#identifier";
 		String splitContent="AABBAA";
 		
+		new File(fopOutputPrePostfix).mkdir();
 		
 		ArrayList<String> listNumbers=new ArrayList<String>();
 		

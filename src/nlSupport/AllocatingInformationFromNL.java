@@ -94,7 +94,7 @@ public class AllocatingInformationFromNL {
 		
 		for(int i=1;i<=100;i++) {
 			String nameOfFile=String.format("%03d", i);
-			String fopOutputElement=fopOutputPrePostfix+File.pathSeparator+nameOfFile+File.pathSeparator;
+			String fopOutputElement=fopOutputPrePostfix+File.separator+nameOfFile+File.separator;
 			new File(fopOutputElement).mkdir();
 			String strCodeToken=arrSourceContent[i-1].split(splitContent)[0];
 			String strVarInfoInCode=arrSourceContent[i-1].split(splitContent)[1];

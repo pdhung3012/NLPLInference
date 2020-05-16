@@ -87,6 +87,7 @@ public class MakeContextDatasetForMethodName {
 					sbTotalPostfix.append(object.getPostfix()+"\n");
 					sbTotalMName.append(arrTokens[j]+"\n");
 					
+					
 					countOfPrefixPostfix++;
 					if(countOfPrefixPostfix%countRefresh==0) {
 						FileIO.appendStringToFile(sbTotalPrefix.toString(), fpOutputPrefix);

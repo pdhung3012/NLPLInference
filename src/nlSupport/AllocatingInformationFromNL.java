@@ -40,6 +40,11 @@ public class AllocatingInformationFromNL {
 		LinkedHashSet<String> setNLTokens=new LinkedHashSet<String>();
 		for(int i=0;i<arrVarsInNL.length;i++) {
 			setNLTokens.add(arrVarsInNL[i]);
+			if(isNumeric(arrVarsInNL[i])) {
+				sb.append(arrVarsInNL[i]+"\t"+"int"+"\n");
+			} else if(arrVarsInNL[i].startsWith("\"") && arrVarsInNL[i].endsWith("\"") ) {
+				sb.append(arrVarsInNL[i]+"\t"+"String"+"\n");
+			}
 		}
 		
 		
@@ -66,6 +71,18 @@ public class AllocatingInformationFromNL {
 		}
 		return sbTokens.toString();
 	}
+	
+	public static boolean isNumeric(String strNum) {
+	    if (strNum == null) {
+	        return false;
+	    }
+	    try {
+	        double d = Double.parseDouble(strNum);
+	    } catch (NumberFormatException nfe) {
+	        return false;
+	    }
+	    return true;
+	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -79,6 +96,7 @@ public class AllocatingInformationFromNL {
 		String unknownMethodToken="unknownMethod#identifier";
 		String splitContent="AABBAA";
 		
+		new File(fopOutputPrePostfix).mkdir();
 		
 		ArrayList<String> listNumbers=new ArrayList<String>();
 		
@@ -94,7 +112,7 @@ public class AllocatingInformationFromNL {
 		
 		for(int i=1;i<=100;i++) {
 			String nameOfFile=String.format("%03d", i);
-			String fopOutputElement=fopOutputPrePostfix+File.pathSeparator+nameOfFile+File.pathSeparator;
+			String fopOutputElement=fopOutputPrePostfix+File.separator+nameOfFile+File.separator;
 			new File(fopOutputElement).mkdir();
 			String strCodeToken=arrSourceContent[i-1].split(splitContent)[0];
 			String strVarInfoInCode=arrSourceContent[i-1].split(splitContent)[1];
@@ -103,7 +121,9 @@ public class AllocatingInformationFromNL {
 			FileIO.writeStringToFile(ppfx.getPrefix(), fopOutputElement+fname_Prefix);
 			FileIO.writeStringToFile(ppfx.getPostfix(), fopOutputElement+fname_Postfix);
 			String nlDescription=FileIO.readStringFromFile(fopInputTextMetaData+nameOfFile+".java").split("\n")[1];
-			nlDescription=nlDescription.replaceAll(","," ").replaceAll("("," ").replaceAll(")"," ").replaceAll("."," ");
+//			System.out.println(nlDescription);
+			nlDescription=nlDescription.replaceAll(","," ").replaceAll("\\("," ").replaceAll("\\)"," ").replaceAll("\\."," ");
+//			System.out.println(nlDescription);
 			String listVariablesInNLAndType=getVarAppearInNLDescription(strVarInfoInCode,nlDescription);
 			FileIO.writeStringToFile(listVariablesInNLAndType, fopOutputElement+fname_varInNaturalLanguage);
 			String nlTokens=getTokenInformation(nlDescription);

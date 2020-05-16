@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
+import consts.PathConstanct;
 import utils.FileIO;
 
 public class AllocatingInformationFromNL {
@@ -68,9 +69,9 @@ public class AllocatingInformationFromNL {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String fpInputSource="";
-		String fopInputTextMetaData="";
-		String fopOutputPrePostfix="";
+		String fpInputSource=PathConstanct.PATH_PROJECT_NL_SUPPORT+"nlSupport\\step0_sequence\\source.txt";
+		String fopInputTextMetaData=PathConstanct.PATH_PROJECT_NL_SUPPORT+"nlSupport\\IVC\\a_NLAndMethodNames\\";
+		String fopOutputPrePostfix=PathConstanct.PATH_PROJECT_NL_SUPPORT+"nlSupport\\step1_prepostfix\\";
 		String fname_Prefix="ele_prefix.txt";
 		String fname_Postfix="ele_postfix.txt";
 		String fname_varInNaturalLanguage="ele_varInfo.txt";
@@ -89,7 +90,7 @@ public class AllocatingInformationFromNL {
 //		write pre post fix to output, split the code of the string
 		String[] arrSourceContent=FileIO.readStringFromFile(fpInputSource).split("\n");
 		
-		String[] arrTextContent=new String[100];
+//		String[] arrTextContent=new String[100];
 		
 		for(int i=1;i<=100;i++) {
 			String nameOfFile=String.format("%03d", i);

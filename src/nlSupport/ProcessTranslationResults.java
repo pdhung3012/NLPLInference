@@ -130,9 +130,9 @@ public class ProcessTranslationResults {
 				sbTestTrans.append(str+"\n");
 			}
 			
-			FileIO.writeStringToFile(sbTestSource.toString(), fopOutputSplitTrans+fname_testSource);
-			FileIO.writeStringToFile(sbTestRef.toString(), fopOutputSplitTrans+fname_testTarget+".txt");
-			FileIO.writeStringToFile(sbTestTrans.toString(), fopOutputSplitTrans+fname_transResult);
+			FileIO.writeStringToFile(sbTestSource.toString(), fopItem+fname_testSource);
+			FileIO.writeStringToFile(sbTestRef.toString(), fopItem+fname_testTarget+".txt");
+			FileIO.writeStringToFile(sbTestTrans.toString(), fopItem+fname_transResult);
 			
 		}
 		

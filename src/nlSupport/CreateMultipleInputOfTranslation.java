@@ -89,7 +89,7 @@ public class CreateMultipleInputOfTranslation {
 					String[] arrTypeInfo=infoVar[1].split("\\.");	
 					System.out.println(infoVar[1]);
 					String typeName=arrTypeInfo[arrTypeInfo.length-1];
-					sbTokenVar.append(typeName+" ");
+					sbTokenVar.append(typeName+"#var ");
 					indexItem++;
 				}
 			}

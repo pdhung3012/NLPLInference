@@ -106,12 +106,11 @@ public class CreateMultipleInputOfTranslation {
 					sbIndexes.append(indexItem+"\n");
 				}
 			}
-			sbTotalToken.append(strSplitNameToken+"\n")
+			sbTotalToken.append(strSplitNameToken+"\n");
 			sbIndexes.append((-1)+"\n");
 			
 		}
 		String strTargetToken=getTargetTokens(sbTotalToken).toString();
-		
 		FileIO.writeStringToFile(sbTotalToken.toString(), fopOutputMnames+fname_testSource);
 		FileIO.writeStringToFile(strTargetToken, fopOutputMnames+fname_testTarget);
 		

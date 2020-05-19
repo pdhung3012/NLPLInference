@@ -48,7 +48,7 @@ public class CreateMultipleInputOfTranslation {
 		String unknownMethodToken="unknownMethod#identifier";
 		String splitContent="AABBAA";
 		
-		new File(fopInputPrePostfix).mkdir();
+		new File(fopOutputMnames).mkdir();
 		
 		ArrayList<String> listNumbers=new ArrayList<String>();
 		
@@ -66,12 +66,13 @@ public class CreateMultipleInputOfTranslation {
 		int numMethods=50;
 		for(int i=1;i<=100;i++) {
 			String nameOfFile=String.format("%03d", i);
+			String fonIndexFile=File.separator+nameOfFile+File.separator;
 			
-			String prefix=FileIO.readStringFromFile(fopInputPrePostfix+fname_Prefix);
-			String postfix=FileIO.readStringFromFile(fopInputPrePostfix+fname_Postfix);
-			String strVar=FileIO.readStringFromFile(fopInputPrePostfix+fname_varInNaturalLanguage);
-			String strTokenLemm=FileIO.readStringFromFile(fopInputPrePostfix+fname_lemmTokenInNL);
-			String strListMName=FileIO.readStringFromFile(fopOutputMnames+fname_methods);
+			String prefix=FileIO.readStringFromFile(fopInputPrePostfix+fonIndexFile+fname_Prefix);
+			String postfix=FileIO.readStringFromFile(fopInputPrePostfix+fonIndexFile+fname_Postfix);
+			String strVar=FileIO.readStringFromFile(fopInputPrePostfix+fonIndexFile+fname_varInNaturalLanguage);
+			String strTokenLemm=FileIO.readStringFromFile(fopInputPrePostfix+fonIndexFile+fname_lemmTokenInNL);
+			String strListMName=FileIO.readStringFromFile(fopInputMnames+fonIndexFile+fname_methods);
 			
 			
 			String[] arrPrefix=prefix.split("\\s+");

@@ -105,7 +105,7 @@ public class CreateMultipleInputOfTranslation {
 				if(!arrMNames[j].isEmpty()) {
 					String strTokens=prefix+" "+sbTokenVar.toString()+" "+arrMNames[j]+" "+sbTokenTerm.toString()+" "+postfix+" ";
 					sbTotalToken.append(strTokens+"\n");
-					sbIndexes.append(indexItem+"\n");
+					sbIndexes.append(indexItem+"\t"+nameOfFile+"\t"+arrMNames[j]+"\n");
 				}
 			}
 			sbTotalToken.append(strSplitNameToken+"\n");
@@ -115,6 +115,7 @@ public class CreateMultipleInputOfTranslation {
 		String strTargetToken=getTargetTokens(sbTotalToken).toString();
 		FileIO.writeStringToFile(sbTotalToken.toString(), fopOutputMnames+fname_testSource);
 		FileIO.writeStringToFile(strTargetToken, fopOutputMnames+fname_testTarget);
+		FileIO.writeStringToFile(sbIndexes.toString(), fopOutputMnames+fname_index);
 		
 	}
 

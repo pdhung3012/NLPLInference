@@ -6,6 +6,7 @@ import java.util.LinkedHashSet;
 
 import consts.PathConstanct;
 import utils.FileIO;
+import utils.StanfordLemmatizer;
 
 public class AllocatingInformationFromNL {
 	
@@ -60,7 +61,7 @@ public class AllocatingInformationFromNL {
 		return sb.toString();
 	}
 	public static String regexCamelCase="(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])";
-	public static String getTokenInformation(String nlDescription) {
+	public static String getTokenInformation(String nlDescription,StanfordLemmatizer lemm) {
 		StringBuilder sbTokens=new StringBuilder();
 		String[] arrInputTokens=nlDescription.split("\\s+");
 		for(int i=0;i<arrInputTokens.length;i++) {
@@ -68,6 +69,12 @@ public class AllocatingInformationFromNL {
 			for(int j=0;j<arrItems.length;j++) {
 				sbTokens.append(arrItems[j]+" ");
 			}
+		}
+		String strResult=lemm.lemmatizeToString(sbTokens.toString());
+		String[] arr=strResult.split("\\s+");
+		sbTokens=new StringBuilder();
+		for(int i=0;i<arr.length;i++) {
+			sbTokens.append(arr[i].toLowerCase()+"#term ");
 		}
 		return sbTokens.toString();
 	}
@@ -107,7 +114,7 @@ public class AllocatingInformationFromNL {
 		
 //		write pre post fix to output, split the code of the string
 		String[] arrSourceContent=FileIO.readStringFromFile(fpInputSource).split("\n");
-		
+		StanfordLemmatizer lemm=new StanfordLemmatizer();
 //		String[] arrTextContent=new String[100];
 		
 		for(int i=1;i<=100;i++) {
@@ -126,7 +133,7 @@ public class AllocatingInformationFromNL {
 //			System.out.println(nlDescription);
 			String listVariablesInNLAndType=getVarAppearInNLDescription(strVarInfoInCode,nlDescription);
 			FileIO.writeStringToFile(listVariablesInNLAndType, fopOutputElement+fname_varInNaturalLanguage);
-			String nlTokens=getTokenInformation(nlDescription);
+			String nlTokens=getTokenInformation(nlDescription,lemm);
 			FileIO.writeStringToFile(nlTokens, fopOutputElement+fname_lemmTokenInNL);			
 //			String prefix
 		}

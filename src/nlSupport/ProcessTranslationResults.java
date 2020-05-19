@@ -74,7 +74,7 @@ public class ProcessTranslationResults {
 					mapTestTarget.get(indexOfTest).add(i+"\t"+arrTestTarget[i]);					
 				}
 			}
-			if(!strItem.equals(strSplitNameToken)) {
+			if(strItem.equals(strSplitNameToken)) {
 				indexOfTest++;
 			}
 		}

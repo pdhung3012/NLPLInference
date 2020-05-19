@@ -86,7 +86,8 @@ public class CreateMultipleInputOfTranslation {
 			for(int j=0;j<arrVar.length;j++) {
 				String[] infoVar=arrVar[j].split("\t");
 				if(infoVar.length>=2) {
-					String[] arrTypeInfo=infoVar[1].split(".");					
+					String[] arrTypeInfo=infoVar[1].split("\\.");	
+					System.out.println(infoVar[1]);
 					String typeName=arrTypeInfo[arrTypeInfo.length-1];
 					sbTokenVar.append(typeName+" ");
 					indexItem++;

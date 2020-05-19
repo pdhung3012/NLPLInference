@@ -35,7 +35,7 @@ public class ProcessTranslationResults {
 		String fopInputTrans=PathConstanct.PATH_PROJECT_NL_SUPPORT+"nlSupport\\step4_trans\\";
 		String fopOutputSplitTrans=PathConstanct.PATH_PROJECT_NL_SUPPORT+"nlSupport\\step5_splitTrans\\";
 		
-		
+		new File(fopOutputSplitTrans).mkdir();
 //		String fname_methods="methods.txt";
 		String fname_index="indexMethod.txt";
 		String fname_testSource="test.s";

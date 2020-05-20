@@ -69,7 +69,7 @@ public class ReorderTranslatedResult {
 			
 			for(int indexTrans=0;indexTrans<lstTransLists.size();indexTrans++) {
 				String[] arrItemTrans = lstTransLists.get(indexTrans).trim().split("\\s+");
-				String[] arrItemReordered = new String[arrItemTrans.length];
+				String[] arrItemReordered = new String [arrInputTrans.length];
 				for (int j = 0; j < arrItemSource.length; j++) {
 					if(j<arrItemTrans.length) {
 						if (isEndWith(arrItemSource[j],arrItemTrans[j])) {

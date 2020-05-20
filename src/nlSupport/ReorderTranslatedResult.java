@@ -49,7 +49,8 @@ public class ReorderTranslatedResult {
 		String[] arrInputTrans = FileIO.readStringFromFile(fpInputTransResult).trim().split("\n");
 //		StringBuilder sbResult = new StringBuilder();
 		for (int i = 0; i < arrInputSource.length; i++) {
-			String[] arrItemSource = arrInputSource[i].trim().split("\\s+");
+			int indexInSource=Integer.parseInt(arrInputSource[i].trim().split("\t")[0].trim());
+			String[] arrItemSource = arrInputSource[i].trim().split("\t")[1].split("\\s+");
 			ArrayList<String> lstTransLists=new ArrayList<String>();
 			ArrayList<Integer> lstTransIndexes=new ArrayList<Integer>();
 			for(int j=0;j<arrInputTrans.length;j++) {

@@ -43,7 +43,7 @@ public class RetrieveExpression {
 		
 		
 		HashMap<String,String> mapTotalId=MapUtil.getHashMapFromFile(fopMapTotalId+fn_mapTotalId);
-		System.out.println(mapTotalId.size());
+		System.out.println(mapTotalId.size()+"\t"+mapTotalId.get("E-Total-000179080"));
 		
 		String[] arrIndexOfUnknownPosition=FileIO.readStringFromFile(fopInputSequences+fname_indexMethods).split("\n");
 		LinkedHashMap<Integer,Integer> mapPositions=new LinkedHashMap<Integer, Integer>();

@@ -118,7 +118,7 @@ public class ProcessTranslationResults {
 			StringBuilder sbTestTrans=new StringBuilder();
 			
 			ArrayList<String> lstSource=mapTestSource.get(i);
-			ArrayList<String> lstTarget=mapTestSource.get(i);
+			ArrayList<String> lstTarget=mapTestTarget.get(i);
 			ArrayList<String> lstTrans=mapTestTranslatedResult.get(i);
 			
 			for(String str:lstSource) {

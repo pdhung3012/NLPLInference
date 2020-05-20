@@ -58,10 +58,12 @@ public class RetrieveExpression {
 				else if(!mapPositions.containsKey(indexOfTest)) {					
 					int lineOfSource=Integer.parseInt(arrItem[0].trim());
 					mapPositions.put(indexOfTest, lineOfSource);
+					
 				}
 			}
 			
 		}
+		System.out.println(mapPositions.toString());
 		
 		for(int i=1;i<=100;i++) {
 			String nameFolder=String.format("%03d", i);	
@@ -70,7 +72,7 @@ public class RetrieveExpression {
 			String fopInputItemTrans=fopSplitTrans+nameFolder+File.separator;
 			new File(fopOutputItem).mkdir();
 			int indexOfTranslatedPosition=mapPositions.get(i);
-			String[] arrTransResults=FileIO.readStringFromFile(fopInputItemTrans+fname_transResult).split("\n");
+			String[] arrTransResults=FileIO.readStringFromFile(fopInputItemTrans+fname_reorderedResult).split("\n");
 			ArrayList<String> lstTransId=new ArrayList<String>();
 			
 			StringBuilder sbCodeInfo=new StringBuilder();

@@ -48,13 +48,15 @@ public class ReorderTranslatedResult {
 		String[] arrInputSource = FileIO.readStringFromFile(fpInputSource).trim().split("\n");
 		String[] arrInputTrans = FileIO.readStringFromFile(fpInputTransResult).trim().split("\n");
 //		StringBuilder sbResult = new StringBuilder();
+		StringBuilder sbIndexesItem=new StringBuilder();
+		StringBuilder sbOrderedItem=new StringBuilder();
 		for (int i = 0; i < arrInputSource.length; i++) {
 			int indexInSource=Integer.parseInt(arrInputSource[i].trim().split("\t")[0].trim());
 			String[] arrItemSource = arrInputSource[i].trim().split("\t")[1].split("\\s+");
 			ArrayList<String> lstTransLists=new ArrayList<String>();
 			ArrayList<Integer> lstTransIndexes=new ArrayList<Integer>();
 			for(int j=0;j<arrInputTrans.length;j++) {
-				String[] arrTransElements=arrInputTrans[i].trim().split("\\|\\|\\|");
+				String[] arrTransElements=arrInputTrans[j].trim().split("\\|\\|\\|");
 				if(arrTransElements.length>=3) {
 					int indexInS=Integer.parseInt(arrTransElements[0].split("\t")[1].trim());
 					String transCandidate=arrTransElements[2].trim();
@@ -66,7 +68,7 @@ public class ReorderTranslatedResult {
 			}
 			
 			ArrayList<String> lstOrderedTrans=new ArrayList<String>();
-			
+		//	System.out.println(i+"\t"+lstTransLists.toString());
 			for(int indexTrans=0;indexTrans<lstTransLists.size();indexTrans++) {
 				String[] arrItemTrans = lstTransLists.get(indexTrans).trim().split("\\s+");
 			//	String[] arrItemReordered = new String [arrInputTrans.length];
@@ -99,15 +101,15 @@ public class ReorderTranslatedResult {
 				lstOrderedTrans.add(strItemOrdered.trim());
 			}
 			
-			StringBuilder sbIndexesItem=new StringBuilder();
-			StringBuilder sbOrderedItem=new StringBuilder();
+			
 			for(int index=0;index<lstOrderedTrans.size();index++) {
 				sbIndexesItem.append(lstTransIndexes.get(index)+"\n");
 				sbOrderedItem.append(lstTransLists.get(index)+"\n");
 			}
-			FileIO.writeStringToFile(sbIndexesItem.toString(), fpOutputIndexInSource);
-			FileIO.writeStringToFile(sbOrderedItem.toString(), fpOutputTrans2Result);
+			
 		}
+		FileIO.writeStringToFile(sbIndexesItem.toString(), fpOutputIndexInSource);
+		FileIO.writeStringToFile(sbOrderedItem.toString(), fpOutputTrans2Result);
 		
 		
 	}

@@ -119,7 +119,7 @@ public class ReorderTranslatedResult {
 //		String fopInputTrans=PathConstanct.PATH_PROJECT_NL_SUPPORT+"nlSupport\\step4_trans\\";
 		String fopSplitTrans=PathConstanct.PATH_PROJECT_NL_SUPPORT+"nlSupport\\step5_splitTrans\\";
 		
-		new File(fopOutputSplitTrans).mkdir();
+//		new File(fopOutputSplitTrans).mkdir();
 //		String fname_methods="methods.txt";
 		String fname_index="indexMethod.txt";
 		String fname_testSource="test.s";
@@ -134,33 +134,14 @@ public class ReorderTranslatedResult {
 		
 		
 		for(int i=1;i<=100;i++) {
-			String nameFolder=String.format("%03d", i);			
-			String fopItem=fopOutputSplitTrans+nameFolder+File.separator;
-			new File(fopItem).mkdir();
+			String nameFolder=String.format("%03d", i);	
+			String fpInputSource=fopSplitTrans+nameFolder+File.separator+fname_testSource;
+			String fpInputTarget=fopSplitTrans+nameFolder+File.separator+fname_testTarget;
+			String fpInputTransResult=fopSplitTrans+nameFolder+File.separator+fname_transResult;
+			String fpOutputTrans2Result=fopSplitTrans+nameFolder+File.separator+fname_reorderedResult;
+			String fpOutputIndexInSource=fopSplitTrans+nameFolder+File.separator+fname_index;
 			
-			StringBuilder sbTestSource=new StringBuilder();
-			StringBuilder sbTestRef=new StringBuilder();
-			StringBuilder sbTestTrans=new StringBuilder();
-			
-			ArrayList<String> lstSource=mapTestSource.get(i);
-			ArrayList<String> lstTarget=mapTestSource.get(i);
-			ArrayList<String> lstTrans=mapTestTranslatedResult.get(i);
-			
-			for(String str:lstSource) {
-				sbTestSource.append(str+"\n");
-			}
-			
-			for(String str:lstTarget) {
-				sbTestRef.append(str+"\n");
-			}
-			
-			for(String str:lstTrans) {
-				sbTestTrans.append(str+"\n");
-			}
-			
-			FileIO.writeStringToFile(sbTestSource.toString(), fopItem+fname_testSource);
-			FileIO.writeStringToFile(sbTestRef.toString(), fopItem+fname_testTarget+".txt");
-			FileIO.writeStringToFile(sbTestTrans.toString(), fopItem+fname_transResult);
+			reorderingTokens(fpInputSource,fpInputTarget, fpInputTransResult,fpOutputTrans2Result,fpOutputIndexInSource);
 			
 		}
 		

@@ -121,7 +121,7 @@ public class ReorderTranslatedResult {
 		
 //		new File(fopOutputSplitTrans).mkdir();
 //		String fname_methods="methods.txt";
-		String fname_index="indexMethod.txt";
+		String fname_index="indeInSource.txt";
 		String fname_testSource="test.s";
 		String fname_testTarget="ref0.txt";
 		String fname_transResult="trans.txt";

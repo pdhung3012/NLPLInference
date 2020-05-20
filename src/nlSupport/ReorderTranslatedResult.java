@@ -58,7 +58,7 @@ public class ReorderTranslatedResult {
 				if(arrTransElements.length>=3) {
 					int indexInS=Integer.parseInt(arrTransElements[0].split("\t")[1].trim());
 					String transCandidate=arrTransElements[2].trim();
-					if(indexInS==i) {
+					if(indexInS==indexInSource) {
 						lstTransLists.add(transCandidate);
 						lstTransIndexes.add(i);
 					}

@@ -82,11 +82,14 @@ public class ProcessTranslationResults {
 		indexOfTest=1;
 		for(int i=0;i<arrTrans.length;i++) {
 			String strItem=arrTrans[i].trim();
+			
 			String[] arrItems=strItem.split("\\|\\|\\|");
 			
 			if(arrItems.length>=3) {
-				String codeItem=arrItems[2];
+				String codeItem=arrItems[2].trim();
+				
 				if(codeItem.equals(strSplitNameToken)) {
+					System.out.println("aaa "+codeItem);
 					indexOfTest++;
 				} else {
 					if(!mapTestTranslatedResult.containsKey(indexOfTest)) {

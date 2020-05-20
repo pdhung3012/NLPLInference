@@ -104,7 +104,6 @@ public class ReorderTranslatedResult {
 				sbIndexesItem.append(lstTransIndexes.get(index)+"\n");
 				sbOrderedItem.append(lstTransLists.get(index)+"\n");
 			}
-			
 			FileIO.writeStringToFile(sbIndexesItem.toString(), fpOutputIndexInSource);
 			FileIO.writeStringToFile(sbOrderedItem.toString(), fpOutputTrans2Result);
 		}

@@ -34,7 +34,7 @@ public class ReorderingTokens {
 		for (int i = 0; i < arrInputSource.length; i++) {
 			String[] arrItemSource = arrInputSource[i].trim().split("\\s+");
 			String[] arrItemTrans = arrInputTrans[i].trim().split("\\s+");
-			String[] arrItemReordered = new String[arrInputTrans.length];
+			String[] arrItemReordered = new String[arrItemSource.length];
 			for (int j = 0; j < arrItemSource.length; j++) {
 				if(j<arrItemTrans.length) {
 					if (isEndWith(arrItemSource[j],arrItemTrans[j],mapTotalId)) {
@@ -66,6 +66,10 @@ public class ReorderingTokens {
 		}
 		FileIO.writeStringToFile(sbResult.toString(), fpOutputTrans2Result);
 	}
+	
+	
+	
+	
 	
 	public static void reorderingTokensOnlyForStatType(String fpInputSource, String fpInputTarget, String fpInputTransResult,
 			String fpOutputTrans2Result) {

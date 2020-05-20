@@ -69,11 +69,11 @@ public class ReorderTranslatedResult {
 			
 			for(int indexTrans=0;indexTrans<lstTransLists.size();indexTrans++) {
 				String[] arrItemTrans = lstTransLists.get(indexTrans).trim().split("\\s+");
-				String[] arrItemReordered = new String [arrInputTrans.length];
+			//	String[] arrItemReordered = new String [arrInputTrans.length];
 				for (int j = 0; j < arrItemSource.length; j++) {
 					if(j<arrItemTrans.length) {
 						if (isEndWith(arrItemSource[j],arrItemTrans[j])) {
-							arrItemReordered[j] = arrInputTrans[j];
+						//	arrItemReordered[j] =  lstTransLists.get(indexTrans);
 						} else {
 							// find first occurence of ordered and change position
 							for (int k = j + 1; k < arrItemTrans.length; k++) {
@@ -81,7 +81,7 @@ public class ReorderTranslatedResult {
 									String temp = arrItemTrans[j];
 									arrItemTrans[j] = arrItemTrans[k];
 									arrItemTrans[k] = temp;
-									arrItemReordered[j] = arrInputTrans[j];
+								//	arrItemReordered[j] = arrInputTrans[j];
 									break;
 								}
 							}

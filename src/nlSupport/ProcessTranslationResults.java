@@ -59,7 +59,10 @@ public class ProcessTranslationResults {
 		for(int i=0;i<arrTestSource.length;i++) {
 			String strItem=arrTestSource[i].trim();
 			if(!strItem.isEmpty()) {
-				if(!mapTestSource.containsKey(indexOfTest)) {
+				if(strItem.equals(strSplitNameToken)) {
+					indexOfTest++;
+				}
+				else if(!mapTestSource.containsKey(indexOfTest)) {
 					ArrayList<String> lstItem=new ArrayList<String>();
 					lstItem.add(i+"\t"+arrTestSource[i]);
 					mapTestSource.put(indexOfTest, lstItem);
@@ -74,9 +77,7 @@ public class ProcessTranslationResults {
 					mapTestTarget.get(indexOfTest).add(i+"\t"+arrTestTarget[i]);					
 				}
 			}
-			if(strItem.equals(strSplitNameToken)) {
-				indexOfTest++;
-			}
+			
 		}
 		
 		indexOfTest=1;
@@ -118,7 +119,7 @@ public class ProcessTranslationResults {
 			StringBuilder sbTestTrans=new StringBuilder();
 			
 			ArrayList<String> lstSource=mapTestSource.get(i);
-			ArrayList<String> lstTarget=mapTestSource.get(i);
+			ArrayList<String> lstTarget=mapTestTarget.get(i);
 			ArrayList<String> lstTrans=mapTestTranslatedResult.get(i);
 			
 			for(String str:lstSource) {

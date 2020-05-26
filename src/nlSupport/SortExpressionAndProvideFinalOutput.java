@@ -92,6 +92,7 @@ public class SortExpressionAndProvideFinalOutput {
 					
 					LinkedHashSet<String> setTermsInCode=new LinkedHashSet<String>();
 					getSetOfTermInCode(arrCodeOnly[j], setTermsInCode, st);
+					itemTransCands.setSetTermsInCode(setTermsInCode);
 					itemTransCands.calculateScoreAndMatchVariable();
 					listTransCandidates.add(itemTransCands);
 				}

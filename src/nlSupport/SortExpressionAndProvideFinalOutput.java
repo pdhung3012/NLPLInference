@@ -65,13 +65,13 @@ public class SortExpressionAndProvideFinalOutput {
 			String[] arrVarInCode=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeVarInfo).split("\n");
 			String[] arrCodeOnly=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeOnly).split("\n");
 //			String[] arrCodeInfo=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeInfo).split("\n");
-//			String[] arrExprId=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeExprId).split("\n");
+			String[] arrExprId=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeExprId).split("\n");
 //			String[] arrImport=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeImport).split("\n");
-			
+			HashSet<Integer> setExprId=getUniqueID(arrExprId);
 			ArrayList<ObjectTranslatedCandidate> listTransCandidates=new ArrayList<ObjectTranslatedCandidate>();
 			System.out.println(i+"\tindex "+arrVarInCode.length);
 			for(int j=0;j<arrCodeOnly.length;j++) {
-				if(!arrCodeOnly[j].isEmpty()) {
+				if((!arrCodeOnly[j].isEmpty()) && setExprId.contains(j)) {
 					ObjectTranslatedCandidate itemTransCands=new ObjectTranslatedCandidate();
 					itemTransCands.setStrCodeInfo(arrCodeOnly[j]);
 					ArrayList<ObjectMatchedVariablesInNL> listMatchedVarsInNL=getMatchedVarsInNL(strVarInNL);
@@ -183,6 +183,21 @@ public class SortExpressionAndProvideFinalOutput {
 			
 		}	
 		return lstTerms;
+	}
+	
+	public static HashSet<Integer> getUniqueID(String[] arrExprs){
+		HashSet<String> setUniqueStr=new LinkedHashSet<String>();
+		HashSet<Integer> setIndexes=new LinkedHashSet<Integer>(); 
+		for(int i=0;i<arrExprs.length;i++) {
+			String item=arrExprs[i].trim();
+			if(!item.isEmpty()) {
+				if(!setUniqueStr.contains(item)) {
+					setIndexes.add(i);
+					setUniqueStr.add(item);
+				}
+			}
+		}
+		return setIndexes;
 	}
 
 }

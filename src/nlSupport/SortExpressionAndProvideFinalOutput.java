@@ -83,7 +83,7 @@ public class SortExpressionAndProvideFinalOutput {
 						itemVarInfo=arrVarInCode[j];
 					}
 					String[] arrItemVarsInCode =itemVarInfo.split("#");
-					itemTransCands.setStrCodeVarInfo(arrVarInCode[j]);
+					itemTransCands.setStrCodeVarInfo(itemVarInfo);
 					ArrayList<ObjectMatchedVarTypeInCode> lstVarsInCode=new ArrayList<ObjectMatchedVarTypeInCode>();
 					for(int k=0;k<arrItemVarsInCode.length;k++) {
 						if(!arrItemVarsInCode[k].trim().isEmpty()) {

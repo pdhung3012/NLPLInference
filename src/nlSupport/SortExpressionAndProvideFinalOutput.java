@@ -44,8 +44,8 @@ public class SortExpressionAndProvideFinalOutput {
 		String fname_codeFinal="code_final.txt";
 		String fname_codeScore="scoreOfCandidates.txt";
 		
-		String fname_varInfo="varInfo.txt";
-		String fname_lemm="lemmTokens.txt";
+		String fname_varInfo="ele_varInfo.txt";
+		String fname_lemm="ele_lemmToken.txt";
 		
 		String fn_mapTotalId="a_mapTotalIdAndContent.txt";
 		
@@ -58,25 +58,31 @@ public class SortExpressionAndProvideFinalOutput {
 		for(int i=1;i<=100;i++) {
 			String nameFolder=String.format("%03d", i);	
 			String fopOutputItem=fopOutputRankingCandidates+nameFolder+File.separator;
+			new File(fopOutputItem).mkdir();
 			
 			String strVarInNL=FileIO.readStringFromFile(fopInputPrePostfix+nameFolder+File.separator+fname_varInfo);
 			String strTermInfo=FileIO.readStringFromFile(fopInputPrePostfix+nameFolder+File.separator+fname_lemm);
-			String[] arrVarInCode=FileIO.readStringFromFile(fopInpurSplitTrans+nameFolder+File.separator+fname_codeVarInfo).split("\n");
-			String[] arrCodeOnly=FileIO.readStringFromFile(fopInpurSplitTrans+nameFolder+File.separator+fname_codeOnly).split("\n");
-			String[] arrCodeInfo=FileIO.readStringFromFile(fopInpurSplitTrans+nameFolder+File.separator+fname_codeInfo).split("\n");
-			String[] arrExprId=FileIO.readStringFromFile(fopInpurSplitTrans+nameFolder+File.separator+fname_codeExprId).split("\n");
-			String[] arrImport=FileIO.readStringFromFile(fopInpurSplitTrans+nameFolder+File.separator+fname_codeImport).split("\n");
+			String[] arrVarInCode=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeVarInfo).split("\n");
+			String[] arrCodeOnly=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeOnly).split("\n");
+//			String[] arrCodeInfo=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeInfo).split("\n");
+//			String[] arrExprId=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeExprId).split("\n");
+//			String[] arrImport=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeImport).split("\n");
 			
 			ArrayList<ObjectTranslatedCandidate> listTransCandidates=new ArrayList<ObjectTranslatedCandidate>();
-			
+			System.out.println(i+"\tindex "+arrVarInCode.length);
 			for(int j=0;j<arrCodeOnly.length;j++) {
 				if(!arrCodeOnly[j].isEmpty()) {
 					ObjectTranslatedCandidate itemTransCands=new ObjectTranslatedCandidate();
+					itemTransCands.setStrCodeInfo(arrCodeOnly[j]);
 					ArrayList<ObjectMatchedVariablesInNL> listMatchedVarsInNL=getMatchedVarsInNL(strVarInNL);
 					ArrayList<ObjectTermInNL> listTermsInNL=getTermsInNL(strTermInfo);
 					itemTransCands.setListMatchedVarsInNL(listMatchedVarsInNL);					
 					itemTransCands.setListTermInNL(listTermsInNL);
-					String[] arrItemVarsInCode =arrVarInCode[j].split("#");
+					String itemVarInfo="";
+					if(j<arrVarInCode.length) {
+						itemVarInfo=arrVarInCode[j];
+					}
+					String[] arrItemVarsInCode =itemVarInfo.split("#");
 					itemTransCands.setStrCodeVarInfo(arrVarInCode[j]);
 					ArrayList<ObjectMatchedVarTypeInCode> lstVarsInCode=new ArrayList<ObjectMatchedVarTypeInCode>();
 					for(int k=0;k<arrItemVarsInCode.length;k++) {
@@ -91,6 +97,7 @@ public class SortExpressionAndProvideFinalOutput {
 					
 					LinkedHashSet<String> setTermsInCode=new LinkedHashSet<String>();
 					getSetOfTermInCode(arrCodeOnly[j], setTermsInCode, st);
+					itemTransCands.setSetTermsInCode(setTermsInCode);
 					itemTransCands.calculateScoreAndMatchVariable();
 					listTransCandidates.add(itemTransCands);
 				}

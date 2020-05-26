@@ -44,8 +44,8 @@ public class SortExpressionAndProvideFinalOutput {
 		String fname_codeFinal="code_final.txt";
 		String fname_codeScore="scoreOfCandidates.txt";
 		
-		String fname_varInfo="varInfo.txt";
-		String fname_lemm="lemmTokens.txt";
+		String fname_varInfo="ele_varInfo.txt";
+		String fname_lemm="ele_lemmToken.txt";
 		
 		String fn_mapTotalId="a_mapTotalIdAndContent.txt";
 		

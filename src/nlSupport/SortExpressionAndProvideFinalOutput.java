@@ -62,11 +62,11 @@ public class SortExpressionAndProvideFinalOutput {
 			
 			String strVarInNL=FileIO.readStringFromFile(fopInputPrePostfix+nameFolder+File.separator+fname_varInfo);
 			String strTermInfo=FileIO.readStringFromFile(fopInputPrePostfix+nameFolder+File.separator+fname_lemm);
-			String[] arrVarInCode=FileIO.readStringFromFile(fopInpurSplitTrans+nameFolder+File.separator+fname_codeVarInfo).split("\n");
-			String[] arrCodeOnly=FileIO.readStringFromFile(fopInpurSplitTrans+nameFolder+File.separator+fname_codeOnly).split("\n");
-			String[] arrCodeInfo=FileIO.readStringFromFile(fopInpurSplitTrans+nameFolder+File.separator+fname_codeInfo).split("\n");
-			String[] arrExprId=FileIO.readStringFromFile(fopInpurSplitTrans+nameFolder+File.separator+fname_codeExprId).split("\n");
-			String[] arrImport=FileIO.readStringFromFile(fopInpurSplitTrans+nameFolder+File.separator+fname_codeImport).split("\n");
+			String[] arrVarInCode=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeVarInfo).split("\n");
+			String[] arrCodeOnly=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeOnly).split("\n");
+			String[] arrCodeInfo=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeInfo).split("\n");
+			String[] arrExprId=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeExprId).split("\n");
+			String[] arrImport=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeImport).split("\n");
 			
 			ArrayList<ObjectTranslatedCandidate> listTransCandidates=new ArrayList<ObjectTranslatedCandidate>();
 			

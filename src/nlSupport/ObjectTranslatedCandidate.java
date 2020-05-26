@@ -205,6 +205,8 @@ public class ObjectTranslatedCandidate implements Comparable< ObjectTranslatedCa
 		    		 String varName=mapPositionsInCode.get(indexOfVarInCode).getVarName();
 		    		 res.append( varName); 
 			    	 
+		    	 } else {
+		    		 res.append( "#"); 
 		    	 }
 		    	 indexOfVarInCode++;
 		     } else {

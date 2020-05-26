@@ -69,7 +69,7 @@ public class SortExpressionAndProvideFinalOutput {
 			String[] arrImport=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeImport).split("\n");
 			
 			ArrayList<ObjectTranslatedCandidate> listTransCandidates=new ArrayList<ObjectTranslatedCandidate>();
-			
+			System.out.println(i+"\tindex "+arrVarInCode.length);
 			for(int j=0;j<arrCodeOnly.length;j++) {
 				if(!arrCodeOnly[j].isEmpty()) {
 					ObjectTranslatedCandidate itemTransCands=new ObjectTranslatedCandidate();

@@ -58,6 +58,7 @@ public class SortExpressionAndProvideFinalOutput {
 		for(int i=1;i<=100;i++) {
 			String nameFolder=String.format("%03d", i);	
 			String fopOutputItem=fopOutputRankingCandidates+nameFolder+File.separator;
+			new File(fopOutputItem).mkdir();
 			
 			String strVarInNL=FileIO.readStringFromFile(fopInputPrePostfix+nameFolder+File.separator+fname_varInfo);
 			String strTermInfo=FileIO.readStringFromFile(fopInputPrePostfix+nameFolder+File.separator+fname_lemm);

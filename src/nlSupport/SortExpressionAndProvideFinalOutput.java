@@ -64,9 +64,9 @@ public class SortExpressionAndProvideFinalOutput {
 			String strTermInfo=FileIO.readStringFromFile(fopInputPrePostfix+nameFolder+File.separator+fname_lemm);
 			String[] arrVarInCode=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeVarInfo).split("\n");
 			String[] arrCodeOnly=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeOnly).split("\n");
-			String[] arrCodeInfo=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeInfo).split("\n");
-			String[] arrExprId=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeExprId).split("\n");
-			String[] arrImport=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeImport).split("\n");
+//			String[] arrCodeInfo=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeInfo).split("\n");
+//			String[] arrExprId=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeExprId).split("\n");
+//			String[] arrImport=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeImport).split("\n");
 			
 			ArrayList<ObjectTranslatedCandidate> listTransCandidates=new ArrayList<ObjectTranslatedCandidate>();
 			System.out.println(i+"\tindex "+arrVarInCode.length);
@@ -78,7 +78,11 @@ public class SortExpressionAndProvideFinalOutput {
 					ArrayList<ObjectTermInNL> listTermsInNL=getTermsInNL(strTermInfo);
 					itemTransCands.setListMatchedVarsInNL(listMatchedVarsInNL);					
 					itemTransCands.setListTermInNL(listTermsInNL);
-					String[] arrItemVarsInCode =arrVarInCode[j].split("#");
+					String itemVarInfo="";
+					if(j<arrVarInCode.length) {
+						itemVarInfo=arrVarInCode[j];
+					}
+					String[] arrItemVarsInCode =itemVarInfo.split("#");
 					itemTransCands.setStrCodeVarInfo(arrVarInCode[j]);
 					ArrayList<ObjectMatchedVarTypeInCode> lstVarsInCode=new ArrayList<ObjectMatchedVarTypeInCode>();
 					for(int k=0;k<arrItemVarsInCode.length;k++) {

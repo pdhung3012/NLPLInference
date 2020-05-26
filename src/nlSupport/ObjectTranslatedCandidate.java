@@ -162,12 +162,27 @@ public class ObjectTranslatedCandidate implements Comparable< ObjectTranslatedCa
 				
 				if(isMatch(itemNL.getVarType(), itemCode.getClassName())) {
 					itemNL.setMatch(true);
-					numResovedTypesInNL++;
-					numResolvedTypeInCode++;
 					itemNL.addMatchPositionInCode(j);
+					itemCode.setMatch(true);
 				}
 			}
 		}
+		
+		for(int i=0;i<listMatchedVarsInNL.size();i++) {
+			ObjectMatchedVariablesInNL itemNL=listMatchedVarsInNL.get(i);
+			if(itemNL.isMatch()) {
+				numResovedTypesInNL++;
+			}
+		}
+		for(int i=0;i<listMatchedVarType.size();i++) {
+			ObjectMatchedVarTypeInCode itemCode=listMatchedVarType.get(i);
+			
+			if(itemCode.isMatch()) {
+				numResolvedTypeInCode++;
+			}
+		}
+		
+		
 		double scoreMatchedVarInNL=totalTypesInNL!=0?(numResovedTypesInNL*1.0/totalTypesInNL):1;
 		double scoreMatchedVarInCode=totalResolvedTypeInCode!=0?(numResolvedTypeInCode*1.0/totalResolvedTypeInCode):1;
 		double scoreOfEmptyExpression=(totalTypesInNL==0 && totalResolvedTypeInCode==0)?0.8:1;

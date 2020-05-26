@@ -73,6 +73,7 @@ public class SortExpressionAndProvideFinalOutput {
 			for(int j=0;j<arrCodeOnly.length;j++) {
 				if(!arrCodeOnly[j].isEmpty()) {
 					ObjectTranslatedCandidate itemTransCands=new ObjectTranslatedCandidate();
+					itemTransCands.setStrCodeInfo(arrCodeOnly[j]);
 					ArrayList<ObjectMatchedVariablesInNL> listMatchedVarsInNL=getMatchedVarsInNL(strVarInNL);
 					ArrayList<ObjectTermInNL> listTermsInNL=getTermsInNL(strTermInfo);
 					itemTransCands.setListMatchedVarsInNL(listMatchedVarsInNL);					

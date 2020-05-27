@@ -153,20 +153,46 @@ public class ObjectTranslatedCandidate implements Comparable< ObjectTranslatedCa
 		totalTypesInNL=listMatchedVarsInNL.size();
 		totalResolvedTypeInCode=listMatchedVarType.size();
 		HashSet<String> setVariables=new LinkedHashSet<String>();
-		for(int i=0;i<listMatchedVarsInNL.size();i++) {
-//			finding match for vars in NL
-			ObjectMatchedVariablesInNL itemNL=listMatchedVarsInNL.get(i);
-			setVariables.add(itemNL.getVarName().toLowerCase());
-			for(int j=0;j<listMatchedVarType.size();j++) {
-				ObjectMatchedVarTypeInCode itemCode=listMatchedVarType.get(j);
+		
+		for(int j=0;j<listMatchedVarType.size();j++) {
+			ObjectMatchedVarTypeInCode itemCode=listMatchedVarType.get(j);
+//			loop 1: prioritize to non match variable first
+			boolean isMatchForItemVarInCode=false;
+			for(int i=0;i<listMatchedVarsInNL.size();i++) {
+//				finding match for vars in NL
+				ObjectMatchedVariablesInNL itemNL=listMatchedVarsInNL.get(i);
 				
-				if(isMatch(itemNL.getVarType(), itemCode.getClassName())) {
+				if(!itemNL.isMatch() && isMatch(itemNL.getVarType(), itemCode.getClassName())) {
 					itemNL.setMatch(true);
 					itemNL.addMatchPositionInCode(j);
 					itemCode.setMatch(true);
+					isMatchForItemVarInCode=true;
+				}
+				setVariables.add(itemNL.getVarName().toLowerCase());
+				break;
+				
+			}
+			
+//			loop 2: match any possible values
+			if(!isMatchForItemVarInCode) {
+				for(int i=0;i<listMatchedVarsInNL.size();i++) {
+//					finding match for vars in NL
+					ObjectMatchedVariablesInNL itemNL=listMatchedVarsInNL.get(i);
+					
+					if(isMatch(itemNL.getVarType(), itemCode.getClassName())) {
+						itemNL.setMatch(true);
+						itemNL.addMatchPositionInCode(j);
+						itemCode.setMatch(true);
+					}
+					setVariables.add(itemNL.getVarName().toLowerCase());
+					break;
+					
 				}
 			}
+			
+			
 		}
+		
 		
 		for(int i=0;i<listMatchedVarsInNL.size();i++) {
 			ObjectMatchedVariablesInNL itemNL=listMatchedVarsInNL.get(i);

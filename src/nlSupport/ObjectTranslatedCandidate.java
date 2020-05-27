@@ -221,6 +221,7 @@ public class ObjectTranslatedCandidate implements Comparable< ObjectTranslatedCa
 				numWordMatchInNL++;
 			}
 		}
+		System.out.println(setTermsInCode.toString());
 		
 		double scoreMatchedWordInNL=totalWordMatchInNL!=0?(numWordMatchInNL*1.0/totalWordMatchInNL):1;
 		

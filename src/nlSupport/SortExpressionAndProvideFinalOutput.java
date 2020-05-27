@@ -69,7 +69,7 @@ public class SortExpressionAndProvideFinalOutput {
 //			String[] arrImport=FileIO.readStringFromFile(fopInputExpression+nameFolder+File.separator+fname_codeImport).split("\n");
 			HashSet<Integer> setExprId=getUniqueID(arrExprId);
 			ArrayList<ObjectTranslatedCandidate> listTransCandidates=new ArrayList<ObjectTranslatedCandidate>();
-			System.out.println(i+"\tindex "+arrVarInCode.length);
+			//System.out.println(i+"\tindex "+arrVarInCode.length);
 			for(int j=0;j<arrCodeOnly.length;j++) {
 				if((!arrCodeOnly[j].isEmpty()) && setExprId.contains(j)) {
 					ObjectTranslatedCandidate itemTransCands=new ObjectTranslatedCandidate();
@@ -96,7 +96,7 @@ public class SortExpressionAndProvideFinalOutput {
 					itemTransCands.setListMatchedVarType(lstVarsInCode);	
 					
 					LinkedHashSet<String> setTermsInCode=getSetOfTermInCode(arrCodeOnly[j], st);
-					System.out.println("term: "+setTermsInCode.size());
+					//System.out.println("term: "+setTermsInCode.size());
 					itemTransCands.setSetTermsInCode(setTermsInCode);
 					itemTransCands.calculateScoreAndMatchVariable();
 					listTransCandidates.add(itemTransCands);

@@ -95,8 +95,8 @@ public class SortExpressionAndProvideFinalOutput {
 					}
 					itemTransCands.setListMatchedVarType(lstVarsInCode);	
 					
-					LinkedHashSet<String> setTermsInCode=new LinkedHashSet<String>();
-					getSetOfTermInCode(arrCodeOnly[j], setTermsInCode, st);
+					LinkedHashSet<String> setTermsInCode=getSetOfTermInCode(arrCodeOnly[j], st);
+					System.out.println("term: "+setTermsInCode.size());
 					itemTransCands.setSetTermsInCode(setTermsInCode);
 					itemTransCands.calculateScoreAndMatchVariable();
 					listTransCandidates.add(itemTransCands);
@@ -122,10 +122,10 @@ public class SortExpressionAndProvideFinalOutput {
 		}
 	}
 	
-	public static void getSetOfTermInCode(String strCodeInfo,LinkedHashSet<String> setTerms,StanfordLemmatizer st) {
+	public static LinkedHashSet<String> getSetOfTermInCode(String strCodeInfo,StanfordLemmatizer st) {
 		String[] arrCodeTokens=strCodeInfo.trim().replaceAll("\\."," ").replaceAll("\\,"," ").replaceAll("\\("," ").replaceAll("\\)"," ").split("\\s+");
 		
-		setTerms=new LinkedHashSet<String>();
+		LinkedHashSet<String> setTerms=new LinkedHashSet<String>();
 //		System.out.println(strCodeInfo+"\t"+arrCodeTokens.length);
 		for(int i=0;i<arrCodeTokens.length;i++) {
 			String[] arrItemToken=getCamelCaseSplit(arrCodeTokens[i].trim()).split("\\s+");
@@ -135,6 +135,8 @@ public class SortExpressionAndProvideFinalOutput {
 				setTerms.add(itemLemm);
 			}
 		}
+		System.out.println("inside "+setTerms.size());
+		return setTerms;
 	
 	}
 	

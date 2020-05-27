@@ -135,7 +135,7 @@ public class SortExpressionAndProvideFinalOutput {
 				setTerms.add(itemLemm);
 			}
 		}
-		System.out.println("inside "+setTerms.size());
+//		System.out.println("inside "+setTerms.size());
 		return setTerms;
 	
 	}

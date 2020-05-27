@@ -231,7 +231,7 @@ public class ObjectTranslatedCandidate implements Comparable< ObjectTranslatedCa
 		scoreMatchedWordInNL=totalWordMatchInNL!=0?(numWordMatchInNL*1.0/totalWordMatchInNL):1;
 		
 		resultScore=0.6*scoreMatchedVarInNL+0.2*scoreMatchedVarInCode+0.1*scoreOfEmptyExpression+0.1*scoreMatchedWordInNL;
-		System.out.println(scoreMatchedVarInNL+"\t"+scoreMatchedVarInCode+"\t"+scoreOfEmptyExpression+"\t"+scoreMatchedWordInNL);
+//		System.out.println(scoreMatchedVarInNL+"\t"+scoreMatchedVarInCode+"\t"+scoreOfEmptyExpression+"\t"+scoreMatchedWordInNL);
 		scoreTotal=resultScore;
 		
 //		get code in final:

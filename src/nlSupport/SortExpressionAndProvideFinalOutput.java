@@ -111,7 +111,7 @@ public class SortExpressionAndProvideFinalOutput {
 			for(int j=0;j<listTransCandidates.size();j++) {
 				ObjectTranslatedCandidate item=listTransCandidates.get(j);
 				sbCodeFinal.append(item.getStrCodeFinal()+"\n");
-				sbScoreFinal.append(item.getScoreTotal()+"\n");
+				sbScoreFinal.append(item.getStrScoreStatistic()+"\n");
 			}
 			
 			FileIO.writeStringToFile(sbCodeFinal.toString(), fopOutputItem+fname_codeFinal);

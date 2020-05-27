@@ -28,6 +28,11 @@ public class ObjectTranslatedCandidate implements Comparable< ObjectTranslatedCa
 	private double scoreTotal=0.0;
 	private String strCodeFinal;
 	
+	double scoreMatchedVarInNL;
+	double scoreMatchedVarInCode;
+	double scoreOfEmptyExpression;
+	double scoreMatchedWordInNL;
+	
 	
 	
 	
@@ -209,9 +214,9 @@ public class ObjectTranslatedCandidate implements Comparable< ObjectTranslatedCa
 		}
 		
 		
-		double scoreMatchedVarInNL=totalTypesInNL!=0?(numResovedTypesInNL*1.0/totalTypesInNL):1;
-		double scoreMatchedVarInCode=totalResolvedTypeInCode!=0?(numResolvedTypeInCode*1.0/totalResolvedTypeInCode):1;
-		double scoreOfEmptyExpression=(totalTypesInNL==0 && totalResolvedTypeInCode==0)?0.8:1;
+		scoreMatchedVarInNL=totalTypesInNL!=0?(numResovedTypesInNL*1.0/totalTypesInNL):1;
+		scoreMatchedVarInCode=totalResolvedTypeInCode!=0?(numResolvedTypeInCode*1.0/totalResolvedTypeInCode):1;
+		scoreOfEmptyExpression=(totalTypesInNL==0 && totalResolvedTypeInCode==0)?0.8:1;
 		numWordMatchInNL=0;
 		totalWordMatchInNL=listTermInNL.size()-setVariables.size();
 				
@@ -223,7 +228,7 @@ public class ObjectTranslatedCandidate implements Comparable< ObjectTranslatedCa
 		}
 //		System.out.println(setTermsInCode.toString());
 		
-		double scoreMatchedWordInNL=totalWordMatchInNL!=0?(numWordMatchInNL*1.0/totalWordMatchInNL):1;
+		scoreMatchedWordInNL=totalWordMatchInNL!=0?(numWordMatchInNL*1.0/totalWordMatchInNL):1;
 		
 		resultScore=0.6*scoreMatchedVarInNL+0.2*scoreMatchedVarInCode+0.1*scoreOfEmptyExpression+0.1*scoreMatchedWordInNL;
 		System.out.println(scoreMatchedVarInNL+"\t"+scoreMatchedVarInCode+"\t"+scoreOfEmptyExpression+"\t"+scoreMatchedWordInNL);
@@ -261,6 +266,11 @@ public class ObjectTranslatedCandidate implements Comparable< ObjectTranslatedCa
 		
 		return resultScore;
 	}
+	
+	public String getStrScoreStatistic() {
+		return scoreMatchedVarInNL+"\t"+scoreMatchedVarInCode+"\t"+scoreOfEmptyExpression+"\t"+scoreMatchedWordInNL+"\t"+scoreTotal;
+	}
+	
 	@Override
 	public int compareTo(ObjectTranslatedCandidate o) {
 		// TODO Auto-generated method stub

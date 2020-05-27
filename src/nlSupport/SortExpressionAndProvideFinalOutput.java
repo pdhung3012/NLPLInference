@@ -126,12 +126,12 @@ public class SortExpressionAndProvideFinalOutput {
 		String[] arrCodeTokens=strCodeInfo.trim().replaceAll("\\."," ").replaceAll("\\,"," ").replaceAll("\\("," ").replaceAll("\\)"," ").split("\\s+");
 		
 		setTerms=new LinkedHashSet<String>();
-		System.out.println(strCodeInfo+"\t"+arrCodeTokens.length);
+//		System.out.println(strCodeInfo+"\t"+arrCodeTokens.length);
 		for(int i=0;i<arrCodeTokens.length;i++) {
 			String[] arrItemToken=getCamelCaseSplit(arrCodeTokens[i].trim()).split("\\s+");
 			for(int j=0;j<arrItemToken.length;j++) {
 				String itemLemm=st.lemmatizeToString(arrItemToken[j]);
-				System.out.println(itemLemm);
+				//System.out.println(itemLemm);
 				setTerms.add(itemLemm);
 			}
 		}

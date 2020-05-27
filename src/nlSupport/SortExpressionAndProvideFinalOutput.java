@@ -124,7 +124,9 @@ public class SortExpressionAndProvideFinalOutput {
 	
 	public static void getSetOfTermInCode(String strCodeInfo,LinkedHashSet<String> setTerms,StanfordLemmatizer st) {
 		String[] arrCodeTokens=strCodeInfo.trim().replaceAll("\\."," ").replaceAll("\\,"," ").replaceAll("\\("," ").replaceAll("\\)"," ").split("\\s+");
+		
 		setTerms=new LinkedHashSet<String>();
+		System.out.println(strCodeInfo+"\t"+arrCodeTokens);
 		for(int i=0;i<arrCodeTokens.length;i++) {
 			String[] arrItemToken=getCamelCaseSplit(arrCodeTokens[i].trim()).split("\\s+");
 			for(int j=0;j<arrItemToken.length;j++) {

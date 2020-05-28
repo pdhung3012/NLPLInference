@@ -1415,6 +1415,10 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 						return false;
 					this.fullTokens.append(" " + getQualifiedName(tb) + "#var ");
 					this.partialTokens.append(" " + getName(tb) + "#var ");
+					LocalEntity le = new LocalEntity();
+					le.setStrCodeReprensent(b.getName());
+					le.setStrTypeOfEntity(getName(tb));
+					setLocalVariables.add(le);
 				}
 			} else if (b instanceof ITypeBinding) {
 				ITypeBinding tb = (ITypeBinding) b;

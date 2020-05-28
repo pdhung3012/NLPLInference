@@ -37,13 +37,13 @@ public class AllocatingInformationFromNL {
 		
 	}
 	
-	public static String getVarAppearInNLDescription(String varInCode,String nlDescription,HashSet<String> setVarsAndAbstractInfo,HashMap<String,String> mapStringLiterals,LinkedHashMap<String,String> mapTotalVarAndTypes) {
+	public static Object[] getVarAppearInNLDescription(String varInCode,String nlDescription,HashMap<String,String> mapStringLiterals,) {
 		StringBuilder sb=new StringBuilder();
 		String[] arrVarsInNL=nlDescription.split("\\s+");
 		String[] arrVarsInCode=varInCode.split(",");
 		LinkedHashSet<String> setNLTokens=new LinkedHashSet<String>();
-		
-		mapTotalVarAndTypes=new LinkedHashMap<String, String>();
+		HashSet<String> setVarsAndAbstractInfo=new LinkedHashSet<String>();
+		LinkedHashMap<String,String> mapTotalVarAndTypes=new LinkedHashMap<String, String>();
 		for(int i=0;i<arrVarsInNL.length;i++) {
 			setNLTokens.add(arrVarsInNL[i]);
 			if(isNumeric(arrVarsInNL[i])) {
@@ -80,7 +80,11 @@ public class AllocatingInformationFromNL {
 		for(String key:mapTotalVarAndTypes.keySet()) {
 			sb.append(key+"\t"+mapTotalVarAndTypes.get(key)+"\n");
 		}
-		return sb.toString();
+		Object[] results=new Object[3];
+		results[0]=sb.toString();
+		results[1]=setVarsAndAbstractInfo;
+		results[2]=mapTotalVarAndTypes;
+		return results;
 	}
 	public static String regexCamelCase="(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])";
 	public static String getTokenInformation(String nlDescription,HashSet<String> setVarsAndAbss,StanfordLemmatizer lemm) {
@@ -117,12 +121,12 @@ public class AllocatingInformationFromNL {
 	    return true;
 	}
 	
-	public static String abstractStringLiteralAndNumberLiteral(String input,HashMap<String,String> mapCodeEntities) {
+	public static Object[] abstractStringLiteralAndNumberLiteral(String input) {
 		StringBuilder sbItem=new StringBuilder();
 		StringBuilder sbTotal=new StringBuilder();
 		int indexQuote=0;
 		boolean isInQuoteMode=false;
-		mapCodeEntities=new HashMap<String,String>();
+		HashMap<String,String> mapCodeEntities=new HashMap<String,String>();
 		for(int i=0;i<input.length();i++) {
 			char cIndex=input.charAt(i);
 			if(cIndex=='\"') {
@@ -151,7 +155,10 @@ public class AllocatingInformationFromNL {
 			}
 			
 		}
-		return sbTotal.toString();
+		Object[] results=new Object[2];
+		results[0]=sbTotal.toString();
+		results[1]=mapCodeEntities;
+		return results;
 	}
 
 	public static void main(String[] args) {
@@ -201,12 +208,17 @@ public class AllocatingInformationFromNL {
 //			System.out.println(nlDescription);
 			nlDescription=nlDescription.replaceAll(","," ").replaceAll("\\("," ").replaceAll("\\)"," ").replaceAll("\\."," ");
 			
-			HashMap<String,String> mapLiterals=new HashMap<String, String>();
-			String nlDesAfterNormalize=abstractStringLiteralAndNumberLiteral(nlDescription, mapLiterals);
+			
+			Object[] results=abstractStringLiteralAndNumberLiteral(nlDescription);
+			String nlDesAfterNormalize=(String)results[0];
+			HashMap<String,String> mapLiterals=(HashMap<String, String>)results[1];
 //			System.out.println(nlDescription);
-			LinkedHashMap<String,String> mapTotalVarAndTypes=new LinkedHashMap<String, String>();
-			LinkedHashSet<String> setVarAndAbs=new LinkedHashSet<String>();
-			String listVariablesInNLAndType=getVarAppearInNLDescription(strVarInfoInCode,nlDesAfterNormalize,setVarAndAbs,mapLiterals,mapTotalVarAndTypes);
+			
+			results=getVarAppearInNLDescription(strVarInfoInCode,nlDesAfterNormalize,mapLiterals);
+			String listVariablesInNLAndType=(String)results[0];
+			LinkedHashSet<String> setVarAndAbs=(LinkedHashSet<String>) results[1];			
+			LinkedHashMap<String,String> mapTotalVarAndTypes=(LinkedHashMap<String, String>) results[2];
+			
 			FileIO.writeStringToFile(listVariablesInNLAndType, fopOutputElement+fname_varInNaturalLanguage);
 			String nlTokens=getTokenInformation(nlDesAfterNormalize,setVarAndAbs,lemm);
 			System.out.println(i+"\t"+setVarAndAbs.size()+"\t"+setVarAndAbs.toString()+"\t"+mapTotalVarAndTypes.size()+"\t"+mapLiterals.size());

@@ -206,12 +206,13 @@ public class AllocatingInformationFromNL {
 			FileIO.writeStringToFile(ppfx.getPostfix(), fopOutputElement+fname_Postfix);
 			String nlDescription=FileIO.readStringFromFile(fopInputTextMetaData+nameOfFile+".java").split("\n")[1];
 //			System.out.println(nlDescription);
-			nlDescription=nlDescription.replaceAll(","," ").replaceAll("\\("," ").replaceAll("\\)"," ").replaceAll("\\."," ");
-			
-			
 			Object[] results=abstractStringLiteralAndNumberLiteral(nlDescription);
 			String nlDesAfterNormalize=(String)results[0];
 			HashMap<String,String> mapLiterals=(HashMap<String, String>)results[1];
+			nlDesAfterNormalize=nlDesAfterNormalize.replaceAll(","," ").replaceAll("\\("," ").replaceAll("\\)"," ").replaceAll("\\."," ");
+			
+			
+			
 //			System.out.println(nlDescription);
 			
 			results=getVarAppearInNLDescription(strVarInfoInCode,nlDesAfterNormalize,mapLiterals);

@@ -137,6 +137,7 @@ public class AllocatingInformationFromNL {
 					int numberIndex=indexQuote%2;
 					String key="StringLit_"+numberIndex;
 					sbTotal.append(" "+key+" ");
+					System.out.println("update "+sbItem.toString());
 					mapCodeEntities.put(key, sbItem.toString());
 					
 				}

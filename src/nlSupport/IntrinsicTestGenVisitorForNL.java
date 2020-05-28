@@ -377,19 +377,19 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 //		sb.append("setLocalVariable " + setLocalVariables.size() + ": ");
 		for (LocalEntity ent : setLocalVariables) {
 			sb.append(ent.getStrCodeReprensent() + "\t"
-					+ ent.getStrTypeOfEntity() + ",");
+					+ ent.getStrTypeOfEntity() + "ABCABC");
 		}
 //		sb.append("\n");
 //		sb.append("setArgument " + setArguments.size() + ": ");
 		for (LocalEntity ent : setArguments) {
 			sb.append(ent.getStrCodeReprensent() + "\t"
-					+ ent.getStrTypeOfEntity() + ",");
+					+ ent.getStrTypeOfEntity() + "ABCABC");
 		}
 //		sb.append("\n");
 //		sb.append("setField " + setFields.size() + ": ");
 		for (LocalEntity ent : setFields) {
 			sb.append(ent.getStrCodeReprensent() + "\t"
-					+ ent.getStrTypeOfEntity() + ",");
+					+ ent.getStrTypeOfEntity() + "ABCABC");
 		}
 //		sb.append("\n");
 

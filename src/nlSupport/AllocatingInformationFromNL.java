@@ -37,7 +37,7 @@ public class AllocatingInformationFromNL {
 		
 	}
 	
-	public static Object[] getVarAppearInNLDescription(String varInCode,String nlDescription,HashMap<String,String> mapStringLiterals,) {
+	public static Object[] getVarAppearInNLDescription(String varInCode,String nlDescription,HashMap<String,String> mapStringLiterals) {
 		StringBuilder sb=new StringBuilder();
 		String[] arrVarsInNL=nlDescription.split("\\s+");
 		String[] arrVarsInCode=varInCode.split(",");

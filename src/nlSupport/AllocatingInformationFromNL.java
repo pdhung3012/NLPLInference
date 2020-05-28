@@ -179,6 +179,11 @@ public class AllocatingInformationFromNL {
 		StanfordLemmatizer lemm=new StanfordLemmatizer();
 //		String[] arrTextContent=new String[100];
 		
+		StringBuilder sbTotalPrefix=new StringBuilder();
+		StringBuilder sbTotalPostfix=new StringBuilder();
+		StringBuilder sbTotalvarInNaturalLanguage=new StringBuilder();
+		StringBuilder sbTotalLemmTokenInNL=new StringBuilder();
+		
 		for(int i=1;i<=100;i++) {
 			String nameOfFile=String.format("%03d", i);
 			String fopOutputElement=fopOutputPrePostfix+File.separator+nameOfFile+File.separator;
@@ -204,9 +209,19 @@ public class AllocatingInformationFromNL {
 			FileIO.writeStringToFile(listVariablesInNLAndType, fopOutputElement+fname_varInNaturalLanguage);
 			String nlTokens=getTokenInformation(nlDesAfterNormalize,setVarAndAbs,lemm);
 			System.out.println(i+"\t"+setVarAndAbs.size()+"\t"+setVarAndAbs.toString()+"\t"+mapTotalVarAndTypes.size());
-			FileIO.writeStringToFile(nlTokens, fopOutputElement+fname_lemmTokenInNL);			
+			FileIO.writeStringToFile(nlTokens, fopOutputElement+fname_lemmTokenInNL);	
+			sbTotalPrefix.append(ppfx.getPrefix().replaceAll("\n", " , ")+"\n");
+			sbTotalPostfix.append(ppfx.getPostfix().replaceAll("\n", " , ")+"\n");
+			sbTotalvarInNaturalLanguage.append(listVariablesInNLAndType.replaceAll("\n", " , ")+"\n");
+			sbTotalLemmTokenInNL.append(nlTokens.replaceAll("\n", " , ")+"\n");
 //			String prefix
 		}
+		
+		FileIO.writeStringToFile(sbTotalPrefix.toString(), fopOutputPrePostfix+fname_Prefix);
+		FileIO.writeStringToFile(sbTotalPostfix.toString(), fopOutputPrePostfix+fname_Postfix);
+		FileIO.writeStringToFile(sbTotalvarInNaturalLanguage.toString(), fopOutputPrePostfix+fname_varInNaturalLanguage);
+		FileIO.writeStringToFile(sbTotalLemmTokenInNL.toString(), fopOutputPrePostfix+fname_lemmTokenInNL);	
+		
 		
 		
 	}

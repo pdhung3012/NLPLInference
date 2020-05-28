@@ -103,6 +103,11 @@ public class OnlySourceSequenceGeneratorForNL {
 		for (String rootPath : rootPaths) {
 			String[] sourcePaths = getSourcePaths(rootPath, new String[] { ".java" });
 			Arrays.sort(sourcePaths);
+			
+//			only one sourcePaths
+//			String[] sourceRemove= {sourcePaths[28]};
+//			sourcePaths=sourceRemove;
+			
 			System.out.println(sourcePaths.length);
 			@SuppressWarnings("rawtypes")
 			Map options = JavaCore.getOptions();

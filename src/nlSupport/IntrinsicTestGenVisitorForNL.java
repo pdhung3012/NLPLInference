@@ -1242,6 +1242,7 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 		le.setStrCodeReprensent(iden);
 		le.setStrTypeOfEntity(name);
 		setFields.add(le);
+//		System.out.println("field here "+iden);
 		this.partialTokens.append(" " + uName + "#var ");
 		if (b != null) {
 			if (tb != null)
@@ -1412,9 +1413,11 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 	public boolean visit(SimpleName node) {
 		IBinding b = node.resolveBinding();
 		if (b != null) {
+			
 			if (b instanceof IVariableBinding) {
 				IVariableBinding vb = (IVariableBinding) b;
 				ITypeBinding tb = vb.getType();
+				
 				if (tb != null) {
 					tb = tb.getTypeDeclaration();
 					if (tb.isLocal() || tb.getQualifiedName().isEmpty())
@@ -1435,8 +1438,13 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 				this.partialTokens.append(" " + getName(tb) + " ");
 			}
 		} else {
+//			System.out.println(node.getIdentifier());
 			this.fullTokens.append(" " + node.getIdentifier() + " ");
 			this.partialTokens.append(" " + node.getIdentifier() + " ");
+			LocalEntity le = new LocalEntity();
+			le.setStrCodeReprensent(node.getIdentifier());
+			le.setStrTypeOfEntity("Object");
+			setLocalVariables.add(le);
 		}
 		return false;
 	}

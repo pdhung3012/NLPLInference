@@ -45,7 +45,7 @@ public class AllocatingInformationFromNL {
 		HashSet<String> setVarsAndAbstractInfo=new LinkedHashSet<String>();
 		LinkedHashMap<String,String> mapTotalVarAndTypes=new LinkedHashMap<String, String>();
 		for(int i=0;i<arrVarsInNL.length;i++) {
-			setNLTokens.add(arrVarsInNL[i]);
+			setNLTokens.add(arrVarsInNL[i].trim());
 			if(isNumeric(arrVarsInNL[i])) {
 				if(arrVarsInNL[i].contains(".")) {
 					mapTotalVarAndTypes.put(arrVarsInNL[i], "double");
@@ -63,13 +63,14 @@ public class AllocatingInformationFromNL {
 				mapTotalVarAndTypes.put(strValue, "String");
 			}
 		}
-		
+//		System.out.println(setNLTokens.toString());
 		
 		for(int i=0;i<arrVarsInCode.length;i++) {
 			String[] itemVarAndType=arrVarsInCode[i].split("\t");
 			if(itemVarAndType.length<2) {
 				continue;
 			}
+//			System.out.println(itemVarAndType[0]+"\t"+setNLTokens.contains(itemVarAndType[0].trim()));
 			if(setNLTokens.contains(itemVarAndType[0])) {
 //				sb.append(itemVarAndType[0]+"\t"+itemVarAndType[1]+"\n");
 				setVarsAndAbstractInfo.add(itemVarAndType[0]);
@@ -193,7 +194,7 @@ public class AllocatingInformationFromNL {
 		StringBuilder sbTotalLemmTokenInNL=new StringBuilder();
 		
 		for(int i=1;i<=100;i++) {
-//			if(i!=18) {
+//			if(i!=22) {
 //				continue;
 //			}
 			String nameOfFile=String.format("%03d", i);
@@ -214,12 +215,10 @@ public class AllocatingInformationFromNL {
 			HashMap<String,String> mapLiterals=(HashMap<String, String>)results[1];
 			nlDesAfterNormalize=nlDesAfterNormalize.replaceAll(","," ").replaceAll("\\("," ").replaceAll("\\)"," ").replaceAll("\\."," ");
 			
-			
-			
-//			System.out.println(nlDescription);
-			
+						
 			results=getVarAppearInNLDescription(strVarInfoInCode,nlDesAfterNormalize,mapLiterals);
 			String listVariablesInNLAndType=(String)results[0];
+//			System.out.println(nlDesAfterNormalize+"\t"+listVariablesInNLAndType+"\n"+strVarInfoInCode);
 			LinkedHashSet<String> setVarAndAbs=(LinkedHashSet<String>) results[1];			
 			LinkedHashMap<String,String> mapTotalVarAndTypes=(LinkedHashMap<String, String>) results[2];
 			

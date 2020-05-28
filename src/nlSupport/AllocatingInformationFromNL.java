@@ -209,7 +209,7 @@ public class AllocatingInformationFromNL {
 			String listVariablesInNLAndType=getVarAppearInNLDescription(strVarInfoInCode,nlDesAfterNormalize,setVarAndAbs,mapLiterals,mapTotalVarAndTypes);
 			FileIO.writeStringToFile(listVariablesInNLAndType, fopOutputElement+fname_varInNaturalLanguage);
 			String nlTokens=getTokenInformation(nlDesAfterNormalize,setVarAndAbs,lemm);
-			System.out.println(i+"\t"+setVarAndAbs.size()+"\t"+setVarAndAbs.toString()+"\t"+mapTotalVarAndTypes.size());
+			System.out.println(i+"\t"+setVarAndAbs.size()+"\t"+setVarAndAbs.toString()+"\t"+mapTotalVarAndTypes.size()+"\t"+mapLiterals.size());
 			FileIO.writeStringToFile(nlTokens, fopOutputElement+fname_lemmTokenInNL);	
 			sbTotalPrefix.append(ppfx.getPrefix().replaceAll("\n", " , ")+"\n");
 			sbTotalPostfix.append(ppfx.getPostfix().replaceAll("\n", " , ")+"\n");

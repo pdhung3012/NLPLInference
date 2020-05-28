@@ -193,6 +193,9 @@ public class AllocatingInformationFromNL {
 		StringBuilder sbTotalLemmTokenInNL=new StringBuilder();
 		
 		for(int i=1;i<=100;i++) {
+			if(i!=18) {
+				continue;
+			}
 			String nameOfFile=String.format("%03d", i);
 			String fopOutputElement=fopOutputPrePostfix+File.separator+nameOfFile+File.separator;
 			new File(fopOutputElement).mkdir();

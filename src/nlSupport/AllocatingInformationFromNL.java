@@ -88,10 +88,11 @@ public class AllocatingInformationFromNL {
 		String[] arrInputTokens=nlDescription.split("\\s+");
 		for(int i=0;i<arrInputTokens.length;i++) {
 			String[] arrItems=arrInputTokens[i].split(regexCamelCase);
+			if(setVarsAndAbss.contains(arrInputTokens[i])) {
+				continue;
+			}
 			for(int j=0;j<arrItems.length;j++) {
-				if(setVarsAndAbss.contains(arrItems[j])) {
-					continue;
-				}
+				
 				sbTokens.append(arrItems[j]+" ");
 			}
 		}

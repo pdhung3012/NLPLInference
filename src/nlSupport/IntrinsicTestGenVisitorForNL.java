@@ -1235,8 +1235,14 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 		this.fullTokens.append(" ");
 		this.partialTokens.append(" ");
 		node.getExpression().accept(this);
-		String name = "." + node.getName().getIdentifier();
-		this.partialTokens.append(" " + name + " ");
+		String iden =  node.getName().getIdentifier();
+		String uName=getName(tb);
+		String name=uName;
+		LocalEntity le = new LocalEntity();
+		le.setStrCodeReprensent(iden);
+		le.setStrTypeOfEntity(name);
+		setFields.add(le);
+		this.partialTokens.append(" " + uName + "#var ");
 		if (b != null) {
 			if (tb != null)
 				name = getQualifiedName(tb.getTypeDeclaration()) + name;

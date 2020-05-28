@@ -202,6 +202,7 @@ public class AllocatingInformationFromNL {
 			String listVariablesInNLAndType=getVarAppearInNLDescription(strVarInfoInCode,nlDesAfterNormalize,setVarAndAbs,mapLiterals,mapTotalVarAndTypes);
 			FileIO.writeStringToFile(listVariablesInNLAndType, fopOutputElement+fname_varInNaturalLanguage);
 			String nlTokens=getTokenInformation(nlDesAfterNormalize,setVarAndAbs,lemm);
+			System.out.println(i+"\t"+setVarAndAbs.size()+"\t"+mapTotalVarAndTypes.size());
 			FileIO.writeStringToFile(nlTokens, fopOutputElement+fname_lemmTokenInNL);			
 //			String prefix
 		}

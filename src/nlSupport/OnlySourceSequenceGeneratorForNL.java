@@ -105,7 +105,7 @@ public class OnlySourceSequenceGeneratorForNL {
 			Arrays.sort(sourcePaths);
 			
 //			only one sourcePaths
-//			String[] sourceRemove= {sourcePaths[28]};
+//			String[] sourceRemove= {sourcePaths[52]};
 //			sourcePaths=sourceRemove;
 			
 			System.out.println(sourcePaths.length);

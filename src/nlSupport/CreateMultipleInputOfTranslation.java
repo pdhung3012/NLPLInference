@@ -63,7 +63,7 @@ public class CreateMultipleInputOfTranslation {
 //		String[] arrTextContent=new String[100];
 		StringBuilder sbTotalToken=new StringBuilder();
 		StringBuilder sbIndexes=new StringBuilder();
-		int numMethods=50;
+		int numMethods=200;
 		for(int i=1;i<=100;i++) {
 			String nameOfFile=String.format("%03d", i);
 			String fonIndexFile=File.separator+nameOfFile+File.separator;

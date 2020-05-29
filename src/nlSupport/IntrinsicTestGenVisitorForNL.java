@@ -561,10 +561,12 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 		setLocalVariables.clear();
 		Iterator<SingleVariableDeclaration> parameters = node.parameters()
 				.iterator();
+		
 		while (parameters.hasNext()) {
 			SingleVariableDeclaration parameter = parameters.next();
 			IVariableBinding parameterType = parameter.resolveBinding();
 			SimpleName varName = parameter.getName();
+//			System.out.println("arg size "+varName.getIdentifier()+"\t"+parameter.getType().toString());
 			if (parameterType != null && varName != null) {
 				ITypeBinding typeBind = parameterType.getType();
 				if (typeBind != null) {
@@ -574,6 +576,11 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 					setArguments.add(le);
 //					System.out.println(varName+"\t"+typeBind.getName());
 				}
+			} else if(parameter.getType()!=null) {
+				LocalEntity le = new LocalEntity();
+				le.setStrCodeReprensent(varName.getIdentifier());
+				le.setStrTypeOfEntity(parameter.getType().toString());
+				setArguments.add(le);
 			}
 		}
 		
@@ -1230,28 +1237,30 @@ public class IntrinsicTestGenVisitorForNL  extends ASTVisitor {
 				tb = tb.getTypeDeclaration();
 				if (tb.isLocal() || tb.getQualifiedName().isEmpty())
 					return false;
+				this.fullTokens.append(" ");
+				this.partialTokens.append(" ");
+				node.getExpression().accept(this);
+				String iden =  node.getName().getIdentifier();
+				String uName=getName(tb);
+				String name=uName;
+				LocalEntity le = new LocalEntity();
+				le.setStrCodeReprensent(iden);
+				le.setStrTypeOfEntity(name);
+				setFields.add(le);
+//				System.out.println("field here "+iden);
+				this.partialTokens.append(" " + uName + "#var ");
+				if (b != null) {
+					if (tb != null)
+						name = getQualifiedName(tb.getTypeDeclaration()) + name;
+					/*
+					 * else name = "Array" + name;
+					 */
+				}
+				this.fullTokens.append(" " + name + " ");
 			}
+			
 		}
-		this.fullTokens.append(" ");
-		this.partialTokens.append(" ");
-		node.getExpression().accept(this);
-		String iden =  node.getName().getIdentifier();
-		String uName=getName(tb);
-		String name=uName;
-		LocalEntity le = new LocalEntity();
-		le.setStrCodeReprensent(iden);
-		le.setStrTypeOfEntity(name);
-		setFields.add(le);
-//		System.out.println("field here "+iden);
-		this.partialTokens.append(" " + uName + "#var ");
-		if (b != null) {
-			if (tb != null)
-				name = getQualifiedName(tb.getTypeDeclaration()) + name;
-			/*
-			 * else name = "Array" + name;
-			 */
-		}
-		this.fullTokens.append(" " + name + " ");
+		
 		return false;
 	}
 

@@ -62,6 +62,12 @@ public class AllocatingInformationFromNL {
 				String strValue=mapStringLiterals.get(arrVarsInNL[i]);
 				mapTotalVarAndTypes.put(strValue, "String");
 			}
+			else if(arrVarsInNL[i].equals("this")) {
+//				sb.append(arrVarsInNL[i]+"\t"+"String"+"\n");
+				setVarsAndAbstractInfo.add("this");
+				
+				mapTotalVarAndTypes.put("this", "Object");
+			}
 		}
 //		System.out.println(setNLTokens.toString());
 		
@@ -70,6 +76,8 @@ public class AllocatingInformationFromNL {
 			if(itemVarAndType.length<2) {
 				continue;
 			}
+			itemVarAndType[0]=itemVarAndType[0].trim();
+			itemVarAndType[1]=itemVarAndType[1].trim();
 //			System.out.println(itemVarAndType[0]+"\t"+setNLTokens.contains(itemVarAndType[0].trim()));
 			if(setNLTokens.contains(itemVarAndType[0])) {
 //				sb.append(itemVarAndType[0]+"\t"+itemVarAndType[1]+"\n");
@@ -142,7 +150,7 @@ public class AllocatingInformationFromNL {
 					int numberIndex=indexQuote%2;
 					String key="StringLit_"+numberIndex;
 					sbTotal.append(" "+key+" ");
-					System.out.println("update "+sbItem.toString());
+//					System.out.println("update "+sbItem.toString());
 					mapCodeEntities.put(key, sbItem.toString());
 					
 				}
@@ -194,7 +202,7 @@ public class AllocatingInformationFromNL {
 		StringBuilder sbTotalLemmTokenInNL=new StringBuilder();
 		
 		for(int i=1;i<=100;i++) {
-//			if(i!=22) {
+//			if(i!=34) {
 //				continue;
 //			}
 			String nameOfFile=String.format("%03d", i);

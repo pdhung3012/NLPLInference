@@ -57,9 +57,9 @@ public class SortExpressionAndProvideFinalOutput {
 		
 		for(int i=1;i<=100;i++) {
 			
-			if(i!=44) {
-				continue;
-			}
+//			if(i!=44) {
+//				continue;
+//			}
 			
 			String nameFolder=String.format("%03d", i);	
 			String fopOutputItem=fopOutputRankingCandidates+nameFolder+File.separator;

@@ -56,6 +56,11 @@ public class SortExpressionAndProvideFinalOutput {
 		
 		
 		for(int i=1;i<=100;i++) {
+			
+			if(i!=44) {
+				continue;
+			}
+			
 			String nameFolder=String.format("%03d", i);	
 			String fopOutputItem=fopOutputRankingCandidates+nameFolder+File.separator;
 			new File(fopOutputItem).mkdir();
@@ -153,8 +158,10 @@ public class SortExpressionAndProvideFinalOutput {
 	}
 	
 	public static String getClassName(String fullName) {
+		fullName=fullName.split("\\<")[0];
 		String[] arr=fullName.split("\\.");
 		if(arr.length>0) {
+//			System.out.println(arr[arr.length-1]);
 			return arr[arr.length-1];
 		}
 		return "";
@@ -168,7 +175,7 @@ public class SortExpressionAndProvideFinalOutput {
 			if(arrItemVarNL.length>=2) {
 				ObjectMatchedVariablesInNL itemNL=new ObjectMatchedVariablesInNL();
 				itemNL.setVarName(arrItemVarNL[0]);
-				itemNL.setVarType(arrItemVarNL[1]);
+				itemNL.setVarType(getClassName(arrItemVarNL[1]));
 				lstVars.add(itemNL);
 			}
 		}

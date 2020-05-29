@@ -145,6 +145,10 @@ public class ObjectTranslatedCandidate implements Comparable< ObjectTranslatedCa
 	
 	public boolean isMatch(String nlType,String codeType) {
 		boolean result=false;
+//		System.out.println(nlType+"\t"+codeType);
+		if(nlType.equals("Object")) {
+			return true;
+		}
 		if(codeType.equals(nlType)) {
 			result=true;
 		}
@@ -167,14 +171,16 @@ public class ObjectTranslatedCandidate implements Comparable< ObjectTranslatedCa
 //				finding match for vars in NL
 				ObjectMatchedVariablesInNL itemNL=listMatchedVarsInNL.get(i);
 				
-				if(!itemNL.isMatch() && isMatch(itemNL.getVarType(), itemCode.getClassName())) {
+				if((!itemNL.isMatch()) && isMatch(itemNL.getVarType(), itemCode.getClassName())) {
 					itemNL.setMatch(true);
 					itemNL.addMatchPositionInCode(j);
 					itemCode.setMatch(true);
 					isMatchForItemVarInCode=true;
+					setVariables.add(itemNL.getVarName().toLowerCase());
+					break;
 				}
-				setVariables.add(itemNL.getVarName().toLowerCase());
-				break;
+				
+				
 				
 			}
 			
@@ -188,9 +194,10 @@ public class ObjectTranslatedCandidate implements Comparable< ObjectTranslatedCa
 						itemNL.setMatch(true);
 						itemNL.addMatchPositionInCode(j);
 						itemCode.setMatch(true);
+						setVariables.add(itemNL.getVarName().toLowerCase());
+						break;
 					}
-					setVariables.add(itemNL.getVarName().toLowerCase());
-					break;
+					
 					
 				}
 			}
